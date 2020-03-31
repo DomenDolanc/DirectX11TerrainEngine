@@ -48,13 +48,10 @@ bool Terrain_engineMain::Render()
 	auto viewport = m_deviceResources->GetScreenViewport();
 	context->RSSetViewports(1, &viewport);
 
-
     ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
     context->PSSetSamplers(0, 1, sampler);
 
     RenderFromLightsView();
-
-
     RenderFromCameraView();
 	
 	m_textRenderer->Render();

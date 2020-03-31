@@ -3,9 +3,6 @@
 #include <stdint.h>
 #include <algorithm>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "../Common/stb_image.h"
-
 using namespace Terrain_engine;
 
 using namespace DirectX;
