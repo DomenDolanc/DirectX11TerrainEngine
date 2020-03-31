@@ -1,0 +1,30 @@
+.vs/Terrain engine/v16/.suo
+.vs/Terrain engine/v16/Browse.VC.db
+.vs/Terrain engine/v16/Browse.VC.opendb
+.vs/Terrain engine/v16/ipch/8d86f158f9627c18.ipch
+.vs/Terrain engine/v16/ipch/f36b4eda59f515ed.ipch
+Debug/Terrain engine/Terrain engine.exe
+Debug/Terrain engine/Terrain engine.ilk
+Debug/Terrain engine/Terrain engine.pdb
+Debug/Terrain engine/Terrain_engine.winmd
+Debug/Terrain engine/AppX/Terrain engine.exe
+Debug/Terrain engine/AppX/Terrain_engine.winmd
+Debug/Terrain engine/AppX/ucrtbased.dll
+Debug/Terrain engine/AppX/vs.appxrecipe
+Terrain engine/Debug/App.obj
+*.obj
+*.resfiles
+*.intermediate
+*.txt
+*.pch
+*.xml
+*.state
+*.log
+*.Cache
+*.cache
+*.idb
+*.pdb
+*.tlog
+*.lastbuildstate
+*.cso
+*.winmd
