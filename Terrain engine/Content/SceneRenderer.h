@@ -63,7 +63,7 @@ namespace Terrain_engine
         std::shared_ptr<PerlinNoise> m_PerlinNoise;
         static std::map<int, DirectX::XMFLOAT3> m_TerrainColormap;
 
-        DirectX::XMVECTOR m_Eye = { 0.0f, 80.0f, 0.0f, 0.0f };
+        DirectX::XMVECTOR m_Eye = { 0.0f, 500.0f, 0.0f, 0.0f };
         DirectX::XMVECTOR m_At = { 0.0f, 0.0f, 0.0f, 0.0f };
         DirectX::XMVECTOR m_Up = { 0.0f, 1.0f, 0.0f, 0.0f };
 
@@ -83,7 +83,7 @@ namespace Terrain_engine
 		bool	m_tracking;
         const int m_Columns = 200;
         const int m_Rows = 200;
-        const float m_sceneScaling = 100;
+        const float m_sceneScaling = 10000;
 	};
 }
 
