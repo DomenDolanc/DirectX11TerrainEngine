@@ -18,15 +18,10 @@ namespace Terrain_engine
 		void ReleaseDeviceDependentResources();
 		void Update(DX::StepTimer const& timer);
 		void RenderFromCameraView();
-		void RenderFromLightsView();
         void MoveCameraForward();
         void MoveCameraBackward();
         void MoveCameraLeft();
         void MoveCameraRight();
-        void MoveLightForward();
-        void MoveLightBackward();
-        void MoveLightUp();
-        void MoveLightDown();
         void UpdateMousePosition(DirectX::XMFLOAT2 mousePoint);
         void UpdateCamera();
         void UpdateCameraSpeed();
@@ -58,11 +53,9 @@ namespace Terrain_engine
 		Microsoft::WRL::ComPtr<ID3D11GeometryShader>	m_geometryShader;
 		Microsoft::WRL::ComPtr<ID3D11PixelShader>	m_pixelShader;
         Microsoft::WRL::ComPtr<ID3D11Buffer>		m_constantBuffer;
-        Microsoft::WRL::ComPtr<ID3D11Buffer>		m_lightBuffer;
         Microsoft::WRL::ComPtr<ID3D11Buffer>		m_drawParamsConstantBuffer;
 
 		ModelViewProjectionConstantBuffer	m_constantBufferData;
-		ModelViewProjectionConstantBuffer	m_lightConstantBufferData;
         DrawParamsConstantBuffer            m_drawParamsConstantBufferData;
 		uint32	m_indexCount;
 
@@ -73,10 +66,6 @@ namespace Terrain_engine
         DirectX::XMVECTOR m_Eye = { 0.0f, 80.0f, 0.0f, 0.0f };
         DirectX::XMVECTOR m_At = { 0.0f, 0.0f, 0.0f, 0.0f };
         DirectX::XMVECTOR m_Up = { 0.0f, 1.0f, 0.0f, 0.0f };
-
-        DirectX::XMVECTOR m_LightEye = { 0.0f, 80.0f, 0.0f, 0.0f };
-        DirectX::XMVECTOR m_LightAt = { 0.0f, 0.0f, 0.0f, 0.0f };
-        DirectX::XMVECTOR m_LightUp = { 0.0f, 1.0f, 0.0f, 0.0f };
 
         DirectX::XMFLOAT3 pos = {0.0f, 0.0f, 0.0f};
         double pitch;

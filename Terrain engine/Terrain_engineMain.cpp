@@ -51,7 +51,6 @@ bool Terrain_engineMain::Render()
     ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
     context->PSSetSamplers(0, 1, sampler);
 
-    RenderFromLightsView();
     RenderFromCameraView();
 	
 	m_textRenderer->Render();
@@ -72,21 +71,6 @@ void Terrain_engine::Terrain_engineMain::RenderFromCameraView()
     context->PSSetShaderResources(0, 1, resourceView);
 
     m_sceneRenderer->RenderFromCameraView();
-}
-
-void Terrain_engine::Terrain_engineMain::RenderFromLightsView()
-{
-    auto context = m_deviceResources->GetD3DDeviceContext();
-    ID3D11ShaderResourceView* const resourceViewNull[1] = { nullptr };
-    ID3D11RenderTargetView* const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
-    context->PSSetShaderResources(0, 1, resourceViewNull);
-
-    context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
-    context->OMSetRenderTargets(1, targets, m_deviceResources->GetShadowMapDepthView());
-    context->ClearDepthStencilView(m_deviceResources->GetShadowMapDepthView(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-    m_sceneRenderer->RenderFromLightsView();
-    context->PSSetShaderResources(0, 1, resourceViewNull);
 }
 
 void Terrain_engineMain::OnDeviceLost()
@@ -139,28 +123,20 @@ void Terrain_engine::Terrain_engineMain::HandleKeyDownEvent(Windows::System::Vir
     switch (key)
     {
         case Windows::System::VirtualKey::W:
+        case Windows::System::VirtualKey::Up:
             m_sceneRenderer->MoveCameraForward();
             break;
         case Windows::System::VirtualKey::S:
+        case Windows::System::VirtualKey::Down:
             m_sceneRenderer->MoveCameraBackward();
             break;
         case Windows::System::VirtualKey::A:
+        case Windows::System::VirtualKey::Left:
             m_sceneRenderer->MoveCameraLeft();
             break;
         case Windows::System::VirtualKey::D:
-            m_sceneRenderer->MoveCameraRight();
-            break;
-        case Windows::System::VirtualKey::Up:
-            m_sceneRenderer->MoveLightUp();
-            break;
-        case Windows::System::VirtualKey::Down:
-            m_sceneRenderer->MoveLightDown();
-            break;
-        case Windows::System::VirtualKey::Left:
-            m_sceneRenderer->MoveLightForward();
-            break;
         case Windows::System::VirtualKey::Right:
-            m_sceneRenderer->MoveLightBackward();
+            m_sceneRenderer->MoveCameraRight();
             break;
         case Windows::System::VirtualKey::Tab:
             m_textRenderer->ShowHelpDisplay();

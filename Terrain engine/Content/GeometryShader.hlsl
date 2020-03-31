@@ -3,7 +3,6 @@ struct GSInputOutput
     float4 pos : SV_POSITION;
     float3 color : COLOR0;
     float3 normal: NORMAL0;
-    float4 lightViewPos: TEXCOORD0;
 };
 
 [maxvertexcount(3)]

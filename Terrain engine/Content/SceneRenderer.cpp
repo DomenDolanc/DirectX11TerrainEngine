@@ -45,10 +45,6 @@ void SceneRenderer::CreateWindowSizeDependentResources()
     XMStoreFloat4x4(&m_constantBufferData.projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
     XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(m_Eye, m_At, m_Up)));
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationX(0.0)));
-
-    XMStoreFloat4x4(&m_lightConstantBufferData.projection, XMMatrixTranspose(lightPerspectiveMatrix * orientationMatrix));
-    XMStoreFloat4x4(&m_lightConstantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(m_LightEye, m_LightAt, m_LightUp)));
-    XMStoreFloat4x4(&m_lightConstantBufferData.model, XMMatrixTranspose(XMMatrixRotationX(0.0)));
 }
 
 void SceneRenderer::Update(DX::StepTimer const& timer)
@@ -97,30 +93,6 @@ void Terrain_engine::SceneRenderer::MoveCameraRight()
     Translate({ travelSpeed, 0.0f, 0.0f });
     UpdateCamera();
     UpdateCameraSpeed();
-}
-
-void Terrain_engine::SceneRenderer::MoveLightForward()
-{
-    m_LightEye.m128_f32[2] += 1;
-    XMStoreFloat4x4(&m_lightConstantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(m_LightEye, m_LightAt, m_LightUp)));
-}
-
-void Terrain_engine::SceneRenderer::MoveLightBackward()
-{
-    m_LightEye.m128_f32[2] -= 1;
-    XMStoreFloat4x4(&m_lightConstantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(m_LightEye, m_LightAt, m_LightUp)));
-}
-
-void Terrain_engine::SceneRenderer::MoveLightUp()
-{
-    m_LightEye.m128_f32[1] += 1;
-    XMStoreFloat4x4(&m_lightConstantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(m_LightEye, m_LightAt, m_LightUp)));
-}
-
-void Terrain_engine::SceneRenderer::MoveLightDown()
-{
-    m_LightEye.m128_f32[1] -= 1;
-    XMStoreFloat4x4(&m_lightConstantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(m_LightEye, m_LightAt, m_LightUp)));
 }
 
 void Terrain_engine::SceneRenderer::UpdateMousePosition(DirectX::XMFLOAT2 mousePoint)
@@ -235,23 +207,7 @@ void Terrain_engine::SceneRenderer::RenderFromCameraView()
     }
     auto context = m_deviceResources->GetD3DDeviceContext();
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
-    context->UpdateSubresource1(m_lightBuffer.Get(), 0, NULL, &m_lightConstantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
-    context->VSSetConstantBuffers1(2, 1, m_lightBuffer.GetAddressOf(), nullptr, nullptr);
-
-    Render();
-}
-
-void Terrain_engine::SceneRenderer::RenderFromLightsView()
-{
-    if (!m_loadingComplete)
-    {
-        return;
-    }
-    auto context = m_deviceResources->GetD3DDeviceContext();
-    context->UpdateSubresource1(m_lightBuffer.Get(), 0, NULL, &m_lightConstantBufferData, 0, 0, 0);
-    context->VSSetConstantBuffers1(0, 1, m_lightBuffer.GetAddressOf(), nullptr, nullptr);
-    context->VSSetConstantBuffers1(2, 1, m_lightBuffer.GetAddressOf(), nullptr, nullptr);
 
     Render();
 }
@@ -279,9 +235,6 @@ void SceneRenderer::CreateDeviceDependentResources()
 
         CD3D11_BUFFER_DESC constantBufferDesc(sizeof(ModelViewProjectionConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
         DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&constantBufferDesc, nullptr, &m_constantBuffer));
-
-        CD3D11_BUFFER_DESC lightBufferDesc(sizeof(ModelViewProjectionConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
-        DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&lightBufferDesc, nullptr, &m_lightBuffer));
 
         CD3D11_BUFFER_DESC drawDataConstantBufferDesc(sizeof(DrawParamsConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
         DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&drawDataConstantBufferDesc, nullptr, &m_drawParamsConstantBuffer));
@@ -392,7 +345,6 @@ void SceneRenderer::ReleaseDeviceDependentResources()
 	m_pixelShader.Reset();
     m_geometryShader.Reset();
 	m_constantBuffer.Reset();
-	m_lightBuffer.Reset();
     m_drawParamsConstantBuffer.Reset();
 	m_vertexBuffer.Reset();
 	m_indexBuffer.Reset();

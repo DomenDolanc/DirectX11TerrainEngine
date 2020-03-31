@@ -16,7 +16,6 @@ namespace Terrain_engine
 		void Update();
 		bool Render();
         void RenderFromCameraView();
-        void RenderFromLightsView();
 
 		virtual void OnDeviceLost();
 		virtual void OnDeviceRestored();
