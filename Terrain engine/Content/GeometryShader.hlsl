@@ -21,7 +21,7 @@ void main(triangle GSInputOutput input[3] : SV_POSITION, inout TriangleStream< G
 	for (uint i = 0; i < 3; i++)
 	{
         element = input[i];
-        element.normal = faceNormal;
+        //element.normal = faceNormal;
 		output.Append(element);
 	}
 }

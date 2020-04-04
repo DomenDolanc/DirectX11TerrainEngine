@@ -58,6 +58,21 @@
     <ClCompile Include="Common\PerlinNoise.cpp">
       <Filter>Common</Filter>
     </ClCompile>
+    <ClCompile Include="Common\DirectXMeshNormals.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\DirectXMeshClean.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\DirectXMeshOptimize.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\DirectXMeshUtil.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\DirectXMeshValidate.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
@@ -70,6 +85,12 @@
       <Filter>Content</Filter>
     </ClInclude>
     <ClInclude Include="Common\PerlinNoise.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DirectXMesh.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\DirectXMeshP.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
@@ -91,5 +112,10 @@
     <FxCompile Include="Content\GeometryShader.hlsl">
       <Filter>Content</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Common\DirectXMesh.inl">
+      <Filter>Common</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -21,5 +21,6 @@ namespace Terrain_engine
 	{
 		DirectX::XMFLOAT3 pos;
 		DirectX::XMFLOAT3 color;
+		DirectX::XMFLOAT3 normal;
 	};
 }

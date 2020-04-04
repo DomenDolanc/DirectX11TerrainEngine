@@ -16,8 +16,8 @@ struct PixelShaderInput
     float3 normal: NORMAL0;
 };
 
-static float4 ambientVector = float4(0.80, 0.80, 0.80, 1);
-static float3 lightVector = float3(-1, -0.5, -0.5);
+static float4 ambientVector = float4(0.50, 0.50, 0.50, 1);
+static float3 lightVector = float3(0.7, -0.6, 0.3);
 
 float4 main(PixelShaderInput input) : SV_TARGET
 {

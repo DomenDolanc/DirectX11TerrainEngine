@@ -4,6 +4,18 @@
 #include "Common\DeviceResources.h"
 #include "Terrain_engineMain.h"
 
+MIDL_INTERFACE("45D64A29-A63E-4CB6-B498-5781D298CB4F")
+ICoreWindowInterop : public IUnknown
+{
+public:
+    virtual HRESULT STDMETHODCALLTYPE get_WindowHandle(
+        __RPC__deref_out_opt HWND * hwnd) = 0;
+
+    virtual HRESULT STDMETHODCALLTYPE put_MessageHandled(
+        boolean value) = 0;
+
+};
+
 namespace Terrain_engine
 {
 	ref class App sealed : public Windows::ApplicationModel::Core::IFrameworkView

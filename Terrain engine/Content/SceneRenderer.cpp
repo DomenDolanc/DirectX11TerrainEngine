@@ -23,6 +23,12 @@ SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceR
 	CreateWindowSizeDependentResources();
 }
 
+Terrain_engine::SceneRenderer::~SceneRenderer()
+{
+    free(m_terrainVertices);
+    free(m_terrainIndices);
+}
+
 void SceneRenderer::CreateWindowSizeDependentResources()
 {
 	Size outputSize = m_deviceResources->GetOutputSize();
@@ -187,10 +193,10 @@ void SceneRenderer::Render()
 	context->IASetInputLayout(m_inputLayout.Get());
     context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
-    if (m_renderShadows)
-        context->GSSetShader(m_geometryShader.Get(), nullptr, 0);
-    else
-        context->GSSetShader(nullptr, nullptr, 0);
+    //if (m_renderShadows)
+    //    context->GSSetShader(m_geometryShader.Get(), nullptr, 0);
+    //else
+    //    context->GSSetShader(nullptr, nullptr, 0);
     context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
     context->PSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     context->RSSetState(rasterizer);
@@ -224,7 +230,8 @@ void SceneRenderer::CreateDeviceDependentResources()
 		static const D3D11_INPUT_ELEMENT_DESC vertexDesc [] =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 		};
 
 		DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), &fileData[0], fileData.size(), &m_inputLayout));
@@ -246,8 +253,8 @@ void SceneRenderer::CreateDeviceDependentResources()
 
 	auto createTerrainTask = (createPSTask && createVSTask).then([this] () 
     {
-        CreateVertices();
         CreateIndices();
+        CreateVertices();
 	});
 
 	createTerrainTask.then([this] () {
@@ -257,12 +264,14 @@ void SceneRenderer::CreateDeviceDependentResources()
 
 void Terrain_engine::SceneRenderer::CreateVertices()
 {
+    free(m_terrainVertices);
     m_vertexBuffer.Reset();
 
     XMFLOAT3 gridColor{ 1.0f, 1.0f, 1.0f };
 
     size_t arraySize = m_Columns * m_Rows * sizeof(VertexPositionColor);
-    VertexPositionColor* terrainVertices = (VertexPositionColor*)malloc(arraySize);
+    m_terrainVertices = (VertexPositionColor*)malloc(arraySize);
+    std::unique_ptr<XMFLOAT3[]> pos(new XMFLOAT3[m_Columns * m_Rows]);
 
     float halfScaling = m_sceneScaling / 2.0f;
     const float startX = -halfScaling;
@@ -284,20 +293,29 @@ void Terrain_engine::SceneRenderer::CreateVertices()
             double height = m_PerlinNoise->GenerateValue(i, j);
             double colorValue = min(max(height + 0.4, 0), 1);
             XMFLOAT3 heightColor = GetColorFromHeight(height);
-            terrainVertices[i * m_Rows + j] = { XMFLOAT3(tempX, height, tempZ), heightColor };
+            height *= m_sceneScaling / 20;
+            m_terrainVertices[i * m_Rows + j] = { XMFLOAT3(tempX, height, tempZ), heightColor, heightColor };
+            pos.get()[i * m_Rows + j] = m_terrainVertices[i * m_Rows + j].pos;
             tempZ += stepZ;
         }
         tempX += stepX;
     }
+    
+    size_t nFaces = m_indexCount / 3;
+    size_t nVerts = m_Columns * m_Rows;
+
+    std::unique_ptr<XMFLOAT3[]> normals(new XMFLOAT3[nVerts]);
+    ComputeNormals(m_terrainIndices, nFaces, pos.get(), nVerts, CNORM_WIND_CW, normals.get());
+
+    for (size_t j = 0; j < nVerts; j++)
+        m_terrainVertices[j].normal = normals.get()[j];
 
     D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-    vertexBufferData.pSysMem = terrainVertices;
+    vertexBufferData.pSysMem = m_terrainVertices;
     vertexBufferData.SysMemPitch = 0;
     vertexBufferData.SysMemSlicePitch = 0;
     CD3D11_BUFFER_DESC vertexBufferDesc(arraySize, D3D11_BIND_VERTEX_BUFFER);
     DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_vertexBuffer));
-
-    free(terrainVertices);
 }
 
 DirectX::XMFLOAT3 Terrain_engine::SceneRenderer::GetColorFromHeight(double height)
@@ -310,31 +328,31 @@ DirectX::XMFLOAT3 Terrain_engine::SceneRenderer::GetColorFromHeight(double heigh
 
 void SceneRenderer::CreateIndices()
 {
+    free(m_terrainIndices);
     m_indexCount = (m_Columns - 1) * (m_Rows - 1) * 6;
 
-    size_t arraySize = m_indexCount * sizeof(unsigned int);
-    unsigned int* terrainIndices = (unsigned int*)malloc(arraySize); 
+    size_t arraySize = m_indexCount * sizeof(uint32_t);
+    m_terrainIndices = (unsigned int*)malloc(arraySize); 
     int index = 0;
     for (size_t i = 0; i < m_Columns - 1; i++)
     {
         for (size_t j = 0; j < m_Rows - 1; j++)
         {
-            terrainIndices[index++] = i * m_Rows + j;
-            terrainIndices[index++] = (i + 1) * m_Rows + j;
-            terrainIndices[index++] = (i + 1) * m_Rows + j + 1;
-            terrainIndices[index++] = i * m_Rows + j;
-            terrainIndices[index++] = i * m_Rows + j + 1;
-            terrainIndices[index++] = (i + 1) * m_Rows + j + 1;
+            m_terrainIndices[index++] = i * m_Rows + j;             // 0
+            m_terrainIndices[index++] = (i + 1) * m_Rows + j + 1;   // 3
+            m_terrainIndices[index++] = i * m_Rows + j + 1;         // 1
+            m_terrainIndices[index++] = i * m_Rows + j;             // 0
+            m_terrainIndices[index++] = (i + 1) * m_Rows + j;       // 2
+            m_terrainIndices[index++] = (i + 1) * m_Rows + j + 1;   // 3
         }
     }
 
     D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-    indexBufferData.pSysMem = terrainIndices;
+    indexBufferData.pSysMem = m_terrainIndices;
     indexBufferData.SysMemPitch = 0;
     indexBufferData.SysMemSlicePitch = 0;
     CD3D11_BUFFER_DESC indexBufferDesc(arraySize, D3D11_BIND_INDEX_BUFFER);
     DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&indexBufferDesc, &indexBufferData, &m_indexBuffer));
-    free(terrainIndices);
 }
 
 void SceneRenderer::ReleaseDeviceDependentResources()

@@ -5,6 +5,7 @@
 #include "..\Common\StepTimer.h"
 #include "..\Common\DirectXHelper.h"
 #include "..\Common\PerlinNoise.h"
+#include "..\Common\DirectXMesh.h"
 #include <map>
 
 namespace Terrain_engine
@@ -13,6 +14,7 @@ namespace Terrain_engine
 	{
 	public:
 		SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources);
+        ~SceneRenderer();
 		void CreateDeviceDependentResources();
 		void CreateWindowSizeDependentResources();
 		void ReleaseDeviceDependentResources();
@@ -59,11 +61,14 @@ namespace Terrain_engine
         DrawParamsConstantBuffer            m_drawParamsConstantBufferData;
 		uint32	m_indexCount;
 
+        VertexPositionColor* m_terrainVertices;
+        uint32_t* m_terrainIndices;
+
 
         std::shared_ptr<PerlinNoise> m_PerlinNoise;
         static std::map<int, DirectX::XMFLOAT3> m_TerrainColormap;
 
-        DirectX::XMVECTOR m_Eye = { 0.0f, 500.0f, 0.0f, 0.0f };
+        DirectX::XMVECTOR m_Eye = { 0.0f, 5000.0f, 0.0f, 0.0f };
         DirectX::XMVECTOR m_At = { 0.0f, 0.0f, 0.0f, 0.0f };
         DirectX::XMVECTOR m_Up = { 0.0f, 1.0f, 0.0f, 0.0f };
 

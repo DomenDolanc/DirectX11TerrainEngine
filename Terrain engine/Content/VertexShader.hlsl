@@ -17,6 +17,7 @@ struct VertexShaderInput
 {
 	float3 pos : POSITION;
 	float3 color : COLOR0;
+    float3 normal: NORMAL0;
 };
 
 struct GeometryShaderInput
@@ -30,8 +31,7 @@ GeometryShaderInput main(VertexShaderInput input)
 {
     GeometryShaderInput output;
 	float4 pos = float4(input.pos, 1.0f);
-    pos.y = pos.y * scaling/20;
-    output.normal = pos;
+    output.normal = input.normal;
 
 	pos = mul(pos, model);
 	pos = mul(pos, view);
