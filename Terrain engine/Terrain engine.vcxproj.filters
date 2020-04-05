@@ -79,6 +79,9 @@
     <ClCompile Include="Common\Graphics\Camera.cpp">
       <Filter>Common\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Common\Graphics\Terrain.cpp">
+      <Filter>Common\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
@@ -100,6 +103,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Common\Graphics\Camera.h">
+      <Filter>Common\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Graphics\Terrain.h">
       <Filter>Common\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
