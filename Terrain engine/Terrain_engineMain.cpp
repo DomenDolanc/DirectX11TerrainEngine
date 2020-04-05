@@ -97,7 +97,7 @@ void Terrain_engine::Terrain_engineMain::HandleKeyUpEvent(Windows::System::Virtu
             m_isCtrlKeyPressed = false;
             break;
         default:
-            m_sceneRenderer->StopCameraMovement();
+            m_sceneRenderer->getCamera()->Stop();
     }
 }
 
@@ -124,19 +124,19 @@ void Terrain_engine::Terrain_engineMain::HandleKeyDownEvent(Windows::System::Vir
     {
         case Windows::System::VirtualKey::W:
         case Windows::System::VirtualKey::Up:
-            m_sceneRenderer->MoveCameraForward();
+            m_sceneRenderer->getCamera()->MoveForward();
             break;
         case Windows::System::VirtualKey::S:
         case Windows::System::VirtualKey::Down:
-            m_sceneRenderer->MoveCameraBackward();
+            m_sceneRenderer->getCamera()->MoveBackward();
             break;
         case Windows::System::VirtualKey::A:
         case Windows::System::VirtualKey::Left:
-            m_sceneRenderer->MoveCameraLeft();
+            m_sceneRenderer->getCamera()->MoveLeft();
             break;
         case Windows::System::VirtualKey::D:
         case Windows::System::VirtualKey::Right:
-            m_sceneRenderer->MoveCameraRight();
+            m_sceneRenderer->getCamera()->MoveRight();
             break;
         case Windows::System::VirtualKey::Tab:
             m_textRenderer->ShowHelpDisplay();

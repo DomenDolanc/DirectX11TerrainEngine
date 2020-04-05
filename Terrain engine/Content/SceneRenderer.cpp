@@ -8,8 +8,6 @@ using namespace Terrain_engine;
 using namespace DirectX;
 using namespace Windows::Foundation;
 
-const float SceneRenderer::INITIAL_TRAVEL_SPEED = 0.4f;
-
 SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
 	m_loadingComplete(false),
 	m_degreesPerSecond(45),
@@ -18,6 +16,7 @@ SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceR
 	m_deviceResources(deviceResources)
 {
     m_PerlinNoise = std::make_shared<PerlinNoise>();
+    m_Camera = std::make_shared<Camera>();
 
 	CreateDeviceDependentResources();
 	CreateWindowSizeDependentResources();
@@ -49,7 +48,7 @@ void SceneRenderer::CreateWindowSizeDependentResources()
 	XMMATRIX orientationMatrix = XMLoadFloat4x4(&orientation);
 
     XMStoreFloat4x4(&m_constantBufferData.projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
-    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(XMMatrixLookAtRH(m_Eye, m_At, m_Up)));
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationX(0.0)));
 }
 
@@ -61,44 +60,6 @@ void SceneRenderer::Update(DX::StepTimer const& timer)
 		double totalRotation = timer.GetTotalSeconds() * radiansPerSecond;
         float radians = static_cast<float>(fmod(totalRotation, XM_2PI));
 	}
-}
-
-void Terrain_engine::SceneRenderer::Translate(DirectX::XMFLOAT3 translation)
-{
-    XMStoreFloat3(&translation, XMVector3Transform(
-        XMLoadFloat3(&translation), 
-        XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f) * XMMatrixScaling(travelSpeed, travelSpeed, travelSpeed)
-    ));
-
-    pos = { pos.x + translation.x, pos.y + translation.y, pos.z + translation.z };
-}
-
-void Terrain_engine::SceneRenderer::MoveCameraForward()
-{
-    Translate({ 0.0f, 0.0f, -travelSpeed });
-    UpdateCamera();
-    UpdateCameraSpeed();
-}
-
-void Terrain_engine::SceneRenderer::MoveCameraBackward()
-{
-    Translate({ 0.0f, 0.0f, travelSpeed });
-    UpdateCamera();
-    UpdateCameraSpeed();
-}
-
-void Terrain_engine::SceneRenderer::MoveCameraLeft()
-{
-    Translate({ -travelSpeed, 0.0f, 0.0f });
-    UpdateCamera();
-    UpdateCameraSpeed();
-}
-
-void Terrain_engine::SceneRenderer::MoveCameraRight()
-{
-    Translate({ travelSpeed, 0.0f, 0.0f });
-    UpdateCamera();
-    UpdateCameraSpeed();
 }
 
 void Terrain_engine::SceneRenderer::UpdateMousePosition(DirectX::XMFLOAT2 mousePoint)
@@ -113,41 +74,18 @@ void Terrain_engine::SceneRenderer::UpdateMousePosition(DirectX::XMFLOAT2 mouseP
     m_MousePoint = mousePoint;
 
     constexpr double PI = 3.141592653589;
-    pitch = pitch - (deltaY / 150);
+    double pitch = m_Camera->getPitch() - (deltaY / 150);
     pitch = fmod(pitch + PI, 2*PI);
     if (pitch < 0)
         pitch += 2*PI;
     pitch = pitch - PI;
+    m_Camera->setPitch(pitch);
 
+    double yaw = m_Camera->getYaw();
     yaw = yaw - deltaX / 150;
+    m_Camera->setYaw(yaw);
 
-    UpdateCamera();
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationX(0.0)));
-}
-
-void Terrain_engine::SceneRenderer::UpdateCamera()
-{
-    const XMVECTOR forwardBaseVector = XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);   
-    const auto lookVector = XMVector3Transform(forwardBaseVector, XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0));
-    const auto camPositon = m_Eye + XMLoadFloat3(&pos);
-    const auto camTarget = camPositon + lookVector;
-
-    XMMATRIX initialPos = XMMatrixLookAtRH(camPositon, camTarget, m_Up);
-    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(initialPos));
-}
-
-void Terrain_engine::SceneRenderer::UpdateCameraSpeed()
-{
-    const float MAX_TRAVEL_SPEED = 3.0f;
-    if (this->travelSpeed > MAX_TRAVEL_SPEED)
-        return;
-
-    this->travelSpeed += this->acceleration;
-}
-
-void Terrain_engine::SceneRenderer::StopCameraMovement()
-{
-    this->travelSpeed = INITIAL_TRAVEL_SPEED;
 }
 
 void Terrain_engine::SceneRenderer::TogglePrimitiveRendering()
@@ -212,6 +150,8 @@ void Terrain_engine::SceneRenderer::RenderFromCameraView()
         return;
     }
     auto context = m_deviceResources->GetD3DDeviceContext();
+
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
@@ -316,6 +256,11 @@ void Terrain_engine::SceneRenderer::CreateVertices()
     vertexBufferData.SysMemSlicePitch = 0;
     CD3D11_BUFFER_DESC vertexBufferDesc(arraySize, D3D11_BIND_VERTEX_BUFFER);
     DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_vertexBuffer));
+}
+
+std::shared_ptr<Camera> Terrain_engine::SceneRenderer::getCamera()
+{
+    return m_Camera;
 }
 
 DirectX::XMFLOAT3 Terrain_engine::SceneRenderer::GetColorFromHeight(double height)

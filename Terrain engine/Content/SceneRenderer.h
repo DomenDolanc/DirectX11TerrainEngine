@@ -5,6 +5,7 @@
 #include "..\Common\StepTimer.h"
 #include "..\Common\DirectXHelper.h"
 #include "..\Common\PerlinNoise.h"
+#include "..\Common\Graphics\Camera.h"
 #include "..\Common\DirectXMesh.h"
 #include <map>
 
@@ -20,14 +21,8 @@ namespace Terrain_engine
 		void ReleaseDeviceDependentResources();
 		void Update(DX::StepTimer const& timer);
 		void RenderFromCameraView();
-        void MoveCameraForward();
-        void MoveCameraBackward();
-        void MoveCameraLeft();
-        void MoveCameraRight();
+        
         void UpdateMousePosition(DirectX::XMFLOAT2 mousePoint);
-        void UpdateCamera();
-        void UpdateCameraSpeed();
-        void StopCameraMovement();
 
         void TogglePrimitiveRendering();
         void ToggleShadowsRendering();
@@ -35,13 +30,12 @@ namespace Terrain_engine
 
         void CreateVertices();
 
-        DirectX::XMFLOAT3 GetColorFromHeight(double height);
+        std::shared_ptr<Camera> getCamera();
 
-        static const float INITIAL_TRAVEL_SPEED;
+        DirectX::XMFLOAT3 GetColorFromHeight(double height);
 
 	private:
         void Render();
-        void Translate(DirectX::XMFLOAT3 translation);
 
         void CreateIndices();
 
@@ -66,17 +60,11 @@ namespace Terrain_engine
 
 
         std::shared_ptr<PerlinNoise> m_PerlinNoise;
+
+        std::shared_ptr<Camera> m_Camera;
+
         static std::map<int, DirectX::XMFLOAT3> m_TerrainColormap;
 
-        DirectX::XMVECTOR m_Eye = { 0.0f, 5000.0f, 0.0f, 0.0f };
-        DirectX::XMVECTOR m_At = { 0.0f, 0.0f, 0.0f, 0.0f };
-        DirectX::XMVECTOR m_Up = { 0.0f, 1.0f, 0.0f, 0.0f };
-
-        DirectX::XMFLOAT3 pos = {0.0f, 0.0f, 0.0f};
-        double pitch;
-        double yaw;
-        float travelSpeed = INITIAL_TRAVEL_SPEED;
-        const float acceleration = 0.1f;
 
         bool m_renderTriangles = true;
         bool m_renderShadows = true;
