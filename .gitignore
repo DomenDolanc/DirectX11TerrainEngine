@@ -28,3 +28,6 @@ Terrain engine/Debug/App.obj
 *.lastbuildstate
 *.cso
 *.winmd
+Debug/Terrain engine/Terrain engine.build.appxrecipe
+.vs/Terrain engine/v16/ipch/AutoPCH/5aac0a77372786e1/IMGUI_IMPL_WIN32.ipch
+.vs/Terrain engine/v16/ipch/AutoPCH/c458e486f9498042/MESH.ipch

@@ -3,6 +3,7 @@ struct GSInputOutput
     float4 pos : SV_POSITION;
     float3 color : COLOR0;
     float3 normal: NORMAL0;
+	float3 worldPos : POSITIONT;
 };
 
 [maxvertexcount(3)]
