@@ -10,17 +10,17 @@
 
 namespace Terrain_engine
 {
-	class SceneRenderer
-	{
-	public:
-		SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources);
+    class SceneRenderer
+    {
+    public:
+        SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources);
         ~SceneRenderer();
-		void CreateDeviceDependentResources();
-		void CreateWindowSizeDependentResources();
-		void ReleaseDeviceDependentResources();
-		void Update(DX::StepTimer const& timer);
-		void RenderFromCameraView();
-        
+        void CreateDeviceDependentResources();
+        void CreateWindowSizeDependentResources();
+        void ReleaseDeviceDependentResources();
+        void Update(DX::StepTimer const& timer);
+        void RenderFromCameraView();
+
         void UpdateMousePosition(DirectX::XMFLOAT2 mousePoint);
 
         void TogglePrimitiveRendering();
@@ -29,20 +29,20 @@ namespace Terrain_engine
 
         std::shared_ptr<Camera> getCamera();
 
-	private:
+    private:
         void Render();
 
-	private:
-		std::shared_ptr<DX::DeviceResources> m_deviceResources;
+    private:
+        std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
-		Microsoft::WRL::ComPtr<ID3D11InputLayout>	    m_inputLayout;
-		Microsoft::WRL::ComPtr<ID3D11VertexShader>	    m_vertexShader;
-		Microsoft::WRL::ComPtr<ID3D11GeometryShader>	m_geometryShader;
-		Microsoft::WRL::ComPtr<ID3D11PixelShader>	    m_pixelShader;
+        Microsoft::WRL::ComPtr<ID3D11InputLayout>	    m_inputLayout;
+        Microsoft::WRL::ComPtr<ID3D11VertexShader>	    m_vertexShader;
+        Microsoft::WRL::ComPtr<ID3D11GeometryShader>	m_geometryShader;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader>	    m_pixelShader;
         Microsoft::WRL::ComPtr<ID3D11Buffer>		    m_constantBuffer;
         Microsoft::WRL::ComPtr<ID3D11Buffer>		    m_drawParamsConstantBuffer;
 
-		ModelViewProjectionConstantBuffer	m_constantBufferData;
+        ModelViewProjectionConstantBuffer	m_constantBufferData;
         DrawParamsConstantBuffer            m_drawParamsConstantBufferData;
 
         std::shared_ptr<Camera> m_Camera;
@@ -53,10 +53,10 @@ namespace Terrain_engine
 
         DirectX::XMFLOAT2 m_MousePoint;
 
-		bool	m_loadingComplete;
-		float	m_degreesPerSecond;
-		bool	m_tracking;
+        bool	m_loadingComplete;
+        float	m_degreesPerSecond;
+        bool	m_tracking;
         const float m_sceneScaling = 10000;
-	};
+    };
 }
 

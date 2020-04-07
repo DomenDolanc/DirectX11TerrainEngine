@@ -6,98 +6,84 @@ using namespace Terrain_engine;
 using namespace Windows::Foundation;
 using namespace Windows::System::Threading;
 using namespace Concurrency;
-using namespace Microsoft::WRL;
 
+// Loads and initializes application assets when the application is loaded.
 Terrain_engineMain::Terrain_engineMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
-	m_deviceResources(deviceResources)
+	m_deviceResources(deviceResources), m_pointerLocationX(0.0f)
 {
+	// Register to be notified if the Device is lost or recreated
 	m_deviceResources->RegisterDeviceNotify(this);
+
+	// TODO: Replace this with your app's content initialization.
 	m_sceneRenderer = std::unique_ptr<SceneRenderer>(new SceneRenderer(m_deviceResources));
+
 	m_textRenderer = std::unique_ptr<TextRenderer>(new TextRenderer(m_deviceResources));
+
+	// TODO: Change the timer settings if you want something other than the default variable timestep mode.
+	// e.g. for 60 FPS fixed timestep update logic, call:
+	/*
+	m_timer.SetFixedTimeStep(true);
+	m_timer.SetTargetElapsedSeconds(1.0 / 60);
+	*/
 }
 
 Terrain_engineMain::~Terrain_engineMain()
 {
+	// Deregister device notification
 	m_deviceResources->RegisterDeviceNotify(nullptr);
 }
 
+// Updates application state when the window size changes (e.g. device orientation change)
 void Terrain_engineMain::CreateWindowSizeDependentResources() 
 {
+	// TODO: Replace this with the size-dependent initialization of your app's content.
 	m_sceneRenderer->CreateWindowSizeDependentResources();
 }
 
-void Terrain_engineMain::Update() 
+void Terrain_engineMain::StartRenderLoop()
 {
-	m_timer.Tick([&]()
+	// If the animation render loop is already running then do not start another thread.
+	if (m_renderLoopWorker != nullptr && m_renderLoopWorker->Status == AsyncStatus::Started)
 	{
-		m_sceneRenderer->Update(m_timer);
-		m_textRenderer->Update(m_timer);
-	});
-}
-
-bool Terrain_engineMain::Render() 
-{
-	if (m_timer.GetFrameCount() == 0)
-	{
-		return false;
+		return;
 	}
 
-	auto context = m_deviceResources->GetD3DDeviceContext();
-    auto context2d = m_deviceResources->GetD2DDeviceContext();
+	// Create a task that will be run on a background thread.
+	auto workItemHandler = ref new WorkItemHandler([this](IAsyncAction ^ action)
+	{
+		// Calculate the updated frame and render once per vertical blanking interval.
+		while (action->Status == AsyncStatus::Started)
+		{
+			critical_section::scoped_lock lock(m_criticalSection);
+			Update();
+			if (Render())
+			{
+				m_deviceResources->Present();
+			}
+		}
+	});
 
-	auto viewport = m_deviceResources->GetScreenViewport();
-	context->RSSetViewports(1, &viewport);
-
-    ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
-    context->PSSetSamplers(0, 1, sampler);
-
-    RenderFromCameraView();
-	
-	m_textRenderer->Render();
-
-	return true;
+	// Run task on a dedicated high priority background thread.
+	m_renderLoopWorker = ThreadPool::RunAsync(workItemHandler, WorkItemPriority::High, WorkItemOptions::TimeSliced);
 }
 
-void Terrain_engine::Terrain_engineMain::RenderFromCameraView()
+void Terrain_engineMain::StopRenderLoop()
 {
-    auto context = m_deviceResources->GetD3DDeviceContext();
-    ID3D11RenderTargetView* const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
-
-    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
-    context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
-    context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-    ID3D11ShaderResourceView* const resourceView[1] = { m_deviceResources->GetShadowMapShaderResourceView() };
-    context->PSSetShaderResources(0, 1, resourceView);
-
-    m_sceneRenderer->RenderFromCameraView();
-}
-
-void Terrain_engineMain::OnDeviceLost()
-{
-	m_sceneRenderer->ReleaseDeviceDependentResources();
-	m_textRenderer->ReleaseDeviceDependentResources();
-}
-
-void Terrain_engineMain::OnDeviceRestored()
-{
-	m_sceneRenderer->CreateDeviceDependentResources();
-	m_textRenderer->CreateDeviceDependentResources();
-	CreateWindowSizeDependentResources();
+	m_renderLoopWorker->Cancel();
 }
 
 void Terrain_engine::Terrain_engineMain::HandleKeyUpEvent(Windows::System::VirtualKey key)
 {
     switch (key)
     {
-        case Windows::System::VirtualKey::Tab:
-            m_textRenderer->HideHelpDisplay();
-            break;
-        case Windows::System::VirtualKey::Control:
-            m_isCtrlKeyPressed = false;
-            break;
-        default:
-            m_sceneRenderer->getCamera()->Stop();
+    case Windows::System::VirtualKey::Tab:
+        m_textRenderer->HideHelpDisplay();
+        break;
+    case Windows::System::VirtualKey::Control:
+        m_isCtrlKeyPressed = false;
+        break;
+    default:
+        m_sceneRenderer->getCamera()->Stop();
     }
 }
 
@@ -122,33 +108,108 @@ void Terrain_engine::Terrain_engineMain::HandleKeyDownEvent(Windows::System::Vir
 
     switch (key)
     {
-        case Windows::System::VirtualKey::W:
-        case Windows::System::VirtualKey::Up:
-            m_sceneRenderer->getCamera()->MoveForward();
-            break;
-        case Windows::System::VirtualKey::S:
-        case Windows::System::VirtualKey::Down:
-            m_sceneRenderer->getCamera()->MoveBackward();
-            break;
-        case Windows::System::VirtualKey::A:
-        case Windows::System::VirtualKey::Left:
-            m_sceneRenderer->getCamera()->MoveLeft();
-            break;
-        case Windows::System::VirtualKey::D:
-        case Windows::System::VirtualKey::Right:
-            m_sceneRenderer->getCamera()->MoveRight();
-            break;
-        case Windows::System::VirtualKey::Tab:
-            m_textRenderer->ShowHelpDisplay();
-            break;
-        case Windows::System::VirtualKey::Control:
-            m_isCtrlKeyPressed = true;
-            break;
+    case Windows::System::VirtualKey::W:
+    case Windows::System::VirtualKey::Up:
+        m_sceneRenderer->getCamera()->MoveForward();
+        break;
+    case Windows::System::VirtualKey::S:
+    case Windows::System::VirtualKey::Down:
+        m_sceneRenderer->getCamera()->MoveBackward();
+        break;
+    case Windows::System::VirtualKey::A:
+    case Windows::System::VirtualKey::Left:
+        m_sceneRenderer->getCamera()->MoveLeft();
+        break;
+    case Windows::System::VirtualKey::D:
+    case Windows::System::VirtualKey::Right:
+        m_sceneRenderer->getCamera()->MoveRight();
+        break;
+    case Windows::System::VirtualKey::Tab:
+        m_textRenderer->ShowHelpDisplay();
+        break;
+    case Windows::System::VirtualKey::Control:
+        m_isCtrlKeyPressed = true;
+        break;
     }
 }
 
 void Terrain_engine::Terrain_engineMain::HandleMouseEvent(Windows::Foundation::Point point)
 {
-    DirectX::XMFLOAT2 point2D{point.X, point.Y};
+    DirectX::XMFLOAT2 point2D{ point.X, point.Y };
     m_sceneRenderer->UpdateMousePosition(point2D);
+}
+
+// Updates the application state once per frame.
+void Terrain_engineMain::Update() 
+{
+	ProcessInput();
+
+	// Update scene objects.
+	m_timer.Tick([&]()
+	{
+		// TODO: Replace this with your app's content update functions.
+		m_sceneRenderer->Update(m_timer);
+		m_textRenderer->Update(m_timer);
+	});
+}
+
+// Process all input from the user before updating game state
+void Terrain_engineMain::ProcessInput()
+{
+	// TODO: Add per frame input handling here.
+}
+
+// Renders the current frame according to the current application state.
+// Returns true if the frame was rendered and is ready to be displayed.
+bool Terrain_engineMain::Render() 
+{
+	// Don't try to render anything before the first Update.
+	if (m_timer.GetFrameCount() == 0)
+	{
+		return false;
+	}
+
+	auto context = m_deviceResources->GetD3DDeviceContext();
+
+    auto viewport = m_deviceResources->GetScreenViewport();
+    context->RSSetViewports(1, &viewport);
+
+    ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
+    context->PSSetSamplers(0, 1, sampler);
+
+    RenderFromCameraView();
+
+    m_textRenderer->Render();
+
+	return true;
+}
+
+void Terrain_engine::Terrain_engineMain::RenderFromCameraView()
+{
+    auto context = m_deviceResources->GetD3DDeviceContext();
+    ID3D11RenderTargetView* const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
+
+    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
+    context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
+    context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+    ID3D11ShaderResourceView* const resourceView[1] = { m_deviceResources->GetShadowMapShaderResourceView() };
+    context->PSSetShaderResources(0, 1, resourceView);
+
+    m_sceneRenderer->RenderFromCameraView();
+}
+
+// Notifies renderers that device resources need to be released.
+void Terrain_engineMain::OnDeviceLost()
+{
+	m_sceneRenderer->ReleaseDeviceDependentResources();
+	m_textRenderer->ReleaseDeviceDependentResources();
+}
+
+// Notifies renderers that device resources may now be recreated.
+void Terrain_engineMain::OnDeviceRestored()
+{
+	m_sceneRenderer->CreateDeviceDependentResources();
+	m_textRenderer->CreateDeviceDependentResources();
+	CreateWindowSizeDependentResources();
 }

@@ -9,17 +9,17 @@ using namespace DirectX;
 using namespace Windows::Foundation;
 
 SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
-	m_loadingComplete(false),
-	m_degreesPerSecond(45),
-	m_tracking(false),
-	m_deviceResources(deviceResources)
+    m_loadingComplete(false),
+    m_degreesPerSecond(45),
+    m_tracking(false),
+    m_deviceResources(deviceResources)
 {
     m_Camera = std::make_shared<Camera>();
     m_Terrain = std::make_shared<Terrain>(m_deviceResources);
     m_Terrain->setScaling(m_sceneScaling);
 
-	CreateDeviceDependentResources();
-	CreateWindowSizeDependentResources();
+    CreateDeviceDependentResources();
+    CreateWindowSizeDependentResources();
 }
 
 Terrain_engine::SceneRenderer::~SceneRenderer()
@@ -28,22 +28,22 @@ Terrain_engine::SceneRenderer::~SceneRenderer()
 
 void SceneRenderer::CreateWindowSizeDependentResources()
 {
-	Size outputSize = m_deviceResources->GetOutputSize();
-	float aspectRatio = outputSize.Width / outputSize.Height;
-	float fovAngleY = 70.0f * XM_PI / 180.0f;
-	float lightFovAngleY = 40.0f * XM_PI / 180.0f;
+    Size outputSize = m_deviceResources->GetOutputSize();
+    float aspectRatio = outputSize.Width / outputSize.Height;
+    float fovAngleY = 70.0f * XM_PI / 180.0f;
+    float lightFovAngleY = 40.0f * XM_PI / 180.0f;
 
-	if (aspectRatio < 1.0f)
-	{
-		fovAngleY *= 2.0f;
-	}
+    if (aspectRatio < 1.0f)
+    {
+        fovAngleY *= 2.0f;
+    }
 
     XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, 10000.0f);
     XMMATRIX lightPerspectiveMatrix = XMMatrixPerspectiveFovRH(lightFovAngleY, aspectRatio, 0.1f, 10000.0f);
 
-	XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
+    XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
 
-	XMMATRIX orientationMatrix = XMLoadFloat4x4(&orientation);
+    XMMATRIX orientationMatrix = XMLoadFloat4x4(&orientation);
 
     XMStoreFloat4x4(&m_constantBufferData.projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
     XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
@@ -52,12 +52,12 @@ void SceneRenderer::CreateWindowSizeDependentResources()
 
 void SceneRenderer::Update(DX::StepTimer const& timer)
 {
-	if (!m_tracking)
-	{
-		float radiansPerSecond = XMConvertToRadians(m_degreesPerSecond);
-		double totalRotation = timer.GetTotalSeconds() * radiansPerSecond;
+    if (!m_tracking)
+    {
+        float radiansPerSecond = XMConvertToRadians(m_degreesPerSecond);
+        double totalRotation = timer.GetTotalSeconds() * radiansPerSecond;
         float radians = static_cast<float>(fmod(totalRotation, XM_2PI));
-	}
+    }
 }
 
 void Terrain_engine::SceneRenderer::UpdateMousePosition(DirectX::XMFLOAT2 mousePoint)
@@ -73,9 +73,9 @@ void Terrain_engine::SceneRenderer::UpdateMousePosition(DirectX::XMFLOAT2 mouseP
 
     constexpr double PI = 3.141592653589;
     double pitch = m_Camera->getPitch() - (deltaY / 150);
-    pitch = fmod(pitch + PI, 2*PI);
+    pitch = fmod(pitch + PI, 2 * PI);
     if (pitch < 0)
-        pitch += 2*PI;
+        pitch += 2 * PI;
     pitch = pitch - PI;
     m_Camera->setPitch(pitch);
 
@@ -111,28 +111,28 @@ std::shared_ptr<Camera> Terrain_engine::SceneRenderer::getCamera()
 
 void SceneRenderer::Render()
 {
-	auto context = m_deviceResources->GetD3DDeviceContext();
+    auto context = m_deviceResources->GetD3DDeviceContext();
     auto rasterizer = m_deviceResources->GetRasterizerState();
 
     m_drawParamsConstantBufferData.scaling = m_sceneScaling;
     m_drawParamsConstantBufferData.renderShadows = (float)m_renderShadows;
-	
+
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
 
     if (m_renderTriangles)
-	    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    else if (!m_renderShadows)
-	    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    else
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
     //if (m_renderShadows)
     //    context->GSSetShader(m_geometryShader.Get(), nullptr, 0);
     //else
     //    context->GSSetShader(nullptr, nullptr, 0);
 
-	context->IASetInputLayout(m_inputLayout.Get());
+    context->IASetInputLayout(m_inputLayout.Get());
     context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
-  
+
     context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
     context->PSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     context->RSSetState(rasterizer);
@@ -156,22 +156,22 @@ void Terrain_engine::SceneRenderer::RenderFromCameraView()
 
 void SceneRenderer::CreateDeviceDependentResources()
 {
-	auto loadVSTask = DX::ReadDataAsync(L"VertexShader.cso");
-	auto loadPSTask = DX::ReadDataAsync(L"PixelShader.cso");
-	auto loadGSTask = DX::ReadDataAsync(L"GeometryShader.cso");
+    auto loadVSTask = DX::ReadDataAsync(L"VertexShader.cso");
+    auto loadPSTask = DX::ReadDataAsync(L"PixelShader.cso");
+    auto loadGSTask = DX::ReadDataAsync(L"GeometryShader.cso");
 
-	auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) {
-		DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateVertexShader(&fileData[0], fileData.size(), nullptr, &m_vertexShader));
+    auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) {
+        DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateVertexShader(&fileData[0], fileData.size(), nullptr, &m_vertexShader));
 
-		static const D3D11_INPUT_ELEMENT_DESC vertexDesc [] =
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+        static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
+        {
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
             { "COLOR", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
             { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-		};
+        };
 
-		DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), &fileData[0], fileData.size(), &m_inputLayout));
-	});
+        DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), &fileData[0], fileData.size(), &m_inputLayout));
+        });
 
     auto createPSTask = loadPSTask.then([this](const std::vector<byte>& fileData) {
         DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreatePixelShader(&fileData[0], fileData.size(), nullptr, &m_pixelShader));
@@ -187,26 +187,26 @@ void SceneRenderer::CreateDeviceDependentResources()
         DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateGeometryShader(&fileData[0], fileData.size(), nullptr, &m_geometryShader));
         });
 
-	auto createTerrainTask = (createPSTask && createVSTask).then([this] () 
-    {
+    auto createTerrainTask = (createPSTask && createVSTask).then([this]()
+        {
 
-        m_Terrain->CreateIndices();
-        m_Terrain->CreateVertices();
-	});
+            m_Terrain->CreateIndices();
+            m_Terrain->CreateVertices();
+        });
 
-	createTerrainTask.then([this] () {
-		m_loadingComplete = true;
-	});
+    createTerrainTask.then([this]() {
+        m_loadingComplete = true;
+        });
 }
 
 void SceneRenderer::ReleaseDeviceDependentResources()
 {
-	m_loadingComplete = false;
-	m_vertexShader.Reset();
-	m_inputLayout.Reset();
-	m_pixelShader.Reset();
+    m_loadingComplete = false;
+    m_vertexShader.Reset();
+    m_inputLayout.Reset();
+    m_pixelShader.Reset();
     m_geometryShader.Reset();
-	m_constantBuffer.Reset();
+    m_constantBuffer.Reset();
     m_drawParamsConstantBuffer.Reset();
     m_Terrain->ResetBuffers();
 }

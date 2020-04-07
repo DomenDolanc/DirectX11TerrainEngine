@@ -2,14 +2,14 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Common">
-      <UniqueIdentifier>b15d2172-8455-47d3-ae1e-c125b3c52de4</UniqueIdentifier>
+      <UniqueIdentifier>62a9eff8-3125-4ad6-a68e-77e219d0ae13</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets">
-      <UniqueIdentifier>b6757c0b-1028-4b1c-b0d6-9e21e3b3e1ab</UniqueIdentifier>
+      <UniqueIdentifier>df8b4239-48a1-4793-a08a-45dd7240f455</UniqueIdentifier>
       <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
     </Filter>
     <Filter Include="Content">
-      <UniqueIdentifier>05459652-ebf9-462d-a833-415feb5c55db</UniqueIdentifier>
+      <UniqueIdentifier>3267fc6b-a4fe-4522-adfa-a1409e646ee4</UniqueIdentifier>
     </Filter>
     <ClInclude Include="Common\DirectXHelper.h">
       <Filter>Common</Filter>
@@ -45,11 +45,13 @@
       <Filter>Assets</Filter>
     </Image>
     <Filter Include="Common\Graphics">
-      <UniqueIdentifier>{36cc58ff-f6d1-4fe4-a3f2-573207743c44}</UniqueIdentifier>
+      <UniqueIdentifier>{e76e65aa-0aa7-434e-b205-987cfc1c3fd8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="App.cpp" />
+    <ApplicationDefinition Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
     <ClCompile Include="Terrain_engineMain.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Content\SceneRenderer.cpp">
@@ -58,13 +60,16 @@
     <ClCompile Include="Content\TextRenderer.cpp">
       <Filter>Content</Filter>
     </ClCompile>
-    <ClCompile Include="Common\PerlinNoise.cpp">
+    <ClCompile Include="Common\Graphics\Camera.cpp">
+      <Filter>Common\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Graphics\Terrain.cpp">
+      <Filter>Common\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\DirectXMeshClean.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="Common\DirectXMeshNormals.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\DirectXMeshClean.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="Common\DirectXMeshOptimize.cpp">
@@ -76,15 +81,11 @@
     <ClCompile Include="Common\DirectXMeshValidate.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Common\Graphics\Camera.cpp">
-      <Filter>Common\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\Graphics\Terrain.cpp">
-      <Filter>Common\Graphics</Filter>
+    <ClCompile Include="Common\PerlinNoise.cpp">
+      <Filter>Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="App.h" />
     <ClInclude Include="Terrain_engineMain.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Content\SceneRenderer.h">
@@ -93,8 +94,11 @@
     <ClInclude Include="Content\TextRenderer.h">
       <Filter>Content</Filter>
     </ClInclude>
-    <ClInclude Include="Common\PerlinNoise.h">
-      <Filter>Common</Filter>
+    <ClInclude Include="Common\Graphics\Camera.h">
+      <Filter>Common\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Graphics\Terrain.h">
+      <Filter>Common\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Common\DirectXMesh.h">
       <Filter>Common</Filter>
@@ -102,11 +106,11 @@
     <ClInclude Include="Common\DirectXMeshP.h">
       <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Common\Graphics\Camera.h">
-      <Filter>Common\Graphics</Filter>
+    <ClInclude Include="Common\PerlinNoise.h">
+      <Filter>Common</Filter>
     </ClInclude>
-    <ClInclude Include="Common\Graphics\Terrain.h">
-      <Filter>Common\Graphics</Filter>
+    <ClInclude Include="Common\scoped.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -118,10 +122,13 @@
     <AppxManifest Include="Package.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Content\VertexShader.hlsl">
+    <Page Include="DirectXPage.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Content\PixelShader.hlsl">
       <Filter>Content</Filter>
     </FxCompile>
-    <FxCompile Include="Content\PixelShader.hlsl">
+    <FxCompile Include="Content\VertexShader.hlsl">
       <Filter>Content</Filter>
     </FxCompile>
     <FxCompile Include="Content\GeometryShader.hlsl">

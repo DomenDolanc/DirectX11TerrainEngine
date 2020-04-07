@@ -7,11 +7,11 @@
   IgnorableNamespaces="uap mp">
 
   <Identity
-    Name="493984e4-63ae-47c5-81f7-e7c8ff34b970"
+    Name="3418caf7-4321-4d9d-9327-6345c7e32ced"
     Publisher="CN=Domen"
     Version="1.0.0.0" />
 
-  <mp:PhoneIdentity PhoneProductId="493984e4-63ae-47c5-81f7-e7c8ff34b970" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="3418caf7-4321-4d9d-9327-6345c7e32ced" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
     <DisplayName>Terrain engine</DisplayName>

@@ -17,10 +17,10 @@ namespace Terrain_engine
         float padding3;
     };
 
-	struct VertexPositionColor
-	{
-		DirectX::XMFLOAT3 pos;
-		DirectX::XMFLOAT3 color;
-		DirectX::XMFLOAT3 normal;
-	};
+    struct VertexPositionColor
+    {
+        DirectX::XMFLOAT3 pos;
+        DirectX::XMFLOAT3 color;
+        DirectX::XMFLOAT3 normal;
+    };
 }
