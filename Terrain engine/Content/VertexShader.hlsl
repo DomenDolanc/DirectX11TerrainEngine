@@ -7,10 +7,12 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
 
 cbuffer DrawParamsConstantBuffer : register(b1)
 {
+    float3 lightPos;
     float scaling;
     float renderShadows;
     float padding2;
     float padding3;
+    float padding4;
 };
 
 struct VertexShaderInput

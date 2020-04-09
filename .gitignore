@@ -31,3 +31,11 @@ Terrain engine/Debug/App.obj
 Debug/Terrain engine/Terrain engine.build.appxrecipe
 .vs/Terrain engine/v16/ipch/AutoPCH/5aac0a77372786e1/IMGUI_IMPL_WIN32.ipch
 .vs/Terrain engine/v16/ipch/AutoPCH/c458e486f9498042/MESH.ipch
+Debug/Terrain engine/App.xbf
+Debug/Terrain engine/DirectXPage.xbf
+Debug/Terrain engine/AppX/App.xbf
+Debug/Terrain engine/AppX/DirectXPage.xbf
+Terrain engine/Generated Files/App.xbf
+Terrain engine/Generated Files/DirectXPage.g.h
+Terrain engine/Generated Files/DirectXPage.g.hpp
+Terrain engine/Generated Files/DirectXPage.xbf

@@ -76,9 +76,6 @@ void Terrain_engine::Terrain_engineMain::HandleKeyUpEvent(Windows::System::Virtu
 {
     switch (key)
     {
-    case Windows::System::VirtualKey::Tab:
-        m_textRenderer->HideHelpDisplay();
-        break;
     case Windows::System::VirtualKey::Control:
         m_isCtrlKeyPressed = false;
         break;
@@ -124,8 +121,8 @@ void Terrain_engine::Terrain_engineMain::HandleKeyDownEvent(Windows::System::Vir
     case Windows::System::VirtualKey::Right:
         m_sceneRenderer->getCamera()->MoveRight();
         break;
-    case Windows::System::VirtualKey::Tab:
-        m_textRenderer->ShowHelpDisplay();
+    case Windows::System::VirtualKey::Escape:
+        m_isEscKeyPressed = !m_isEscKeyPressed;
         break;
     case Windows::System::VirtualKey::Control:
         m_isCtrlKeyPressed = true;
@@ -136,7 +133,20 @@ void Terrain_engine::Terrain_engineMain::HandleKeyDownEvent(Windows::System::Vir
 void Terrain_engine::Terrain_engineMain::HandleMouseEvent(Windows::Foundation::Point point)
 {
     DirectX::XMFLOAT2 point2D{ point.X, point.Y };
+    if (m_isEscKeyPressed)
+        return;
+
     m_sceneRenderer->UpdateMousePosition(point2D);
+}
+
+void Terrain_engine::Terrain_engineMain::UpdateLightPosition(DirectX::XMFLOAT3 lightPos)
+{
+    m_sceneRenderer->UpdateLightPosition(lightPos);
+}
+
+void Terrain_engine::Terrain_engineMain::UpdateTerrainSettings(DirectX::XMFLOAT3 terrainParams)
+{
+    m_sceneRenderer->UpdateTerrainSettings(terrainParams);
 }
 
 // Updates the application state once per frame.

@@ -27,9 +27,9 @@ namespace Terrain_engine
         double SmoothedNoise(int i, int x, int y);
         double Interpolate(double a, double b, double x);
 
-        int m_NumOfOctaves = 5;
-        double m_Persistence = 0.5;
-        double m_Amplitude = 10;
+        int m_NumOfOctaves = 6;
+        double m_Persistence = 0.45;
+        double m_Amplitude = 19;
 
         int m_PrimeIndex = 0;
 

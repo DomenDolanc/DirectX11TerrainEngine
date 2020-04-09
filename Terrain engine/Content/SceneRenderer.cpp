@@ -99,6 +99,21 @@ void Terrain_engine::SceneRenderer::ToggleShadowsRendering()
 void Terrain_engine::SceneRenderer::SwitchTerrainPreset(int mode)
 {
     m_Terrain->setMode(mode);
+    m_loadingComplete = true;
+    m_Terrain->CreateVertices();
+    m_loadingComplete = true;
+}
+
+void Terrain_engine::SceneRenderer::UpdateLightPosition(DirectX::XMFLOAT3 lightPos)
+{
+    m_lightPos = lightPos;
+}
+
+void Terrain_engine::SceneRenderer::UpdateTerrainSettings(DirectX::XMFLOAT3 terrainParams)
+{
+    m_Terrain->getPerlinNoise()->setNumOfOctaves(terrainParams.x);
+    m_Terrain->getPerlinNoise()->setAmplitude(terrainParams.y);
+    m_Terrain->getPerlinNoise()->setPersistance(terrainParams.z);
     m_loadingComplete = false;
     m_Terrain->CreateVertices();
     m_loadingComplete = true;
@@ -116,6 +131,7 @@ void SceneRenderer::Render()
 
     m_drawParamsConstantBufferData.scaling = m_sceneScaling;
     m_drawParamsConstantBufferData.renderShadows = (float)m_renderShadows;
+    m_drawParamsConstantBufferData.lightPos = m_lightPos;
 
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
 

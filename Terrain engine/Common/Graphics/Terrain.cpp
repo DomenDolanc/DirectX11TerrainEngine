@@ -171,6 +171,11 @@ void Terrain::Draw()
         context->DrawIndexed((m_Rows - 1) * 6, i * (m_Rows - 1) * 6, 0);
 }
 
+std::shared_ptr<PerlinNoise> Terrain_engine::Terrain::getPerlinNoise()
+{
+    return m_PerlinNoise;
+}
+
 DirectX::XMFLOAT3 Terrain::GetColorFromHeight(double height)
 {
     height = (height + 1) / 2;

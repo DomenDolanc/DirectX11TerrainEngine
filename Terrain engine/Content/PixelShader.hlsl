@@ -3,10 +3,12 @@ SamplerState simpleSampler;
 
 cbuffer DrawParamsConstantBuffer : register(b1)
 {
+    float3 lightPos;
     float scaling;
     float renderShadows;
     float padding2;
     float padding3;
+    float padding4;
 };
 
 struct PixelShaderInput
@@ -24,8 +26,6 @@ static const float diffueIntensity = 1.0f;
 static const float attConst = 1.0f;
 static const float attLin = 0.55f;
 static const float attQuad = 0.95f;
-
-static const float3 lightPos = float3(-0.2f, 0.1f, 0.0f) * scaling;
 
 float4 main(PixelShaderInput input) : SV_TARGET
 {

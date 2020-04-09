@@ -13,10 +13,7 @@ namespace Terrain_engine
         void CreateDeviceDependentResources();
         void ReleaseDeviceDependentResources();
         void Update(DX::StepTimer const& timer);
-        void ShowHelpDisplay();
-        void HideHelpDisplay();
         void Render();
-        void DrawHelpDisplay();
 
         void BeginDraw();
         void EndDraw();
@@ -26,7 +23,6 @@ namespace Terrain_engine
         std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
 
-        bool m_DrawHelpDisplay = false;
         std::wstring                                    m_FPSText;
         DWRITE_TEXT_METRICS	                            m_textMetrics;
         Microsoft::WRL::ComPtr<ID2D1SolidColorBrush>    m_whiteBrush;

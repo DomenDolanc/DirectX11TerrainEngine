@@ -23,6 +23,9 @@ namespace Terrain_engine
         void HandleKeyDownEvent(Windows::System::VirtualKey key);
         void HandleMouseEvent(Windows::Foundation::Point point);
 
+        void UpdateLightPosition(DirectX::XMFLOAT3 lightPos);
+        void UpdateTerrainSettings(DirectX::XMFLOAT3 terrainParams);
+
 		// IDeviceNotify
 		virtual void OnDeviceLost();
 		virtual void OnDeviceRestored();
@@ -50,5 +53,6 @@ namespace Terrain_engine
 		float m_pointerLocationX;
 
         bool m_isCtrlKeyPressed;
+        bool m_isEscKeyPressed = false;
 	};
 }

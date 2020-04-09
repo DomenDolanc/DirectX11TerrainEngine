@@ -41,16 +41,6 @@ void TextRenderer::Update(DX::StepTimer const& timer)
     m_FPSText = (fps > 0) ? std::to_wstring(fps) + L" FPS" : L" - FPS";
 }
 
-void Terrain_engine::TextRenderer::ShowHelpDisplay()
-{
-    m_DrawHelpDisplay = true;
-}
-
-void Terrain_engine::TextRenderer::HideHelpDisplay()
-{
-    m_DrawHelpDisplay = false;
-}
-
 void TextRenderer::BeginDraw()
 {
     ID2D1DeviceContext* context = m_deviceResources->GetD2DDeviceContext();
@@ -105,14 +95,7 @@ void TextRenderer::Render()
     BeginDraw();
     DrawText(m_FPSText, 0, 0);
 
-    if (m_DrawHelpDisplay)
-        DrawHelpDisplay();
     EndDraw();
-}
-
-void Terrain_engine::TextRenderer::DrawHelpDisplay()
-{
-    DrawText(L"WASD or arrow keys - movement.", 0, 100);
 }
 
 void TextRenderer::CreateDeviceDependentResources()

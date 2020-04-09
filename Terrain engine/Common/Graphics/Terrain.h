@@ -34,6 +34,8 @@ namespace Terrain_engine
 
         void Draw();
 
+        std::shared_ptr<PerlinNoise> getPerlinNoise();
+
         DirectX::XMFLOAT3 GetColorFromHeight(double height);
 
     private:

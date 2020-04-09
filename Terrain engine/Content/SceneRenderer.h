@@ -27,6 +27,9 @@ namespace Terrain_engine
         void ToggleShadowsRendering();
         void SwitchTerrainPreset(int mode);
 
+        void UpdateLightPosition(DirectX::XMFLOAT3 lightPos);
+        void UpdateTerrainSettings(DirectX::XMFLOAT3 terrainParams);
+
         std::shared_ptr<Camera> getCamera();
 
     private:
@@ -47,6 +50,8 @@ namespace Terrain_engine
 
         std::shared_ptr<Camera> m_Camera;
         std::shared_ptr<Terrain> m_Terrain;
+
+        DirectX::XMFLOAT3 m_lightPos;
 
         bool m_renderTriangles = true;
         bool m_renderShadows = true;

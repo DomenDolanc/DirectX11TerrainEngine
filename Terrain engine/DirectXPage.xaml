@@ -8,20 +8,144 @@
     mc:Ignorable="d"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-  <SwapChainPanel x:Name="swapChainPanel">
-    <TextBlock Text="Hello from XAML!"
-               HorizontalAlignment="Right"
-               VerticalAlignment="Top"
-               FontSize="30" />
-  </SwapChainPanel>
+    <SwapChainPanel x:Name="swapChainPanel">
 
-  <Page.BottomAppBar>
-    <AppBar x:Name="bottomAppBar" Padding="10,0,10,0">
-      <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-        <AppBarButton AutomationProperties.Name="Sample Button"
+        <StackPanel Name="SettingsPanel"
+                        Margin="0 24 0 0"
+                        Padding="8 0 0 0"
+                        Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left"
+                        Width="300" Background="Black">
+            <StackPanel Name="LightPanel"
+                        Margin="0 24 0 0"
+                        Padding="8 0 0 0"
+                        Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left"
+                        Width="300" Background="Black" Opacity="0.7">
+                <TextBlock Text="Light position"
+                   Foreground="White"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="16" />
+                <TextBlock Name="LightPosXText"
+                   Text="Position X: 0.0"
+                   Foreground="White"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider Name="LightPosXSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="-5000.0"
+                    Maximum="5000.0"
+                    Value="0.0"
+                    ValueChanged="LightPosSlider_ValueChanged"
+                 />
+                <TextBlock Name="LightPosYText"
+                    Text="Position Y: 0.0"
+                    Foreground="White"       
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    FontSize="12" />
+                <Slider Name="LightPosYSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="-5000.0"
+                    Maximum="5000.0"
+                    Value="0.0"
+                    ValueChanged="LightPosSlider_ValueChanged"
+                />
+                <TextBlock Name="LightPosZText"
+                   Text="Position Z: 0.0"
+                   Foreground="White"        
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider Name="LightPosZSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="-5000.0"
+                    Maximum="5000.0"
+                    Value="0.0"
+                    ValueChanged="LightPosSlider_ValueChanged"
+                 />
+            </StackPanel>
+
+            <StackPanel Name="TerrainPerlinPanel"
+                        Margin="0 24 0 0"
+                        Padding="8 0 0 0"
+                        Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left"
+                        Width="300" Background="Black" Opacity="0.7">
+                <TextBlock Text="Terrain options"
+                   Foreground="White"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="16" />
+                <TextBlock
+                   Name="TerrainOctavesText"
+                   Text="Number of octaves"
+                   Foreground="White"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider
+                    Name="TerrainOctavesSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="1"
+                    Maximum="15"
+                    Value="6"
+                    ValueChanged="PerlinOptionsSlider_ValueChanged"
+                 />
+                <TextBlock 
+                    Name="TerrainAmplitudeText"
+                    Text="Amplitude"
+                    Foreground="White"       
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    FontSize="12" />
+                <Slider
+                    Name="TerrainAmplitudeSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="1.0"
+                    Maximum="30.0"
+                    Value="19"
+                    ValueChanged="PerlinOptionsSlider_ValueChanged"
+                />
+                <TextBlock 
+                   Name="TerrainPersistanceText"
+                   Text="Persistance"
+                   Foreground="White"        
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider
+                    Name="TerrainPersistanceSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="0.01"
+                    Maximum="0.99"
+                    Value="0.45"
+                    StepFrequency="0.05"
+                    ValueChanged="PerlinOptionsSlider_ValueChanged"
+                 />
+            </StackPanel>
+        </StackPanel>
+
+    </SwapChainPanel>
+
+    <Page.BottomAppBar>
+        <AppBar x:Name="bottomAppBar" Padding="10,0,10,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                <AppBarButton AutomationProperties.Name="Sample Button"
                       AutomationProperties.AutomationId="SampleAppBarButton"
                       Click="AppBarButton_Click"/>
-      </StackPanel>
-    </AppBar>
-  </Page.BottomAppBar>
+            </StackPanel>
+        </AppBar>
+    </Page.BottomAppBar>
 </Page>

@@ -86,6 +86,8 @@ DirectXPage::DirectXPage():
 	// Run task on a dedicated high priority background thread.
 	m_inputLoopWorker = ThreadPool::RunAsync(workItemHandler, WorkItemPriority::High, WorkItemOptions::TimeSliced);
 
+    InitSettingsWindow();
+
 	m_main = std::unique_ptr<Terrain_engineMain>(new Terrain_engineMain(m_deviceResources));
 	m_main->StartRenderLoop();
 }
@@ -181,6 +183,20 @@ void DirectXPage::OnPointerReleased(Object^ sender, PointerEventArgs^ e)
 	// Stop tracking pointer movement when the pointer is released.
 }
 
+void Terrain_engine::DirectXPage::InitSettingsWindow()
+{
+    if (m_settingsVisible)
+    {
+        LightPanel->Visibility = Windows::UI::Xaml::Visibility::Visible;
+        TerrainPerlinPanel->Visibility = Windows::UI::Xaml::Visibility::Visible;
+    }
+    else
+    {
+        LightPanel->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+        TerrainPerlinPanel->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+    }
+}
+
 void DirectXPage::OnCompositionScaleChanged(SwapChainPanel^ sender, Object^ args)
 {
 	critical_section::scoped_lock lock(m_main->GetCriticalSection());
@@ -203,4 +219,29 @@ void DirectXPage::OnKeyDown(Windows::UI::Core::CoreWindow^ sender, Windows::UI::
 void DirectXPage::OnKeyUp(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Core::KeyEventArgs^ args)
 {
     m_main->HandleKeyUpEvent(args->VirtualKey);
+    if (args->VirtualKey == Windows::System::VirtualKey::Escape)
+        m_settingsVisible = !m_settingsVisible;
+    InitSettingsWindow();
+}
+
+void Terrain_engine::DirectXPage::LightPosSlider_ValueChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs^ e)
+{
+    if (!this->IsLoaded)
+        return;
+
+    LightPosXText->Text = "Position X: " + LightPosXSlider->Value.ToString();
+    LightPosYText->Text = "Position Y: " + LightPosYSlider->Value.ToString();
+    LightPosZText->Text = "Position Z: " + LightPosZSlider->Value.ToString();
+    m_main->UpdateLightPosition({ (float)LightPosXSlider->Value, (float)LightPosYSlider->Value, (float)LightPosZSlider->Value });
+}
+
+void Terrain_engine::DirectXPage::PerlinOptionsSlider_ValueChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs^ e)
+{
+    if (!this->IsLoaded)
+        return;
+
+    TerrainOctavesText->Text = "Number of octaves: " + TerrainOctavesSlider->Value.ToString();
+    TerrainAmplitudeText->Text = "Amplitude: " + TerrainAmplitudeSlider->Value.ToString();
+    TerrainPersistanceText->Text = "Persistance: " + TerrainPersistanceSlider->Value.ToString();
+    m_main->UpdateTerrainSettings({ (float)TerrainOctavesSlider->Value, (float)TerrainAmplitudeSlider->Value, (float)TerrainPersistanceSlider->Value });
 }

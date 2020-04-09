@@ -11,10 +11,12 @@ namespace Terrain_engine
 
     struct DrawParamsConstantBuffer
     {
+        DirectX::XMFLOAT3 lightPos;
         float scaling;
         float renderShadows;
         float padding2;
         float padding3;
+        float padding4;
     };
 
     struct VertexPositionColor
