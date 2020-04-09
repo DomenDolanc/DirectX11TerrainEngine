@@ -37,6 +37,11 @@ Terrain::~Terrain()
 
 void Terrain::CreateVertices()
 {
+    if (!m_loadingComplete)
+        return;
+
+    m_loadingComplete = false;
+
     if (m_vertices)
         free(m_vertices);
     m_vertexBuffer.Reset();
@@ -91,6 +96,7 @@ void Terrain::CreateVertices()
     vertexBufferData.SysMemSlicePitch = 0;
     CD3D11_BUFFER_DESC vertexBufferDesc(arraySize, D3D11_BIND_VERTEX_BUFFER);
     DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_vertexBuffer));
+    m_loadingComplete = true;
 }
 
 void Terrain::CreateIndices()

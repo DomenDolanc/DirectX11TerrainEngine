@@ -49,6 +49,8 @@ namespace Terrain_engine
         uint32_t* m_indices;
         size_t	m_verticesCount;
         size_t	m_indexCount;
+        
+        bool m_loadingComplete = true;
 
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertexBuffer;
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_indexBuffer;
