@@ -17,6 +17,7 @@ SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceR
     m_Camera = std::make_shared<Camera>();
     m_Terrain = std::make_shared<Terrain>(m_deviceResources);
     m_Terrain->setScaling(m_sceneScaling);
+    m_lightPos = { -m_sceneScaling / 4.0f, m_sceneScaling / 2.0f, 0.0f };
 
     CreateDeviceDependentResources();
     CreateWindowSizeDependentResources();
