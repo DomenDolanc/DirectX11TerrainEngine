@@ -9,7 +9,7 @@ using namespace DirectX;
 using namespace Windows::Foundation;
 
 
-const float Camera::INITIAL_TRAVEL_SPEED = 0.4f;
+const float Camera::INITIAL_TRAVEL_SPEED = 1.0f;
 
 void Camera::MoveForward()
 {
@@ -47,7 +47,7 @@ void Terrain_engine::Camera::Translate(DirectX::XMFLOAT3 translation)
 
 void Camera::UpdateSpeed()
 {
-    const float MAX_TRAVEL_SPEED = 3.0f;
+    const float MAX_TRAVEL_SPEED = 5.0f;
     if (m_TravelSpeed > MAX_TRAVEL_SPEED)
         return;
 
