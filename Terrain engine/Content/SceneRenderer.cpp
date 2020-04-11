@@ -152,18 +152,18 @@ void SceneRenderer::Render()
 
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
 
-    if (m_usesTessellation)
+    //if (m_usesTessellation)
     {
-        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
         context->HSSetShader(m_hullShader.Get(), nullptr, 0);
         context->DSSetShader(m_domainShader.Get(), nullptr, 0);
     }
-    else
-    {
-        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-        context->HSSetShader(nullptr, nullptr, 0);
-        context->DSSetShader(nullptr, nullptr, 0);
-    }
+    //else
+    //{
+    //    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    //    context->HSSetShader(nullptr, nullptr, 0);
+    //    context->DSSetShader(nullptr, nullptr, 0);
+    //}
 
     context->IASetInputLayout(m_inputLayout.Get());
     context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
@@ -188,6 +188,7 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.scaling = m_sceneScaling;
     m_drawParamsConstantBufferData.renderShadows = 0.0f;
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
+    m_drawParamsConstantBufferData.eyePos = m_Camera->GetEye();
     m_drawParamsConstantBufferData.usesTessellation = 0.0f;
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);

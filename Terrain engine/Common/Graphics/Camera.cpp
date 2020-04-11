@@ -85,8 +85,14 @@ DirectX::XMMATRIX Terrain_engine::Camera::GetMatrix()
     const auto lookVector = XMVector3Transform(forwardBaseVector, XMMatrixRotationRollPitchYaw(m_Pitch, m_Yaw, 0.0));
     const auto camPositon = m_Eye + XMLoadFloat3(&m_position);
     const auto camTarget = camPositon + lookVector;
-
+    
+    XMStoreFloat3(&m_CurrentPositon, camPositon);
     return XMMatrixLookAtRH(camPositon, camTarget, m_Up);
+}
+
+DirectX::XMFLOAT3 Terrain_engine::Camera::GetEye()
+{
+    return m_CurrentPositon;
 }
 
 void StopCameraMovement()

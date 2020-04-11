@@ -100,20 +100,26 @@ void Terrain::CreateVertices()
 void Terrain::CreateIndices()
 {
     m_indices.clear();
-    m_indexCount = (m_Columns - 1) * (m_Rows - 1) * 6;
     for (size_t i = 0; i < m_Columns - 1; i++)
     {
         for (size_t j = 0; j < m_Rows - 1; j++)
         {
+            //m_indices.emplace_back(i * m_Rows + j);             // 0
+            //m_indices.emplace_back((i + 1) * m_Rows + j);       // 2
+            //m_indices.emplace_back(i * m_Rows + j + 1);         // 1
+            //m_indices.emplace_back((i + 1) * m_Rows + j);       // 2
+            //m_indices.emplace_back((i + 1) * m_Rows + j + 1);   // 3
+            //m_indices.emplace_back(i * m_Rows + j + 1);         // 1
+
             m_indices.emplace_back(i * m_Rows + j);             // 0
             m_indices.emplace_back((i + 1) * m_Rows + j);       // 2
             m_indices.emplace_back(i * m_Rows + j + 1);         // 1
-            m_indices.emplace_back((i + 1) * m_Rows + j);       // 2
             m_indices.emplace_back((i + 1) * m_Rows + j + 1);   // 3
-            m_indices.emplace_back(i * m_Rows + j + 1);         // 1
         }
         m_indices.emplace_back(-1);
     }
+
+    m_indexCount = m_indices.size();
 
     D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
     indexBufferData.pSysMem = &m_indices.front();

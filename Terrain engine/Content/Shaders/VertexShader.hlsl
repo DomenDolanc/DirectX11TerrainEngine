@@ -9,9 +9,9 @@ cbuffer DrawParamsConstantBuffer : register(b1)
 {
     float3 lightPos;
     float scaling;
+    float3 eyePos;
     float renderShadows;
-    float padding3;
-    float padding4;
+    float3 padding4;
     float usesTessallation;
     float4 tesselationParams;
 };

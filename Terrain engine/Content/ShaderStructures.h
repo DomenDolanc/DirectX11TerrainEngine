@@ -13,9 +13,9 @@ namespace Terrain_engine
     {
         DirectX::XMFLOAT3 lightPos;
         float scaling;
+        DirectX::XMFLOAT3 eyePos;
         float renderShadows;
-        float padding3;
-        float padding4;
+        DirectX::XMFLOAT3 padding;
         float usesTessellation;
         DirectX::XMFLOAT4 tesselationParams;
     };
