@@ -342,11 +342,8 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 			dxgiDevice->SetMaximumFrameLatency(1)
 			);
 
-        D3D11_RASTERIZER_DESC rasterizerDesc = { 0 };
-        rasterizerDesc.FillMode = D3D11_FILL_SOLID;
-        rasterizerDesc.CullMode = D3D11_CULL_BACK;
-
-        DX::ThrowIfFailed(m_d3dDevice->CreateRasterizerState(&rasterizerDesc, &m_rasterizerState));
+		bool drawSolid = true;
+		ChangeDrawMode(drawSolid);
 	}
 
 	// Set the proper orientation for the swap chain, and generate 2D and
@@ -745,6 +742,20 @@ void DX::DeviceResources::Present()
 	{
 		DX::ThrowIfFailed(hr);
 	}
+}
+
+void DX::DeviceResources::ChangeDrawMode(bool drawSolid)
+{
+	m_rasterizerState.Reset();
+
+	D3D11_RASTERIZER_DESC rasterizerDesc = { 0 };
+	if (drawSolid)
+		rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	else
+		rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
+	rasterizerDesc.CullMode = D3D11_CULL_BACK;
+
+	DX::ThrowIfFailed(m_d3dDevice->CreateRasterizerState(&rasterizerDesc, &m_rasterizerState));
 }
 
 // This method determines the rotation between the display device's native orientation and the
