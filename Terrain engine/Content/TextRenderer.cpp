@@ -92,8 +92,10 @@ void TextRenderer::DrawText(std::wstring text, int x, int y)
 
 void TextRenderer::Render()
 {
+    Windows::Foundation::Size logicalSize = m_deviceResources->GetLogicalSize();
+
     BeginDraw();
-    DrawText(m_FPSText, 0, 0);
+    DrawText(m_FPSText, logicalSize.Width - 100, 0);
 
     EndDraw();
 }

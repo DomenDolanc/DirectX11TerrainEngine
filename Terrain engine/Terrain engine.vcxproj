@@ -281,6 +281,7 @@
     <ClInclude Include="Common\DirectXMesh.h" />
     <ClInclude Include="Common\DirectXMeshP.h" />
     <ClInclude Include="Common\Graphics\Camera.h" />
+    <ClInclude Include="Common\Graphics\Sphere.h" />
     <ClInclude Include="Common\Graphics\Terrain.h" />
     <ClInclude Include="Common\PerlinNoise.h" />
     <ClInclude Include="Common\scoped.h" />
@@ -306,6 +307,7 @@
     <ClCompile Include="Common\DirectXMeshUtil.cpp" />
     <ClCompile Include="Common\DirectXMeshValidate.cpp" />
     <ClCompile Include="Common\Graphics\Camera.cpp" />
+    <ClCompile Include="Common\Graphics\Sphere.cpp" />
     <ClCompile Include="Common\Graphics\Terrain.cpp" />
     <ClCompile Include="Common\PerlinNoise.cpp" />
     <ClCompile Include="Terrain_engineMain.cpp" />

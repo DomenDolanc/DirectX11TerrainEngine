@@ -5,6 +5,7 @@
 #include "..\Common\StepTimer.h"
 #include "..\Common\DirectXHelper.h"
 #include "..\Common\Graphics\Terrain.h"
+#include "..\Common\Graphics\Sphere.h"
 #include "..\Common\Graphics\Camera.h"
 #include "..\Common\DirectXMesh.h"
 
@@ -50,6 +51,7 @@ namespace Terrain_engine
 
         std::shared_ptr<Camera> m_Camera;
         std::shared_ptr<Terrain> m_Terrain;
+        std::shared_ptr<Sphere> m_Light;
 
         DirectX::XMFLOAT3 m_lightPos;
 

@@ -42,7 +42,7 @@ void Terrain_engine::Camera::Translate(DirectX::XMFLOAT3 translation)
         XMMatrixRotationRollPitchYaw(m_Pitch, m_Yaw, 0.0f) * XMMatrixScaling(m_TravelSpeed, m_TravelSpeed, m_TravelSpeed)
     ));
 
-    m_Pos = { m_Pos.x + translation.x, m_Pos.y + translation.y, m_Pos.z + translation.z };
+    m_position = { m_position.x + translation.x, m_position.y + translation.y, m_position.z + translation.z };
 }
 
 void Camera::UpdateSpeed()
@@ -83,7 +83,7 @@ DirectX::XMMATRIX Terrain_engine::Camera::GetMatrix()
 {
     const XMVECTOR forwardBaseVector = XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
     const auto lookVector = XMVector3Transform(forwardBaseVector, XMMatrixRotationRollPitchYaw(m_Pitch, m_Yaw, 0.0));
-    const auto camPositon = m_Eye + XMLoadFloat3(&m_Pos);
+    const auto camPositon = m_Eye + XMLoadFloat3(&m_position);
     const auto camTarget = camPositon + lookVector;
 
     return XMMatrixLookAtRH(camPositon, camTarget, m_Up);

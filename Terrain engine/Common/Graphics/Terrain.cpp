@@ -12,8 +12,6 @@ Terrain::Terrain(std::shared_ptr<DX::DeviceResources> deviceResources)
 {
     m_deviceResources = deviceResources;
     m_PerlinNoise = std::make_shared<PerlinNoise>();
-    m_vertices = nullptr;
-    m_indices = nullptr;
     m_scaling = 100;
 }
 
@@ -21,8 +19,6 @@ Terrain::Terrain(std::shared_ptr<DX::DeviceResources> deviceResources, int colum
 {
     m_deviceResources = deviceResources;
     m_PerlinNoise = std::make_shared<PerlinNoise>();
-    m_vertices = nullptr;
-    m_indices = nullptr;
 
     m_scaling = 100;
     m_Columns = columns;
@@ -31,8 +27,8 @@ Terrain::Terrain(std::shared_ptr<DX::DeviceResources> deviceResources, int colum
 
 Terrain::~Terrain()
 {
-    free(m_vertices);
-    free(m_indices);
+    m_vertices.clear();
+    m_indices.clear();
 }
 
 void Terrain::CreateVertices()
@@ -41,16 +37,12 @@ void Terrain::CreateVertices()
         return;
 
     m_loadingComplete = false;
-
-    if (m_vertices)
-        free(m_vertices);
+    m_vertices.clear();
     m_vertexBuffer.Reset();
 
     XMFLOAT3 gridColor{ 1.0f, 1.0f, 1.0f };
 
     m_verticesCount = m_Columns * m_Rows;
-    size_t arraySize = m_verticesCount * sizeof(VertexPositionColor);
-    m_vertices = (VertexPositionColor*)malloc(arraySize);
     std::unique_ptr<XMFLOAT3[]> pos(new XMFLOAT3[m_Columns * m_Rows]);
 
     float halfScaling = m_scaling / 2.0f;
@@ -74,57 +66,59 @@ void Terrain::CreateVertices()
             double colorValue = min(max(height + 0.4, 0), 1);
             XMFLOAT3 heightColor = GetColorFromHeight(height);
             height *= m_scaling / 20;
-            m_vertices[i * m_Rows + j] = { XMFLOAT3(tempX, height, tempZ), heightColor, heightColor };
+            VertexPositionColor vertex;
+            vertex.pos = XMFLOAT3(tempX, height, tempZ);
+            vertex.color = heightColor;
+            vertex.normal = heightColor;
+            m_vertices.emplace_back(vertex);
             pos.get()[i * m_Rows + j] = m_vertices[i * m_Rows + j].pos;
             tempZ += stepZ;
         }
         tempX += stepX;
     }
 
+    m_verticesCount = m_vertices.size();
+
     size_t nFaces = m_indexCount / 3;
     size_t nVerts = m_Columns * m_Rows;
 
     std::unique_ptr<XMFLOAT3[]> normals(new XMFLOAT3[nVerts]);
-    ComputeNormals(m_indices, nFaces, pos.get(), nVerts, CNORM_WIND_CW, normals.get());
+    ComputeNormals(&m_indices.front(), nFaces, pos.get(), nVerts, CNORM_WIND_CW, normals.get());
 
     for (size_t j = 0; j < nVerts; j++)
         m_vertices[j].normal = normals.get()[j];
 
     D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
-    vertexBufferData.pSysMem = m_vertices;
+    vertexBufferData.pSysMem = &m_vertices.front();
     vertexBufferData.SysMemPitch = 0;
     vertexBufferData.SysMemSlicePitch = 0;
-    CD3D11_BUFFER_DESC vertexBufferDesc(arraySize, D3D11_BIND_VERTEX_BUFFER);
+    CD3D11_BUFFER_DESC vertexBufferDesc(m_verticesCount * sizeof(VertexPositionColor), D3D11_BIND_VERTEX_BUFFER);
     DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_vertexBuffer));
     m_loadingComplete = true;
 }
 
 void Terrain::CreateIndices()
 {
-    free(m_indices);
+    m_indices.clear();
     m_indexCount = (m_Columns - 1) * (m_Rows - 1) * 6;
-
-    size_t arraySize = m_indexCount * sizeof(uint32_t);
-    m_indices = (unsigned int*)malloc(arraySize);
-    int index = 0;
     for (size_t i = 0; i < m_Columns - 1; i++)
     {
         for (size_t j = 0; j < m_Rows - 1; j++)
         {
-            m_indices[index++] = i * m_Rows + j;             // 0
-            m_indices[index++] = (i + 1) * m_Rows + j + 1;   // 3
-            m_indices[index++] = i * m_Rows + j + 1;         // 1
-            m_indices[index++] = i * m_Rows + j;             // 0
-            m_indices[index++] = (i + 1) * m_Rows + j;       // 2
-            m_indices[index++] = (i + 1) * m_Rows + j + 1;   // 3
+            m_indices.emplace_back(i * m_Rows + j);             // 0
+            m_indices.emplace_back((i + 1) * m_Rows + j + 1);   // 3
+            m_indices.emplace_back(i * m_Rows + j + 1);         // 1
+            m_indices.emplace_back(i * m_Rows + j);             // 0
+            m_indices.emplace_back((i + 1) * m_Rows + j);       // 2
+            m_indices.emplace_back((i + 1) * m_Rows + j + 1);   // 3
         }
     }
 
     D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-    indexBufferData.pSysMem = m_indices;
+    indexBufferData.pSysMem = &m_indices.front();
     indexBufferData.SysMemPitch = 0;
     indexBufferData.SysMemSlicePitch = 0;
-    CD3D11_BUFFER_DESC indexBufferDesc(arraySize, D3D11_BIND_INDEX_BUFFER);
+    CD3D11_BUFFER_DESC indexBufferDesc(m_indexCount * sizeof(uint32_t), D3D11_BIND_INDEX_BUFFER);
     DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&indexBufferDesc, &indexBufferData, &m_indexBuffer));
 }
 
@@ -136,16 +130,6 @@ size_t Terrain::getVerticesCount()
 size_t Terrain::getIndicesCount()
 {
     return m_indexCount;
-}
-
-VertexPositionColor* Terrain::getVertices()
-{
-    return m_vertices;
-}
-
-uint32* Terrain::getIndices()
-{
-    return m_indices;
 }
 
 void Terrain::setScaling(double scaling)

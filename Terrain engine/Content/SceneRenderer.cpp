@@ -17,7 +17,10 @@ SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceR
     m_Camera = std::make_shared<Camera>();
     m_Terrain = std::make_shared<Terrain>(m_deviceResources);
     m_Terrain->setScaling(m_sceneScaling);
+
     m_lightPos = { -m_sceneScaling / 4.0f, m_sceneScaling / 2.0f, 0.0f };
+    m_Light = std::make_shared<Sphere>(m_deviceResources, m_lightPos, 250.0f);
+    m_Light->setScaling(10);
 
     CreateDeviceDependentResources();
     CreateWindowSizeDependentResources();
@@ -154,6 +157,18 @@ void SceneRenderer::Render()
     context->PSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     context->RSSetState(rasterizer);
     m_Terrain->Draw();
+
+
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixTranslation(m_lightPos.x, m_lightPos.y, m_lightPos.z)));
+    context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
+    context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+
+    m_drawParamsConstantBufferData.scaling = m_sceneScaling;
+    m_drawParamsConstantBufferData.renderShadows = 0.0f;
+    m_drawParamsConstantBufferData.lightPos = m_lightPos;
+    context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
+    context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+    m_Light->Draw();
 }
 
 void Terrain_engine::SceneRenderer::RenderFromCameraView()
@@ -164,6 +179,7 @@ void Terrain_engine::SceneRenderer::RenderFromCameraView()
     }
     auto context = m_deviceResources->GetD3DDeviceContext();
 
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
     XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
@@ -206,12 +222,17 @@ void SceneRenderer::CreateDeviceDependentResources()
 
     auto createTerrainTask = (createPSTask && createVSTask).then([this]()
         {
-
             m_Terrain->CreateIndices();
             m_Terrain->CreateVertices();
         });
 
-    createTerrainTask.then([this]() {
+    auto createLightTask = (createPSTask && createVSTask).then([this]()
+        {
+            m_Light->CreateIndices();
+            m_Light->CreateVertices();
+        });
+
+    auto meshesTask = (createTerrainTask && createLightTask).then([this]() {
         m_loadingComplete = true;
         });
 }
@@ -226,4 +247,5 @@ void SceneRenderer::ReleaseDeviceDependentResources()
     m_constantBuffer.Reset();
     m_drawParamsConstantBuffer.Reset();
     m_Terrain->ResetBuffers();
+    m_Light->ResetBuffers();
 }

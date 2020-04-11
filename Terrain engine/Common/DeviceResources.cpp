@@ -344,7 +344,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 
         D3D11_RASTERIZER_DESC rasterizerDesc = { 0 };
         rasterizerDesc.FillMode = D3D11_FILL_SOLID;
-        rasterizerDesc.CullMode = D3D11_CULL_FRONT;
+        rasterizerDesc.CullMode = D3D11_CULL_BACK;
 
         DX::ThrowIfFailed(m_d3dDevice->CreateRasterizerState(&rasterizerDesc, &m_rasterizerState));
 	}
