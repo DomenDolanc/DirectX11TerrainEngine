@@ -93,6 +93,7 @@ void Terrain_engine::SceneRenderer::UpdateMousePosition(DirectX::XMFLOAT2 mouseP
 void Terrain_engine::SceneRenderer::TogglePrimitiveRendering()
 {
     m_renderTriangles = !m_renderTriangles;
+    m_deviceResources->ChangeDrawMode(m_renderTriangles);
 }
 
 void Terrain_engine::SceneRenderer::ToggleShadowsRendering()
@@ -136,28 +137,29 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.scaling = m_sceneScaling;
     m_drawParamsConstantBufferData.renderShadows = (float)m_renderShadows;
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
+    m_drawParamsConstantBufferData.drawTerrain = 1.0f;
 
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
 
-    if (m_renderTriangles)
-        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    else
-        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
 
-    //if (m_renderShadows)
-    //    context->GSSetShader(m_geometryShader.Get(), nullptr, 0);
-    //else
-    //    context->GSSetShader(nullptr, nullptr, 0);
+    context->HSSetShader(m_hullShader.Get(), nullptr, 0);
+    context->DSSetShader(m_domainShader.Get(), nullptr, 0);
 
     context->IASetInputLayout(m_inputLayout.Get());
     context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+    context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
     context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
     context->PSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     context->RSSetState(rasterizer);
     m_Terrain->Draw();
 
+
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    context->HSSetShader(nullptr, nullptr, 0);
+    context->DSSetShader(nullptr, nullptr, 0);
 
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixTranslation(m_lightPos.x, m_lightPos.y, m_lightPos.z)));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
@@ -166,6 +168,7 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.scaling = m_sceneScaling;
     m_drawParamsConstantBufferData.renderShadows = 0.0f;
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
+    m_drawParamsConstantBufferData.drawTerrain = 0.0f;
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     m_Light->Draw();
@@ -192,6 +195,8 @@ void SceneRenderer::CreateDeviceDependentResources()
     auto loadVSTask = DX::ReadDataAsync(L"VertexShader.cso");
     auto loadPSTask = DX::ReadDataAsync(L"PixelShader.cso");
     auto loadGSTask = DX::ReadDataAsync(L"GeometryShader.cso");
+    auto loadHSTask = DX::ReadDataAsync(L"HullShader.cso");
+    auto loadDSTask = DX::ReadDataAsync(L"DomainShader.cso");
 
     auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) {
         DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateVertexShader(&fileData[0], fileData.size(), nullptr, &m_vertexShader));
@@ -218,6 +223,14 @@ void SceneRenderer::CreateDeviceDependentResources()
 
     auto createGSTask = loadGSTask.then([this](const std::vector<byte>& fileData) {
         DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateGeometryShader(&fileData[0], fileData.size(), nullptr, &m_geometryShader));
+        });
+
+    auto createHSTask = loadHSTask.then([this](const std::vector<byte>& fileData) {
+        DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateHullShader(&fileData[0], fileData.size(), nullptr, &m_hullShader));
+        });
+
+    auto createDSTask = loadDSTask.then([this](const std::vector<byte>& fileData) {
+        DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateDomainShader(&fileData[0], fileData.size(), nullptr, &m_domainShader));
         });
 
     auto createTerrainTask = (createPSTask && createVSTask).then([this]()

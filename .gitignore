@@ -39,3 +39,7 @@ Terrain engine/Generated Files/App.xbf
 Terrain engine/Generated Files/DirectXPage.g.h
 Terrain engine/Generated Files/DirectXPage.g.hpp
 Terrain engine/Generated Files/DirectXPage.xbf
+Debug/Terrain engine/resources.pri
+Debug/Terrain engine/Terrain engine.exp
+Debug/Terrain engine/Terrain engine.lib
+Debug/Terrain engine/AppX/resources.pri

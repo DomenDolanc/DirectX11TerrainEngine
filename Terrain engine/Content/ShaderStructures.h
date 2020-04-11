@@ -14,7 +14,7 @@ namespace Terrain_engine
         DirectX::XMFLOAT3 lightPos;
         float scaling;
         float renderShadows;
-        float padding2;
+        float drawTerrain;
         float padding3;
         float padding4;
     };

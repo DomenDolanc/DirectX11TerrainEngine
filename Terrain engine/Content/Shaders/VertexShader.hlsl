@@ -10,7 +10,7 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float3 lightPos;
     float scaling;
     float renderShadows;
-    float padding2;
+    float drawTerrain;
     float padding3;
     float padding4;
 };
@@ -35,13 +35,20 @@ GeometryShaderInput main(VertexShaderInput input)
     GeometryShaderInput output;
     float4 pos = float4(input.pos, 1.0f);
     output.normal = input.normal;
-    output.worldPos = mul(pos, model);
-
-    pos = mul(pos, model);
-    pos = mul(pos, view);
-    pos = mul(pos, projection);
-    output.pos = pos;
     output.color = input.color;
+    
+    if (drawTerrain == 1.0f)
+    {
+        output.pos = pos;
+        output.worldPos = pos;
+    } else
+    {
+        output.worldPos = mul(pos, model);
+        pos = mul(pos, model);  
+        pos = mul(pos, view);
+        pos = mul(pos, projection);
+        output.pos = pos;
+    }
 
     return output;
 }

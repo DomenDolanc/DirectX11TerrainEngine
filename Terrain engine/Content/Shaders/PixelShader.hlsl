@@ -6,7 +6,7 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float3 lightPos;
     float scaling;
     float renderShadows;
-    float padding2;
+    float drawTerrain;
     float padding3;
     float padding4;
 };
@@ -29,6 +29,7 @@ static const float attQuad = 0.95f;
 
 float4 main(PixelShaderInput input) : SV_TARGET
 {
+    //return float4(1, 1, 1, 1);
     float4 color = float4(input.color, 1.0);
     if (renderShadows == 0.0)
         return color;
