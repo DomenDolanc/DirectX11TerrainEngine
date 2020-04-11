@@ -25,6 +25,8 @@ namespace Terrain_engine
 
         void UpdateLightPosition(DirectX::XMFLOAT3 lightPos);
         void UpdateTerrainSettings(DirectX::XMFLOAT3 terrainParams);
+		void UseTessellation(bool useTessellation);
+		void UpdateTesselationParams(DirectX::XMFLOAT4 tessellationParams);
 
 		// IDeviceNotify
 		virtual void OnDeviceLost();

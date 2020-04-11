@@ -6,9 +6,10 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float3 lightPos;
     float scaling;
     float renderShadows;
-    float drawTerrain;
     float padding3;
     float padding4;
+    float usesTessallation;
+    float4 tesselationParams;
 };
 
 struct PixelShaderInput

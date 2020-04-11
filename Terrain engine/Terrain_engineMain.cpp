@@ -149,6 +149,16 @@ void Terrain_engine::Terrain_engineMain::UpdateTerrainSettings(DirectX::XMFLOAT3
     m_sceneRenderer->UpdateTerrainSettings(terrainParams);
 }
 
+void Terrain_engine::Terrain_engineMain::UseTessellation(bool useTessellation)
+{
+    m_sceneRenderer->UseTessellation(useTessellation);
+}
+
+void Terrain_engine::Terrain_engineMain::UpdateTesselationParams(DirectX::XMFLOAT4 tessellationParams)
+{
+    m_sceneRenderer->UpdateTesselationParams(tessellationParams);
+}
+
 // Updates the application state once per frame.
 void Terrain_engineMain::Update() 
 {

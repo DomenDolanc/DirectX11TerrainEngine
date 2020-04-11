@@ -14,9 +14,10 @@ namespace Terrain_engine
         DirectX::XMFLOAT3 lightPos;
         float scaling;
         float renderShadows;
-        float drawTerrain;
         float padding3;
         float padding4;
+        float usesTessellation;
+        DirectX::XMFLOAT4 tesselationParams;
     };
 
     struct VertexPositionColor

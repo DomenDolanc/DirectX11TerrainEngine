@@ -21,6 +21,7 @@ SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceR
     m_lightPos = { -m_sceneScaling / 4.0f, m_sceneScaling / 2.0f, 0.0f };
     m_Light = std::make_shared<Sphere>(m_deviceResources, m_lightPos, 250.0f);
     m_Light->setScaling(10);
+    m_drawParamsConstantBufferData.tesselationParams = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     CreateDeviceDependentResources();
     CreateWindowSizeDependentResources();
@@ -124,6 +125,16 @@ void Terrain_engine::SceneRenderer::UpdateTerrainSettings(DirectX::XMFLOAT3 terr
     m_loadingComplete = true;
 }
 
+void Terrain_engine::SceneRenderer::UseTessellation(bool useTessellation)
+{
+    m_usesTessellation = useTessellation;
+}
+
+void Terrain_engine::SceneRenderer::UpdateTesselationParams(DirectX::XMFLOAT4 tessellationParams)
+{
+    m_drawParamsConstantBufferData.tesselationParams = tessellationParams;
+}
+
 std::shared_ptr<Camera> Terrain_engine::SceneRenderer::getCamera()
 {
     return m_Camera;
@@ -137,19 +148,28 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.scaling = m_sceneScaling;
     m_drawParamsConstantBufferData.renderShadows = (float)m_renderShadows;
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
-    m_drawParamsConstantBufferData.drawTerrain = 1.0f;
+    m_drawParamsConstantBufferData.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
 
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
 
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
-
-    context->HSSetShader(m_hullShader.Get(), nullptr, 0);
-    context->DSSetShader(m_domainShader.Get(), nullptr, 0);
+    if (m_usesTessellation)
+    {
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+        context->HSSetShader(m_hullShader.Get(), nullptr, 0);
+        context->DSSetShader(m_domainShader.Get(), nullptr, 0);
+    }
+    else
+    {
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+        context->HSSetShader(nullptr, nullptr, 0);
+        context->DSSetShader(nullptr, nullptr, 0);
+    }
 
     context->IASetInputLayout(m_inputLayout.Get());
     context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+    context->HSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
 
     context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
     context->PSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
@@ -168,7 +188,7 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.scaling = m_sceneScaling;
     m_drawParamsConstantBufferData.renderShadows = 0.0f;
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
-    m_drawParamsConstantBufferData.drawTerrain = 0.0f;
+    m_drawParamsConstantBufferData.usesTessellation = 0.0f;
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     m_Light->Draw();

@@ -25,13 +25,13 @@
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Top"
                    FontSize="16" />
-                <TextBlock x:ConnectionId='12' Name="LightPosXText"
+                <TextBlock x:ConnectionId='21' Name="LightPosXText"
                    Text="Position X: 0.0"
                    Foreground="White"
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Top"
                    FontSize="12" />
-                <Slider x:ConnectionId='13' Name="LightPosXSlider"
+                <Slider x:ConnectionId='22' Name="LightPosXSlider"
                     HorizontalAlignment="Stretch" VerticalAlignment="Top" 
                     Margin="12,0,12,0" 
                     Foreground="White"
@@ -40,13 +40,13 @@
                     Value="0.0"
                                                               
                  />
-                <TextBlock x:ConnectionId='14' Name="LightPosYText"
+                <TextBlock x:ConnectionId='23' Name="LightPosYText"
                     Text="Position Y: 0.0"
                     Foreground="White"       
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Top"
                     FontSize="12" />
-                <Slider x:ConnectionId='15' Name="LightPosYSlider"
+                <Slider x:ConnectionId='24' Name="LightPosYSlider"
                     HorizontalAlignment="Stretch" VerticalAlignment="Top" 
                     Margin="12,0,12,0" 
                     Foreground="White"
@@ -55,13 +55,13 @@
                     Value="0.0"
                                                               
                 />
-                <TextBlock x:ConnectionId='16' Name="LightPosZText"
+                <TextBlock x:ConnectionId='25' Name="LightPosZText"
                    Text="Position Z: 0.0"
                    Foreground="White"        
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Top"
                    FontSize="12" />
-                <Slider x:ConnectionId='17' Name="LightPosZSlider"
+                <Slider x:ConnectionId='26' Name="LightPosZSlider"
                     HorizontalAlignment="Stretch" VerticalAlignment="Top" 
                     Margin="12,0,12,0" 
                     Foreground="White"
@@ -134,15 +134,109 @@
                     StepFrequency="0.05"
                                                                    
                  />
+
+
+                <TextBlock Text="Tessellation options"
+                   Foreground="White"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="14" />
+                <StackPanel
+                    Orientation="Horizontal"
+                    VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                    <TextBlock 
+                        Text="Use tessellation" 
+                        Foreground="White" 
+                        FontSize="12"
+                        Margin="0, 6, 0 0"
+                    />
+                    <CheckBox x:ConnectionId='20' 
+                        Name = "UseTessellationCheckBox"  
+                                                                 
+                                                                   
+                        Margin = "12, 0, 12, 0"/>
+                </StackPanel>
+
+                <TextBlock x:ConnectionId='12' 
+                   Name="TessellationFirstEdgeText"
+                   Text="First edge factor"
+                   Foreground="White"        
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider x:ConnectionId='13'
+                    Name="TessellationFirstEdgeSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="1"
+                    Maximum="15"
+                    Value="1"
+                                                                       
+                 />
+
+                <TextBlock x:ConnectionId='14' 
+                   Name="TessellationSecondEdgeText"
+                   Text="Second edge factor"
+                   Foreground="White"        
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider x:ConnectionId='15'
+                    Name="TessellationSecondEdgeSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="1"
+                    Maximum="15"
+                    Value="1"
+                                                                       
+                 />
+
+                <TextBlock x:ConnectionId='16' 
+                   Name="TessellationThirdEdgeText"
+                   Text="Third edge factor"
+                   Foreground="White"        
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider x:ConnectionId='17'
+                    Name="TessellationThirdEdgeSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="1"
+                    Maximum="15"
+                    Value="1"
+                                                                       
+                 />
+
+                <TextBlock x:ConnectionId='18' 
+                   Name="TessellationInsideText"
+                   Text="Inside factor"
+                   Foreground="White"        
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider x:ConnectionId='19'
+                    Name="TessellationInsideSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="1"
+                    Maximum="15"
+                    Value="1"
+                                                                       
+                 />
             </StackPanel>
         </StackPanel>
 
     </SwapChainPanel>
 
     <Page.BottomAppBar>
-        <AppBar x:ConnectionId='18' x:Name="bottomAppBar" Padding="10,0,10,0">
+        <AppBar x:ConnectionId='27' x:Name="bottomAppBar" Padding="10,0,10,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <AppBarButton x:ConnectionId='19' AutomationProperties.Name="Sample Button"
+                <AppBarButton x:ConnectionId='28' AutomationProperties.Name="Sample Button"
                       AutomationProperties.AutomationId="SampleAppBarButton"
                                                 />
             </StackPanel>

@@ -134,6 +134,100 @@
                     StepFrequency="0.05"
                     ValueChanged="PerlinOptionsSlider_ValueChanged"
                  />
+
+
+                <TextBlock Text="Tessellation options"
+                   Foreground="White"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="14" />
+                <StackPanel
+                    Orientation="Horizontal"
+                    VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                    <TextBlock 
+                        Text="Use tessellation" 
+                        Foreground="White" 
+                        FontSize="12"
+                        Margin="0, 6, 0 0"
+                    />
+                    <CheckBox 
+                        Name = "UseTessellationCheckBox"  
+                        Checked="UseTessellationCheckBox_Checked"
+                        Unchecked="UseTessellationCheckBox_Checked"
+                        Margin = "12, 0, 12, 0"/>
+                </StackPanel>
+
+                <TextBlock 
+                   Name="TessellationFirstEdgeText"
+                   Text="First edge factor"
+                   Foreground="White"        
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider
+                    Name="TessellationFirstEdgeSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="1"
+                    Maximum="15"
+                    Value="1"
+                    ValueChanged="TessellationEdgesSlider_ValueChanged"
+                 />
+
+                <TextBlock 
+                   Name="TessellationSecondEdgeText"
+                   Text="Second edge factor"
+                   Foreground="White"        
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider
+                    Name="TessellationSecondEdgeSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="1"
+                    Maximum="15"
+                    Value="1"
+                    ValueChanged="TessellationEdgesSlider_ValueChanged"
+                 />
+
+                <TextBlock 
+                   Name="TessellationThirdEdgeText"
+                   Text="Third edge factor"
+                   Foreground="White"        
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider
+                    Name="TessellationThirdEdgeSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="1"
+                    Maximum="15"
+                    Value="1"
+                    ValueChanged="TessellationEdgesSlider_ValueChanged"
+                 />
+
+                <TextBlock 
+                   Name="TessellationInsideText"
+                   Text="Inside factor"
+                   Foreground="White"        
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider
+                    Name="TessellationInsideSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="1"
+                    Maximum="15"
+                    Value="1"
+                    ValueChanged="TessellationEdgesSlider_ValueChanged"
+                 />
             </StackPanel>
         </StackPanel>
 

@@ -1,3 +1,14 @@
+cbuffer DrawParamsConstantBuffer : register(b1)
+{
+    float3 lightPos;
+    float scaling;
+    float renderShadows;
+    float padding3;
+    float padding4;
+    float usesTessallation;
+    float4 tesselationParams;
+};
+
 // Input control point
 struct VS_CONTROL_POINT_OUTPUT
 {
@@ -34,10 +45,10 @@ HS_CONSTANT_DATA_OUTPUT CalcHSPatchConstants(
 	HS_CONSTANT_DATA_OUTPUT Output;
 
 	// Insert code to compute Output here
-    Output.EdgeTessFactor[0] = 1;
-	Output.EdgeTessFactor[1] = 1;
-	Output.EdgeTessFactor[2] = 1;
-	Output.InsideTessFactor = 1; // e.g. could calculate dynamic tessellation factors instead
+    Output.EdgeTessFactor[0] = tesselationParams.x;
+	Output.EdgeTessFactor[1] = tesselationParams.y;
+	Output.EdgeTessFactor[2] = tesselationParams.z;
+	Output.InsideTessFactor = tesselationParams.w; // e.g. could calculate dynamic tessellation factors instead
 
 	return Output;
 }

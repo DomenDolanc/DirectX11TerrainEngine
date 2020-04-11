@@ -10,9 +10,10 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float3 lightPos;
     float scaling;
     float renderShadows;
-    float drawTerrain;
     float padding3;
     float padding4;
+    float usesTessallation;
+    float4 tesselationParams;
 };
 
 struct VertexShaderInput
@@ -37,7 +38,7 @@ GeometryShaderInput main(VertexShaderInput input)
     output.normal = input.normal;
     output.color = input.color;
     
-    if (drawTerrain == 1.0f)
+    if (usesTessallation == 1.0f)
     {
         output.pos = pos;
         output.worldPos = pos;

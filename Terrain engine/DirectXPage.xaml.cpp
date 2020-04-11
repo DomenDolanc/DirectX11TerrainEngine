@@ -245,3 +245,23 @@ void Terrain_engine::DirectXPage::PerlinOptionsSlider_ValueChanged(Platform::Obj
     TerrainPersistanceText->Text = "Persistance: " + TerrainPersistanceSlider->Value.ToString();
     m_main->UpdateTerrainSettings({ (float)TerrainOctavesSlider->Value, (float)TerrainAmplitudeSlider->Value, (float)TerrainPersistanceSlider->Value });
 }
+
+
+void Terrain_engine::DirectXPage::UseTessellationCheckBox_Checked(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	if (!this->IsLoaded)
+		return;
+
+	m_main->UseTessellation(UseTessellationCheckBox->IsChecked->Value);
+}
+
+void Terrain_engine::DirectXPage::TessellationEdgesSlider_ValueChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs^ e)
+{
+	if (!this->IsLoaded)
+		return;
+	float firstEdge = (float)TessellationFirstEdgeSlider->Value;
+	float secondEdge = (float)TessellationSecondEdgeSlider->Value;
+	float thirdEdge = (float)TessellationThirdEdgeSlider->Value;
+	float insideFactor = (float)TessellationInsideSlider->Value;
+	m_main->UpdateTesselationParams({ firstEdge, secondEdge, thirdEdge, insideFactor });
+}
