@@ -112,6 +112,7 @@ void Terrain::CreateIndices()
             m_indices.emplace_back((i + 1) * m_Rows + j + 1);   // 3
             m_indices.emplace_back(i * m_Rows + j + 1);         // 1
         }
+        m_indices.emplace_back(-1);
     }
 
     D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
@@ -157,8 +158,7 @@ void Terrain::Draw()
     context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
     context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-    for (size_t i = 0; i < m_Columns - 1; i++)
-        context->DrawIndexed((m_Rows - 1) * 6, i * (m_Rows - 1) * 6, 0);
+    context->DrawIndexed(m_indexCount, 0, 0);
 }
 
 std::shared_ptr<PerlinNoise> Terrain_engine::Terrain::getPerlinNoise()
