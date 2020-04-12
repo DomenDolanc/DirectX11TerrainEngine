@@ -19,6 +19,7 @@ namespace Terrain_engine
 
         void CreateVertices();
         void CreateIndices();
+        void CreateQuadIndices();
 
         size_t getVerticesCount();
         size_t getIndicesCount();

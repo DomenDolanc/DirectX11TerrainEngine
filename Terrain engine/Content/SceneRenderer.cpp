@@ -121,13 +121,21 @@ void Terrain_engine::SceneRenderer::UpdateTerrainSettings(DirectX::XMFLOAT3 terr
     m_Terrain->getPerlinNoise()->setAmplitude(terrainParams.y);
     m_Terrain->getPerlinNoise()->setPersistance(terrainParams.z);
     m_loadingComplete = false;
+    if (m_usesTessellation)
+        m_Terrain->CreateIndices();
     m_Terrain->CreateVertices();
+    if (m_usesTessellation)
+        m_Terrain->CreateQuadIndices();
     m_loadingComplete = true;
 }
 
 void Terrain_engine::SceneRenderer::UseTessellation(bool useTessellation)
 {
     m_usesTessellation = useTessellation;
+    if (m_usesTessellation)
+        m_Terrain->CreateQuadIndices();
+    else
+        m_Terrain->CreateIndices();
 }
 
 void Terrain_engine::SceneRenderer::UpdateTesselationParams(DirectX::XMFLOAT4 tessellationParams)
@@ -154,7 +162,7 @@ void SceneRenderer::Render()
 
     if (m_usesTessellation)
     {
-        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
         context->HSSetShader(m_hullShader.Get(), nullptr, 0);
         context->DSSetShader(m_domainShader.Get(), nullptr, 0);
     }
