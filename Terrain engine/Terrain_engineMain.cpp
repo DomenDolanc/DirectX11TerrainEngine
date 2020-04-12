@@ -159,6 +159,11 @@ void Terrain_engine::Terrain_engineMain::UpdateTesselationParams(DirectX::XMFLOA
     m_sceneRenderer->UpdateTesselationParams(tessellationParams);
 }
 
+void Terrain_engine::Terrain_engineMain::DrawLOD(bool drawLOD)
+{
+    m_sceneRenderer->DrawLOD(drawLOD);
+}
+
 // Updates the application state once per frame.
 void Terrain_engineMain::Update() 
 {

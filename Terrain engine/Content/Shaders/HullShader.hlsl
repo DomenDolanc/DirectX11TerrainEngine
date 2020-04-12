@@ -4,8 +4,9 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float scaling;
     float3 eyePos;
     float renderShadows;
-    float3 padding4;
+    float2 padding4;
     float usesTessallation;
+    float drawLOD;
     float4 tesselationParams;
 };
 
@@ -40,6 +41,15 @@ struct HS_CONSTANT_DATA_OUTPUT
 static const float minLODDistance = 0.0025f * scaling;
 static const float maxLODDistance = 0.3f * scaling;
 
+static const float3 colorLOD[6] = {
+    float3(1.0f, 0.0f, 0.0f),       
+    float3(1.0f, 1.0f, 0.0f),       
+    float3(0.0f, 1.0f, 0.0f),       
+    float3(0.0f, 1.0f, 1.0f),       
+    float3(0.0f, 0.0f, 1.0f),       
+    float3(1.0f, 0.0f, 1.0f),       
+};
+
 float CalcTessFactor(float3 p)
 {
     float d = distance(p, eyePos);
@@ -58,11 +68,11 @@ HS_CONSTANT_DATA_OUTPUT CalcHSPatchConstants(
      // tessellate based on distance from the camera.
     // compute tess factor based on edges.
     // compute midpoint of edges.
-    float3 e0 = 0.5f * (ip[0].pos + ip[2].pos);
-    float3 e1 = 0.5f * (ip[0].pos + ip[1].pos);
-    float3 e2 = 0.5f * (ip[1].pos + ip[3].pos);
-    float3 e3 = 0.5f * (ip[2].pos + ip[3].pos);
-    float3 c = 0.25f * (ip[0].pos + ip[1].pos + ip[2].pos + ip[3].pos);
+    float3 e0 = 0.5f * (ip[0].pos + ip[2].pos).xyz;
+    float3 e1 = 0.5f * (ip[0].pos + ip[1].pos).xyz;
+    float3 e2 = 0.5f * (ip[1].pos + ip[3].pos).xyz;
+    float3 e3 = 0.5f * (ip[2].pos + ip[3].pos).xyz;
+    float3 c = 0.25f * (ip[0].pos + ip[1].pos + ip[2].pos + ip[3].pos).xyz;
  
     Output.EdgeTessFactor[0] = CalcTessFactor(e0);
     Output.EdgeTessFactor[1] = CalcTessFactor(e1);
@@ -90,7 +100,11 @@ HS_CONTROL_POINT_OUTPUT main(
 	Output.pos = ip[i].pos;
 	Output.normal = ip[i].normal;
 	Output.worldPos = ip[i].worldPos;
-	Output.color = ip[i].color;
+    
+    if (drawLOD)
+        Output.color = colorLOD[CalcTessFactor(0.25f * (ip[0].pos + ip[1].pos + ip[2].pos + ip[3].pos).xyz)];
+    else
+        Output.color = ip[i].color;
 
 	return Output;
 }

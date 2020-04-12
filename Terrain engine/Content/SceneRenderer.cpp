@@ -143,6 +143,11 @@ void Terrain_engine::SceneRenderer::UpdateTesselationParams(DirectX::XMFLOAT4 te
     m_drawParamsConstantBufferData.tesselationParams = tessellationParams;
 }
 
+void Terrain_engine::SceneRenderer::DrawLOD(bool drawLOD)
+{
+    m_drawLOD = drawLOD;
+}
+
 std::shared_ptr<Camera> Terrain_engine::SceneRenderer::getCamera()
 {
     return m_Camera;
@@ -157,6 +162,7 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.renderShadows = (float)m_renderShadows;
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
     m_drawParamsConstantBufferData.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
+    m_drawParamsConstantBufferData.drawLOD = m_drawLOD ? 1.0f : 0.0f;
 
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
 
@@ -198,6 +204,7 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
     m_drawParamsConstantBufferData.eyePos = m_Camera->GetEye();
     m_drawParamsConstantBufferData.usesTessellation = 0.0f;
+    m_drawParamsConstantBufferData.drawLOD = 0.0f;
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     m_Light->Draw();

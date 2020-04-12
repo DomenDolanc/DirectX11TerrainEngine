@@ -265,3 +265,11 @@ void Terrain_engine::DirectXPage::TessellationEdgesSlider_ValueChanged(Platform:
 	float insideFactor = (float)TessellationInsideSlider->Value;
 	m_main->UpdateTesselationParams({ firstEdge, secondEdge, thirdEdge, insideFactor });
 }
+
+void Terrain_engine::DirectXPage::DrawLODCheckBox_Checked(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	if (!this->IsLoaded)
+		return;
+
+	m_main->DrawLOD(DrawLODCheckBox->IsChecked->Value);
+}

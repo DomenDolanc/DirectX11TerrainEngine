@@ -32,6 +32,7 @@ namespace Terrain_engine
         void UpdateTerrainSettings(DirectX::XMFLOAT3 terrainParams);
         void UseTessellation(bool useTessellation);
         void UpdateTesselationParams(DirectX::XMFLOAT4 tessellationParams);
+        void DrawLOD(bool drawLOD);
 
         std::shared_ptr<Camera> getCamera();
 
@@ -63,6 +64,7 @@ namespace Terrain_engine
         bool m_renderTriangles = true;
         bool m_renderShadows = true;
         bool m_usesTessellation = false;
+        bool m_drawLOD = false;
 
         DirectX::XMFLOAT2 m_MousePoint;
 

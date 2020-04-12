@@ -25,13 +25,13 @@
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Top"
                    FontSize="16" />
-                <TextBlock x:ConnectionId='21' Name="LightPosXText"
+                <TextBlock x:ConnectionId='22' Name="LightPosXText"
                    Text="Position X: 0.0"
                    Foreground="White"
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Top"
                    FontSize="12" />
-                <Slider x:ConnectionId='22' Name="LightPosXSlider"
+                <Slider x:ConnectionId='23' Name="LightPosXSlider"
                     HorizontalAlignment="Stretch" VerticalAlignment="Top" 
                     Margin="12,0,12,0" 
                     Foreground="White"
@@ -40,13 +40,13 @@
                     Value="0.0"
                                                               
                  />
-                <TextBlock x:ConnectionId='23' Name="LightPosYText"
+                <TextBlock x:ConnectionId='24' Name="LightPosYText"
                     Text="Position Y: 0.0"
                     Foreground="White"       
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Top"
                     FontSize="12" />
-                <Slider x:ConnectionId='24' Name="LightPosYSlider"
+                <Slider x:ConnectionId='25' Name="LightPosYSlider"
                     HorizontalAlignment="Stretch" VerticalAlignment="Top" 
                     Margin="12,0,12,0" 
                     Foreground="White"
@@ -55,13 +55,13 @@
                     Value="0.0"
                                                               
                 />
-                <TextBlock x:ConnectionId='25' Name="LightPosZText"
+                <TextBlock x:ConnectionId='26' Name="LightPosZText"
                    Text="Position Z: 0.0"
                    Foreground="White"        
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Top"
                    FontSize="12" />
-                <Slider x:ConnectionId='26' Name="LightPosZSlider"
+                <Slider x:ConnectionId='27' Name="LightPosZSlider"
                     HorizontalAlignment="Stretch" VerticalAlignment="Top" 
                     Margin="12,0,12,0" 
                     Foreground="White"
@@ -150,10 +150,26 @@
                         FontSize="12"
                         Margin="0, 6, 0 0"
                     />
-                    <CheckBox x:ConnectionId='20' 
+                    <CheckBox x:ConnectionId='21' 
                         Name = "UseTessellationCheckBox"  
                                                                  
                                                                    
+                        Margin = "12, 0, 12, 0"/>
+                </StackPanel>
+
+                <StackPanel
+                    Orientation="Horizontal"
+                    VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                    <TextBlock 
+                        Text="Visualize Level of Detail" 
+                        Foreground="White" 
+                        FontSize="12"
+                        Margin="0, 6, 0 0"
+                    />
+                    <CheckBox x:ConnectionId='20' 
+                        Name = "DrawLODCheckBox"  
+                                                         
+                                                           
                         Margin = "12, 0, 12, 0"/>
                 </StackPanel>
 
@@ -234,9 +250,9 @@
     </SwapChainPanel>
 
     <Page.BottomAppBar>
-        <AppBar x:ConnectionId='27' x:Name="bottomAppBar" Padding="10,0,10,0">
+        <AppBar x:ConnectionId='28' x:Name="bottomAppBar" Padding="10,0,10,0">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-                <AppBarButton x:ConnectionId='28' AutomationProperties.Name="Sample Button"
+                <AppBarButton x:ConnectionId='29' AutomationProperties.Name="Sample Button"
                       AutomationProperties.AutomationId="SampleAppBarButton"
                                                 />
             </StackPanel>
