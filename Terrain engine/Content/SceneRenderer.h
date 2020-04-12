@@ -31,7 +31,6 @@ namespace Terrain_engine
         void UpdateLightPosition(DirectX::XMFLOAT3 lightPos);
         void UpdateTerrainSettings(DirectX::XMFLOAT3 terrainParams);
         void UseTessellation(bool useTessellation);
-        void UpdateTesselationParams(DirectX::XMFLOAT4 tessellationParams);
         void DrawLOD(bool drawLOD);
 
         std::shared_ptr<Camera> getCamera();

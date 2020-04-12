@@ -154,11 +154,6 @@ void Terrain_engine::Terrain_engineMain::UseTessellation(bool useTessellation)
     m_sceneRenderer->UseTessellation(useTessellation);
 }
 
-void Terrain_engine::Terrain_engineMain::UpdateTesselationParams(DirectX::XMFLOAT4 tessellationParams)
-{
-    m_sceneRenderer->UpdateTesselationParams(tessellationParams);
-}
-
 void Terrain_engine::Terrain_engineMain::DrawLOD(bool drawLOD)
 {
     m_sceneRenderer->DrawLOD(drawLOD);

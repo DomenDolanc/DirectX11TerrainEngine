@@ -18,7 +18,6 @@ namespace Terrain_engine
         DirectX::XMFLOAT2 padding;
         float usesTessellation;
         float drawLOD;
-        DirectX::XMFLOAT4 tesselationParams;
     };
 
     struct VertexPositionColor

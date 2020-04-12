@@ -21,7 +21,6 @@ SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceR
     m_lightPos = { -m_sceneScaling / 4.0f, m_sceneScaling / 2.0f, 0.0f };
     m_Light = std::make_shared<Sphere>(m_deviceResources, m_lightPos, 250.0f);
     m_Light->setScaling(10);
-    m_drawParamsConstantBufferData.tesselationParams = { 1.0f, 1.0f, 1.0f, 1.0f };
 
     CreateDeviceDependentResources();
     CreateWindowSizeDependentResources();
@@ -136,11 +135,6 @@ void Terrain_engine::SceneRenderer::UseTessellation(bool useTessellation)
         m_Terrain->CreateQuadIndices();
     else
         m_Terrain->CreateIndices();
-}
-
-void Terrain_engine::SceneRenderer::UpdateTesselationParams(DirectX::XMFLOAT4 tessellationParams)
-{
-    m_drawParamsConstantBufferData.tesselationParams = tessellationParams;
 }
 
 void Terrain_engine::SceneRenderer::DrawLOD(bool drawLOD)

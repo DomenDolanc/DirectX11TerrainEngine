@@ -7,7 +7,6 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float2 padding4;
     float usesTessallation;
     float drawLOD;
-    float4 tesselationParams;
 };
 
 // Input control point
