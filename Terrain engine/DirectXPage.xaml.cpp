@@ -247,18 +247,12 @@ void Terrain_engine::DirectXPage::PerlinOptionsSlider_ValueChanged(Platform::Obj
 }
 
 
-void Terrain_engine::DirectXPage::UseTessellationCheckBox_Checked(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+void Terrain_engine::DirectXPage::TessellationParams_Changed(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
 {
 	if (!this->IsLoaded)
 		return;
+
 
 	m_main->UseTessellation(UseTessellationCheckBox->IsChecked->Value);
-}
-
-void Terrain_engine::DirectXPage::DrawLODCheckBox_Checked(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
-{
-	if (!this->IsLoaded)
-		return;
-
 	m_main->DrawLOD(DrawLODCheckBox->IsChecked->Value);
 }

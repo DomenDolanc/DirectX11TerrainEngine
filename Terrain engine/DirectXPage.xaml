@@ -152,8 +152,8 @@
                     />
                     <CheckBox 
                         Name = "UseTessellationCheckBox"  
-                        Checked="UseTessellationCheckBox_Checked"
-                        Unchecked="UseTessellationCheckBox_Checked"
+                        Checked="TessellationParams_Changed"
+                        Unchecked="TessellationParams_Changed"
                         Margin = "12, 0, 12, 0"/>
                 </StackPanel>
 
@@ -168,8 +168,8 @@
                     />
                     <CheckBox 
                         Name = "DrawLODCheckBox"  
-                        Checked="DrawLODCheckBox_Checked"
-                        Unchecked="DrawLODCheckBox_Checked"
+                        Checked="TessellationParams_Changed"
+                        Unchecked="TessellationParams_Changed"
                         Margin = "12, 0, 12, 0"/>
                 </StackPanel>
             </StackPanel>
