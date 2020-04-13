@@ -88,21 +88,38 @@
                    VerticalAlignment="Top"
                    FontSize="16" />
                 <TextBlock
-                   Name="TerrainOctavesText"
-                   Text="Number of octaves"
+                   Name="TerrainColumnsText"
+                   Text="Grid columns"
                    Foreground="White"
                    HorizontalAlignment="Stretch"
                    VerticalAlignment="Top"
                    FontSize="12" />
                 <Slider
-                    Name="TerrainOctavesSlider"
+                    Name="TerrainColumnsSlider"
                     HorizontalAlignment="Stretch" VerticalAlignment="Top" 
                     Margin="12,0,12,0" 
                     Foreground="White"
-                    Minimum="1"
-                    Maximum="15"
-                    Value="6"
-                    ValueChanged="PerlinOptionsSlider_ValueChanged"
+                    Minimum="2"
+                    Maximum="512"
+                    Value="64"
+                    ValueChanged="TerrainOptionsSlider_ValueChanged"
+                 />
+                <TextBlock
+                   Name="TerrainRowsText"
+                   Text="Grid rows"
+                   Foreground="White"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider
+                    Name="TerrainRowsSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="2"
+                    Maximum="512"
+                    Value="64"
+                    ValueChanged="TerrainOptionsSlider_ValueChanged"
                  />
                 <TextBlock 
                     Name="TerrainAmplitudeText"
@@ -119,26 +136,8 @@
                     Minimum="1.0"
                     Maximum="30.0"
                     Value="19"
-                    ValueChanged="PerlinOptionsSlider_ValueChanged"
+                    ValueChanged="TerrainOptionsSlider_ValueChanged"
                 />
-                <TextBlock 
-                   Name="TerrainPersistanceText"
-                   Text="Persistance"
-                   Foreground="White"        
-                   HorizontalAlignment="Stretch"
-                   VerticalAlignment="Top"
-                   FontSize="12" />
-                <Slider
-                    Name="TerrainPersistanceSlider"
-                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
-                    Margin="12,0,12,0" 
-                    Foreground="White"
-                    Minimum="0.01"
-                    Maximum="0.99"
-                    Value="0.45"
-                    StepFrequency="0.05"
-                    ValueChanged="PerlinOptionsSlider_ValueChanged"
-                 />
 
 
                 <TextBlock Text="Tessellation options"

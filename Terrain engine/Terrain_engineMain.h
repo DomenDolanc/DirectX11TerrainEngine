@@ -24,7 +24,7 @@ namespace Terrain_engine
         void HandleMouseEvent(Windows::Foundation::Point point);
 
         void UpdateLightPosition(DirectX::XMFLOAT3 lightPos);
-        void UpdateTerrainSettings(DirectX::XMFLOAT3 terrainParams);
+        void UpdateTerrainSettings(TerrainParams params);
 		void UseTessellation(bool useTessellation);
 		void DrawLOD(bool drawLOD);
 		void LoadBitmap(Windows::Storage::StorageFile^ file);

@@ -42,8 +42,8 @@ struct HS_CONSTANT_DATA_OUTPUT
 
 static const float minLODDistance = 0.0025f * scaling;
 static const float maxLODDistance = 0.3f * scaling;
-static const float maxTessFactorX = log2(4096) - log2(gridSize.x);
-static const float maxTessFactorY = log2(4096) - log2(gridSize.y);
+static const float maxTessFactorX = min(6.0f, trunc(12.0f - log2(gridSize.x)));
+static const float maxTessFactorY = min(6.0f, trunc(12.0f - log2(gridSize.y)));
 
 static const float3 colorLOD[6] = {
     float3(1.0f, 0.0f, 0.0f),       

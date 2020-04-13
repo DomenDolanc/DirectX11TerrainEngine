@@ -106,11 +106,14 @@ void Terrain_engine::SceneRenderer::UpdateLightPosition(DirectX::XMFLOAT3 lightP
     m_lightPos = lightPos;
 }
 
-void Terrain_engine::SceneRenderer::UpdateTerrainSettings(DirectX::XMFLOAT3 terrainParams)
+void Terrain_engine::SceneRenderer::UpdateTerrainSettings(TerrainParams params)
 {
+    if (!m_loadingComplete)
+        return;
+
     m_loadingComplete = false;
-    if (m_usesTessellation)
-        m_Terrain->CreateIndices();
+    m_Terrain->setGridSize(params.columns, params.rows);
+    m_Terrain->CreateIndices();
     m_Terrain->CreateVertices();
     if (m_usesTessellation)
         m_Terrain->CreateQuadIndices();
@@ -201,11 +204,6 @@ void SceneRenderer::Render()
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
     context->HSSetShader(nullptr, nullptr, 0);
     context->DSSetShader(nullptr, nullptr, 0);
-
-    ID3D11ShaderResourceView* nullSRV[1] = { nullptr };
-    ID3D11SamplerState* nullSampler[1] = { nullptr };
-    context->VSSetShaderResources(0, 1, nullSRV);
-    context->VSSetSamplers(0, 1, nullSampler);
 
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixTranslation(m_lightPos.x, m_lightPos.y, m_lightPos.z)));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);

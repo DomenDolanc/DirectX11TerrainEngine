@@ -26,6 +26,7 @@ namespace Terrain_engine
         void setScaling(double scaling);
 
         DirectX::XMFLOAT2 getGridSize();
+        void setGridSize(float columns, float rows);
 
         void ResetBuffers();
 
@@ -34,8 +35,8 @@ namespace Terrain_engine
     private:
         std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
-        int m_Columns = 100;
-        int m_Rows = 100;
+        int m_Columns = 16;
+        int m_Rows = 16;
         double m_scaling;
 
         std::vector<VertexPositionColor> m_vertices;

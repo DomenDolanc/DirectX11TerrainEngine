@@ -31,10 +31,6 @@ Terrain::~Terrain()
 
 void Terrain::CreateVertices()
 {
-    if (!m_loadingComplete)
-        return;
-
-    m_loadingComplete = false;
     m_vertices.clear();
     m_vertexBuffer.Reset();
 
@@ -77,7 +73,6 @@ void Terrain::CreateVertices()
     vertexBufferData.SysMemSlicePitch = 0;
     CD3D11_BUFFER_DESC vertexBufferDesc(m_verticesCount * sizeof(VertexPositionColor), D3D11_BIND_VERTEX_BUFFER);
     DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_vertexBuffer));
-    m_loadingComplete = true;
 }
 
 void Terrain::CreateIndices()
@@ -152,6 +147,12 @@ void Terrain::setScaling(double scaling)
 XMFLOAT2 Terrain::getGridSize()
 {
     return XMFLOAT2((float)m_Columns, (float)m_Rows);
+}
+
+void Terrain_engine::Terrain::setGridSize(float columns, float rows)
+{
+    m_Columns = columns;
+    m_Rows = rows;
 }
 
 void Terrain::ResetBuffers()

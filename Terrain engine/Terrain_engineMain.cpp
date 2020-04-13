@@ -141,9 +141,9 @@ void Terrain_engine::Terrain_engineMain::UpdateLightPosition(DirectX::XMFLOAT3 l
     m_sceneRenderer->UpdateLightPosition(lightPos);
 }
 
-void Terrain_engine::Terrain_engineMain::UpdateTerrainSettings(DirectX::XMFLOAT3 terrainParams)
+void Terrain_engine::Terrain_engineMain::UpdateTerrainSettings(TerrainParams params)
 {
-    m_sceneRenderer->UpdateTerrainSettings(terrainParams);
+    m_sceneRenderer->UpdateTerrainSettings(params);
 }
 
 void Terrain_engine::Terrain_engineMain::UseTessellation(bool useTessellation)

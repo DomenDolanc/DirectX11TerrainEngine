@@ -253,15 +253,17 @@ void Terrain_engine::DirectXPage::LightPosSlider_ValueChanged(Platform::Object^ 
     m_main->UpdateLightPosition({ (float)LightPosXSlider->Value, (float)LightPosYSlider->Value, (float)LightPosZSlider->Value });
 }
 
-void Terrain_engine::DirectXPage::PerlinOptionsSlider_ValueChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs^ e)
+void Terrain_engine::DirectXPage::TerrainOptionsSlider_ValueChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs^ e)
 {
     if (!this->IsLoaded)
         return;
 
-    TerrainOctavesText->Text = "Number of octaves: " + TerrainOctavesSlider->Value.ToString();
+    TerrainColumnsText->Text = "Grid columns: " + TerrainColumnsSlider->Value.ToString();
+	TerrainRowsText->Text = "Grid rows: " + TerrainRowsSlider->Value.ToString();
     TerrainAmplitudeText->Text = "Amplitude: " + TerrainAmplitudeSlider->Value.ToString();
-    TerrainPersistanceText->Text = "Persistance: " + TerrainPersistanceSlider->Value.ToString();
-    m_main->UpdateTerrainSettings({ (float)TerrainOctavesSlider->Value, (float)TerrainAmplitudeSlider->Value, (float)TerrainPersistanceSlider->Value });
+
+	TerrainParams params = { (float)TerrainColumnsSlider->Value , (float)TerrainRowsSlider->Value };
+    m_main->UpdateTerrainSettings(params);
 }
 
 

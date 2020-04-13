@@ -15,6 +15,12 @@ namespace Terrain_engine
         float drawLOD;
     };
 
+    struct TerrainParams
+    {
+        float columns;
+        float rows;
+    };
+
     struct DrawParamsConstantBuffer
     {
         DirectX::XMFLOAT3 lightPos;
