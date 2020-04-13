@@ -160,8 +160,8 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.scaling = m_sceneScaling;
     m_drawParamsConstantBufferData.renderShadows = (float)m_renderShadows;
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
-    m_drawParamsConstantBufferData.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
-    m_drawParamsConstantBufferData.drawLOD = m_drawLOD ? 1.0f : 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.drawLOD = m_drawLOD ? 1.0f : 0.0f;
 
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
 
@@ -202,8 +202,8 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.renderShadows = 0.0f;
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
     m_drawParamsConstantBufferData.eyePos = m_Camera->GetEye();
-    m_drawParamsConstantBufferData.usesTessellation = 0.0f;
-    m_drawParamsConstantBufferData.drawLOD = 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.drawLOD = 0.0f;
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     m_Light->Draw();
