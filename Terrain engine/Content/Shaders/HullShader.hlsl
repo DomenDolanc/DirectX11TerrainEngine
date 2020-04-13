@@ -6,10 +6,11 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float renderShadows;
     float usesTessallation;
     float drawLOD;
-    float2 gridSize;
     float2 textureSize;
+    float columns;
+    float rows;
+    float amplitude;
     float drawTerrain;
-    float padding;
 };
 
 // Input control point
@@ -42,8 +43,8 @@ struct HS_CONSTANT_DATA_OUTPUT
 
 static const float minLODDistance = 0.0025f * scaling;
 static const float maxLODDistance = 0.3f * scaling;
-static const float maxTessFactorX = min(6.0f, trunc(12.0f - log2(gridSize.x)));
-static const float maxTessFactorY = min(6.0f, trunc(12.0f - log2(gridSize.y)));
+static const float maxTessFactorX = min(6.0f, trunc(12.0f - log2(columns)));
+static const float maxTessFactorY = min(6.0f, trunc(12.0f - log2(rows)));
 
 static const float3 colorLOD[6] = {
     float3(1.0f, 0.0f, 0.0f),       

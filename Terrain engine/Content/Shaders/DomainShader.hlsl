@@ -16,10 +16,11 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float renderShadows;
     float usesTessallation;
     float drawLOD;
-    float2 gridSize;
     float2 textureSize;
+    float columns;
+    float rows;
+    float amplitude;
     float drawTerrain;
-    float padding;
 };
 
 struct DS_OUTPUT
@@ -65,17 +66,15 @@ DS_OUTPUT main(
     Output.color = lerp(lerp(patch[0].color, patch[1].color, domain.x), lerp(patch[2].color, patch[3].color, domain.x), domain.y);
 	
     float2 outTex = float2((Output.pos.x / scaling) + 0.5, (Output.pos.z / scaling) + 0.5);
-    
-    const float heightScale = scaling / 8.0f;
     float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0);
     
-    float zb = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, -stepY), 0).r * heightScale;
-    float zc = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(stepX, 0), 0).r * heightScale;
-    float zd = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, stepY), 0).r * heightScale;
-    float ze = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(-stepX, 0), 0).r * heightScale;
+    float zb = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, -stepY), 0).r * amplitude;
+    float zc = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(stepX, 0), 0).r * amplitude;
+    float zd = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, stepY), 0).r * amplitude;
+    float ze = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(-stepX, 0), 0).r * amplitude;
     
     Output.normal = normalize(float3(ze - zc, 2.0f, zb - zd));
-    Output.pos.y = sampledTexture.r * heightScale;
+    Output.pos.y = sampledTexture.r * amplitude;
     Output.worldPos = mul(Output.pos, model);
     Output.pos = mul(Output.pos, model);
     Output.pos = mul(Output.pos, view);

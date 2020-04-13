@@ -21,6 +21,10 @@ SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceR
     m_lightPos = { -m_sceneScaling / 4.0f, m_sceneScaling / 2.0f, 0.0f };
     m_Light = std::make_shared<Sphere>(m_deviceResources, m_lightPos, 250.0f);
     m_Light->setScaling(10);
+    XMFLOAT2 gridSize = m_Terrain->getGridSize();
+    m_drawParamsConstantBufferData.terrainParams.amplitude = 2500.0f;
+    m_drawParamsConstantBufferData.terrainParams.columns = gridSize.x;
+    m_drawParamsConstantBufferData.terrainParams.rows = gridSize.y;
 
     CreateDeviceDependentResources();
     CreateWindowSizeDependentResources();
@@ -112,6 +116,9 @@ void Terrain_engine::SceneRenderer::UpdateTerrainSettings(TerrainParams params)
         return;
 
     m_loadingComplete = false;
+    
+    params.amplitude *= 500;
+    m_drawParamsConstantBufferData.terrainParams = params;
     m_Terrain->setGridSize(params.columns, params.rows);
     m_Terrain->CreateIndices();
     m_Terrain->CreateVertices();
@@ -162,7 +169,6 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
     m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
     m_drawParamsConstantBufferData.tessellationParams.drawLOD = m_drawLOD ? 1.0f : 0.0f;
-    m_drawParamsConstantBufferData.gridSize = m_Terrain->getGridSize();
     m_drawParamsConstantBufferData.drawTerrain = 1.0f;
 
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);

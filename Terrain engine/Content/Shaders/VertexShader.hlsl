@@ -16,10 +16,11 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float renderShadows;
     float usesTessallation;
     float drawLOD;
-    float2 gridSize;
     float2 textureSize;
+    float columns;
+    float rows;
+    float amplitude;
     float drawTerrain;
-    float padding;
 };
 
 struct VertexShaderInput
@@ -59,16 +60,15 @@ GeometryShaderInput main(VertexShaderInput input)
         {
             float2 outTex = float2((pos.x / scaling) + 0.5, (input.pos.z / scaling) + 0.5);
     
-            const float heightScale = scaling / 8.0f;
             float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0);
     
-            float zb = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, -stepY), 0).r * heightScale;
-            float zc = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(stepX, 0), 0).r * heightScale;
-            float zd = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, stepY), 0).r * heightScale;
-            float ze = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(-stepX, 0), 0).r * heightScale;
+            float zb = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, -stepY), 0).r * amplitude;
+            float zc = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(stepX, 0), 0).r * amplitude;
+            float zd = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, stepY), 0).r * amplitude;
+            float ze = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(-stepX, 0), 0).r * amplitude;
     
             output.normal = normalize(float3(ze - zc, 2.0f, zb - zd));
-            pos.y = sampledTexture.r * heightScale;
+            pos.y = sampledTexture.r * amplitude;
             output.color = sampledTexture;
         }
 

@@ -9,10 +9,11 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float renderShadows;
     float usesTessallation;
     float drawLOD;
-    float2 gridSize;
     float2 textureSize;
+    float columns;
+    float rows;
+    float amplitude;
     float drawTerrain;
-    float padding;
 };
 
 struct PixelShaderInput

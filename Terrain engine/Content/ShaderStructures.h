@@ -19,6 +19,7 @@ namespace Terrain_engine
     {
         float columns;
         float rows;
+        float amplitude;
     };
 
     struct DrawParamsConstantBuffer
@@ -28,10 +29,9 @@ namespace Terrain_engine
         DirectX::XMFLOAT3 eyePos;
         float renderShadows;
         TessellationParams tessellationParams;
-        DirectX::XMFLOAT2 gridSize;
         DirectX::XMFLOAT2 textureSize;
+        TerrainParams terrainParams;
         float drawTerrain;
-        float padding;
     };
 
     struct VertexPositionColor

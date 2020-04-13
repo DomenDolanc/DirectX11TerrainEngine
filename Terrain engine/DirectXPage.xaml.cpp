@@ -262,7 +262,7 @@ void Terrain_engine::DirectXPage::TerrainOptionsSlider_ValueChanged(Platform::Ob
 	TerrainRowsText->Text = "Grid rows: " + TerrainRowsSlider->Value.ToString();
     TerrainAmplitudeText->Text = "Amplitude: " + TerrainAmplitudeSlider->Value.ToString();
 
-	TerrainParams params = { (float)TerrainColumnsSlider->Value , (float)TerrainRowsSlider->Value };
+	TerrainParams params = { (float)TerrainColumnsSlider->Value , (float)TerrainRowsSlider->Value, (float)TerrainAmplitudeSlider->Value };
     m_main->UpdateTerrainSettings(params);
 }
 
