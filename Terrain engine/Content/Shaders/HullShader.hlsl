@@ -101,7 +101,7 @@ HS_CONTROL_POINT_OUTPUT main(
 	Output.worldPos = ip[i].worldPos;
     
     if (drawLOD)
-        Output.color = colorLOD[CalcTessFactor(0.25f * (ip[0].pos + ip[1].pos + ip[2].pos + ip[3].pos).xyz)];
+        Output.color = colorLOD[min(CalcTessFactor(0.25f * (ip[0].pos + ip[1].pos + ip[2].pos + ip[3].pos).xyz), 5)];
     else
         Output.color = ip[i].color;
 

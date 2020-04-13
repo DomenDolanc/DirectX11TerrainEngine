@@ -120,10 +120,12 @@ void Terrain_engine::SceneRenderer::UpdateTerrainSettings(DirectX::XMFLOAT3 terr
 void Terrain_engine::SceneRenderer::UseTessellation(bool useTessellation)
 {
     m_usesTessellation = useTessellation;
+    m_loadingComplete = false;
     if (m_usesTessellation)
         m_Terrain->CreateQuadIndices();
     else
         m_Terrain->CreateIndices();
+    m_loadingComplete = true;
 }
 
 void Terrain_engine::SceneRenderer::DrawLOD(bool drawLOD)
@@ -160,10 +162,11 @@ void SceneRenderer::Render()
 
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
 
+    auto terrainShaderResouce = m_deviceResources->GetTerrainHeightShaderResourceView();
+    ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
+
     if (m_usesTessellation)
     {
-        auto terrainShaderResouce = m_deviceResources->GetTerrainHeightShaderResourceView();
-        ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
         context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
         context->HSSetShader(m_hullShader.Get(), nullptr, 0);
         context->DSSetShader(m_domainShader.Get(), nullptr, 0);
@@ -178,6 +181,9 @@ void SceneRenderer::Render()
         context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
         context->HSSetShader(nullptr, nullptr, 0);
         context->DSSetShader(nullptr, nullptr, 0);
+
+        context->VSSetShaderResources(0, 1, &terrainShaderResouce);
+        context->VSSetSamplers(0, 1, sampler);
     }
 
     context->IASetInputLayout(m_inputLayout.Get());
