@@ -26,7 +26,6 @@ namespace Terrain_engine
 
         void TogglePrimitiveRendering();
         void ToggleShadowsRendering();
-        void SwitchTerrainPreset(int mode);
 
         void UpdateLightPosition(DirectX::XMFLOAT3 lightPos);
         void UpdateTerrainSettings(DirectX::XMFLOAT3 terrainParams);

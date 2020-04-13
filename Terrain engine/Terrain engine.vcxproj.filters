@@ -87,9 +87,6 @@
     <ClCompile Include="Common\DirectXMeshValidate.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Common\PerlinNoise.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="Common\Graphics\Sphere.cpp">
       <Filter>Common\Graphics</Filter>
     </ClCompile>
@@ -122,9 +119,6 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Common\DirectXMeshP.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\PerlinNoise.h">
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Common\scoped.h">

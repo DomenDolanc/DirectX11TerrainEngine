@@ -100,11 +100,6 @@ void Terrain_engine::Terrain_engineMain::HandleKeyDownEvent(Windows::System::Vir
         return;
     }
 
-    if (key >= Windows::System::VirtualKey::Number0 && key <= Windows::System::VirtualKey::Number9)
-    {
-        m_sceneRenderer->SwitchTerrainPreset(static_cast<int>(key - Windows::System::VirtualKey::Number0));
-    }
-
     switch (key)
     {
     case Windows::System::VirtualKey::W:

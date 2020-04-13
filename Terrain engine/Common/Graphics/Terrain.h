@@ -3,7 +3,6 @@
 #include "..\Common\DeviceResources.h"
 #include "Content/ShaderStructures.h"
 #include "..\Common\DirectXHelper.h"
-#include "..\Common\PerlinNoise.h"
 #include "..\Common\Graphics\Camera.h"
 #include "..\Common\DirectXMesh.h"
 #include <map>
@@ -26,21 +25,15 @@ namespace Terrain_engine
 
         void setScaling(double scaling);
 
-        void setMode(int index);
-
         void ResetBuffers();
 
         void Draw();
 
-        std::shared_ptr<PerlinNoise> getPerlinNoise();
-
-        DirectX::XMFLOAT3 GetColorFromHeight(double height);
-
     private:
         std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
-        int m_Columns = 64;
-        int m_Rows = 64;
+        int m_Columns = 100;
+        int m_Rows = 100;
         double m_scaling;
 
         std::vector<VertexPositionColor> m_vertices;
@@ -52,10 +45,6 @@ namespace Terrain_engine
 
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertexBuffer;
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_indexBuffer;
-
-        static std::map<int, DirectX::XMFLOAT3> m_TerrainColormap;
-
-        std::shared_ptr<PerlinNoise> m_PerlinNoise;
     };
 }
 
