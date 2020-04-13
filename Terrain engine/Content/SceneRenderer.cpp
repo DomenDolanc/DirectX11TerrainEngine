@@ -142,6 +142,12 @@ void Terrain_engine::SceneRenderer::DrawLOD(bool drawLOD)
     m_drawLOD = drawLOD;
 }
 
+void Terrain_engine::SceneRenderer::SetTextureSize(int width, int height)
+{
+    m_drawParamsConstantBufferData.textureSize.x = (float)width;
+    m_drawParamsConstantBufferData.textureSize.y = (float)height;
+}
+
 bool Terrain_engine::SceneRenderer::IsReadyToRender()
 {
     return m_loadingComplete;
@@ -167,9 +173,16 @@ void SceneRenderer::Render()
 
     if (m_usesTessellation)
     {
+        auto terrainShaderResouce = m_deviceResources->GetTerrainHeightShaderResourceView();
+        ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
         context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
         context->HSSetShader(m_hullShader.Get(), nullptr, 0);
         context->DSSetShader(m_domainShader.Get(), nullptr, 0);
+        context->DSSetShaderResources(0, 1, &terrainShaderResouce);
+        context->DSSetSamplers(0, 1, sampler);
+        context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+        context->DSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+        context->HSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     }
     else
     {
@@ -181,8 +194,6 @@ void SceneRenderer::Render()
     context->IASetInputLayout(m_inputLayout.Get());
     context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
-    context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
-    context->HSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
 
     context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
     context->PSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);

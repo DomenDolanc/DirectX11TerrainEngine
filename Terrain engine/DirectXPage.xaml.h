@@ -61,6 +61,7 @@ namespace Terrain_engine
 		bool m_windowVisible;
 
         bool m_settingsVisible = false;
+		void LoadTextureButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
         void LightPosSlider_ValueChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs^ e);
         void PerlinOptionsSlider_ValueChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs^ e);
         void TessellationParams_Changed(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);

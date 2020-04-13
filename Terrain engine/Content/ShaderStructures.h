@@ -13,7 +13,6 @@ namespace Terrain_engine
     {
         float usesTessellation;
         float drawLOD;
-        DirectX::XMFLOAT2 padding;
     };
 
     struct DrawParamsConstantBuffer
@@ -23,6 +22,7 @@ namespace Terrain_engine
         DirectX::XMFLOAT3 eyePos;
         float renderShadows;
         TessellationParams tessellationParams;
+        DirectX::XMFLOAT2 textureSize;
     };
 
     struct VertexPositionColor

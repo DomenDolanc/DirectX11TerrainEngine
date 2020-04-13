@@ -44,6 +44,12 @@ namespace DX
 		D3D11_VIEWPORT				GetScreenViewport() const				{ return m_screenViewport; }
 		DirectX::XMFLOAT4X4			GetOrientationTransform3D() const		{ return m_orientationTransform3D; }
 
+		ID3D11Texture2D* GetTerrainHeightMap() const { return m_d3dTerrainHeightMap.Get(); }
+		ID3D11ShaderResourceView* GetTerrainHeightShaderResourceView() const { return m_d3dTerrainHeightMapShaderView.Get(); }
+
+		void SetTerrainHeightMap(ID3D11Texture2D* texture);
+		void SetTerrainHeightShaderResourceView(ID3D11ShaderResourceView* resourceView);
+
         ID3D11Texture2D* GetShadowMap() const { return m_d3dShadowMap.Get(); }
         ID3D11DepthStencilView* GetShadowMapDepthView() const { return m_d3dShadowMapDepthView.Get(); }
         ID3D11ShaderResourceView* GetShadowMapShaderResourceView() const { return m_d3dShadowMapShaderView.Get(); }
@@ -75,6 +81,9 @@ namespace DX
 		Microsoft::WRL::ComPtr<ID3D11RenderTargetView1>	m_d3dRenderTargetView;
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView>	m_d3dDepthStencilView;
 		D3D11_VIEWPORT									m_screenViewport;
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dTerrainHeightMap;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dTerrainHeightMapShaderView;
 
         Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dShadowMap;
         Microsoft::WRL::ComPtr<ID3D11DepthStencilView>  m_d3dShadowMapDepthView;

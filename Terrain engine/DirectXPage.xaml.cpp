@@ -23,6 +23,8 @@ using namespace Windows::UI::Xaml::Input;
 using namespace Windows::UI::Xaml::Media;
 using namespace Windows::UI::Xaml::Navigation;
 using namespace concurrency;
+using namespace Windows::Storage;
+using namespace Windows::Storage::Pickers;
 
 DirectXPage::DirectXPage():
 	m_windowVisible(true),
@@ -164,8 +166,6 @@ void DirectXPage::OnDisplayContentsInvalidated(DisplayInformation^ sender, Objec
 // Called when the app bar button is clicked.
 void DirectXPage::AppBarButton_Click(Object^ sender, RoutedEventArgs^ e)
 {
-	// Use the app bar if it is appropriate for your app. Design the app bar, 
-	// then fill in event handlers (like this one).
 }
 
 void DirectXPage::OnPointerPressed(Object^ sender, PointerEventArgs^ e)
@@ -187,13 +187,11 @@ void Terrain_engine::DirectXPage::InitSettingsWindow()
 {
     if (m_settingsVisible)
     {
-        LightPanel->Visibility = Windows::UI::Xaml::Visibility::Visible;
-        TerrainPerlinPanel->Visibility = Windows::UI::Xaml::Visibility::Visible;
+		SettingsPanel->Visibility = Windows::UI::Xaml::Visibility::Visible;
     }
     else
     {
-        LightPanel->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
-        TerrainPerlinPanel->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
+		SettingsPanel->Visibility = Windows::UI::Xaml::Visibility::Collapsed;
     }
 }
 
@@ -222,6 +220,26 @@ void DirectXPage::OnKeyUp(Windows::UI::Core::CoreWindow^ sender, Windows::UI::Co
     if (args->VirtualKey == Windows::System::VirtualKey::Escape)
         m_settingsVisible = !m_settingsVisible;
     InitSettingsWindow();
+}
+
+void Terrain_engine::DirectXPage::LoadTextureButton_Click(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	FileOpenPicker^ openPicker = ref new FileOpenPicker();
+	openPicker->ViewMode = PickerViewMode::Thumbnail;
+	openPicker->SuggestedStartLocation = PickerLocationId::PicturesLibrary;
+	openPicker->FileTypeFilter->Append(".jpg");
+	openPicker->FileTypeFilter->Append(".jpeg");
+	openPicker->FileTypeFilter->Append(".png");
+
+	auto openFileTask = create_task(openPicker->PickSingleFileAsync()).then([this](StorageFile^ file)
+	{
+		if (file)
+			return file;
+	});
+	openFileTask.then([this](task<StorageFile^> taskFile)
+	{
+		m_main->LoadBitmap(taskFile.get());
+	});
 }
 
 void Terrain_engine::DirectXPage::LightPosSlider_ValueChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs^ e)

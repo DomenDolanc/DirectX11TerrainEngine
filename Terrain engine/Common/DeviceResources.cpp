@@ -84,6 +84,20 @@ DX::DeviceResources::DeviceResources() :
 	CreateDeviceResources();
 }
 
+void DX::DeviceResources::SetTerrainHeightMap(ID3D11Texture2D* texture)
+{
+	if (m_d3dTerrainHeightMap != nullptr)
+		m_d3dTerrainHeightMap->Release();
+	m_d3dTerrainHeightMap = texture;
+}
+
+void DX::DeviceResources::SetTerrainHeightShaderResourceView(ID3D11ShaderResourceView* resourceView)
+{
+	if (m_d3dTerrainHeightMapShaderView != nullptr)
+		m_d3dTerrainHeightMapShaderView->Release();
+	m_d3dTerrainHeightMapShaderView = resourceView;
+}
+
 // Configures resources that don't depend on the Direct3D device.
 void DX::DeviceResources::CreateDeviceIndependentResources()
 {

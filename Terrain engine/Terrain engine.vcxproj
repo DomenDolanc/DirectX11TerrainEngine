@@ -277,9 +277,10 @@
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="Common\BasicLoader.h" />
-    <ClInclude Include="Common\BasicReaderWriter.h" />
     <ClInclude Include="Common\DeviceResources.h" />
+    <ClInclude Include="Common\DirectXHelpers\BasicLoader.h" />
+    <ClInclude Include="Common\DirectXHelpers\BasicReaderWriter.h" />
+    <ClInclude Include="Common\DirectXHelpers\DDSTextureLoader.h" />
     <ClInclude Include="Common\DirectXMesh.h" />
     <ClInclude Include="Common\DirectXMeshP.h" />
     <ClInclude Include="Common\Graphics\Camera.h" />
@@ -287,7 +288,6 @@
     <ClInclude Include="Common\Graphics\Terrain.h" />
     <ClInclude Include="Common\PerlinNoise.h" />
     <ClInclude Include="Common\scoped.h" />
-    <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="Terrain_engineMain.h" />
     <ClInclude Include="DirectXPage.xaml.h">
       <DependentUpon>DirectXPage.xaml</DependentUpon>
@@ -303,9 +303,10 @@
     <ClCompile Include="App.xaml.cpp">
       <DependentUpon>App.xaml</DependentUpon>
     </ClCompile>
-    <ClCompile Include="Common\BasicLoader.cpp" />
-    <ClCompile Include="Common\BasicReaderWriter.cpp" />
     <ClCompile Include="Common\DeviceResources.cpp" />
+    <ClCompile Include="Common\DirectXHelpers\BasicLoader.cpp" />
+    <ClCompile Include="Common\DirectXHelpers\BasicReaderWriter.cpp" />
+    <ClCompile Include="Common\DirectXHelpers\DDSTextureLoader.cpp" />
     <ClCompile Include="Common\DirectXMeshClean.cpp" />
     <ClCompile Include="Common\DirectXMeshNormals.cpp" />
     <ClCompile Include="Common\DirectXMeshOptimize.cpp" />
@@ -315,7 +316,6 @@
     <ClCompile Include="Common\Graphics\Sphere.cpp" />
     <ClCompile Include="Common\Graphics\Terrain.cpp" />
     <ClCompile Include="Common\PerlinNoise.cpp" />
-    <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="Terrain_engineMain.cpp" />
     <ClCompile Include="DirectXPage.xaml.cpp">
       <DependentUpon>DirectXPage.xaml</DependentUpon>

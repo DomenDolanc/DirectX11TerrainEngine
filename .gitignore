@@ -46,3 +46,4 @@ Debug/Terrain engine/AppX/resources.pri
 x64/
 Terrain engine/Generated Files/DirectXPage.xaml
 .vs/Terrain engine/v16/ipch/ddbddadeb9e7af2d.ipch
+Terrain engine/Generated Files/App.g.hpp

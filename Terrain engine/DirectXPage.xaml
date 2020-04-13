@@ -15,6 +15,11 @@
                         Padding="8 0 0 0"
                         Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left"
                         Width="300" Background="Black">
+            <Button
+                    Content="Load height map"
+                    Foreground="White"
+                    Click="LoadTextureButton_Click"/>
+            
             <StackPanel Name="LightPanel"
                         Margin="0 24 0 0"
                         Padding="8 0 0 0"

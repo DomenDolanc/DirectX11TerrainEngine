@@ -50,6 +50,9 @@
     <Filter Include="Content\Shaders">
       <UniqueIdentifier>{420df6fe-4260-406e-8746-72d5f9ce8676}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Common\DirectXHelpers">
+      <UniqueIdentifier>{3ba4d948-86f9-47d7-857e-084c1e045628}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -90,14 +93,14 @@
     <ClCompile Include="Common\Graphics\Sphere.cpp">
       <Filter>Common\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Common\BasicLoader.cpp">
-      <Filter>Common</Filter>
+    <ClCompile Include="Common\DirectXHelpers\BasicLoader.cpp">
+      <Filter>Common\DirectXHelpers</Filter>
     </ClCompile>
-    <ClCompile Include="Common\BasicReaderWriter.cpp">
-      <Filter>Common</Filter>
+    <ClCompile Include="Common\DirectXHelpers\BasicReaderWriter.cpp">
+      <Filter>Common\DirectXHelpers</Filter>
     </ClCompile>
-    <ClCompile Include="DDSTextureLoader.cpp">
-      <Filter>Common</Filter>
+    <ClCompile Include="Common\DirectXHelpers\DDSTextureLoader.cpp">
+      <Filter>Common\DirectXHelpers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -130,14 +133,14 @@
     <ClInclude Include="Common\Graphics\Sphere.h">
       <Filter>Common\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Common\BasicLoader.h">
-      <Filter>Common</Filter>
+    <ClInclude Include="Common\DirectXHelpers\BasicLoader.h">
+      <Filter>Common\DirectXHelpers</Filter>
     </ClInclude>
-    <ClInclude Include="Common\BasicReaderWriter.h">
-      <Filter>Common</Filter>
+    <ClInclude Include="Common\DirectXHelpers\BasicReaderWriter.h">
+      <Filter>Common\DirectXHelpers</Filter>
     </ClInclude>
-    <ClInclude Include="DDSTextureLoader.h">
-      <Filter>Common</Filter>
+    <ClInclude Include="Common\DirectXHelpers\DDSTextureLoader.h">
+      <Filter>Common\DirectXHelpers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

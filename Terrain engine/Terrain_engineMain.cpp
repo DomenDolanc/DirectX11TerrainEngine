@@ -1,11 +1,13 @@
 ﻿#include "pch.h"
 #include "Terrain_engineMain.h"
 #include "Common\DirectXHelper.h"
+#include "Common/DirectXHelpers/BasicLoader.h"
 
 using namespace Terrain_engine;
 using namespace Windows::Foundation;
 using namespace Windows::System::Threading;
 using namespace Concurrency;
+using namespace Windows::Storage;
 
 // Loads and initializes application assets when the application is loaded.
 Terrain_engineMain::Terrain_engineMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
@@ -157,6 +159,30 @@ void Terrain_engine::Terrain_engineMain::UseTessellation(bool useTessellation)
 void Terrain_engine::Terrain_engineMain::DrawLOD(bool drawLOD)
 {
     m_sceneRenderer->DrawLOD(drawLOD);
+}
+
+void Terrain_engine::Terrain_engineMain::LoadBitmap(StorageFile^ file)
+{
+    auto tempFolder = Windows::Storage::ApplicationData::Current->TemporaryFolder;
+    create_task(file->CopyAsync(tempFolder, file->Name, NameCollisionOption::GenerateUniqueName)).then([this](StorageFile^ tempFile)
+    {
+        if (tempFile)
+        {
+            BasicLoader^ basicLoader = ref new BasicLoader(m_deviceResources->GetD3DDevice(), m_deviceResources->GetWicImagingFactory());
+
+            ID3D11Texture2D* terrainTexture;
+            ID3D11ShaderResourceView* terrainShaderResourceView;
+            Platform::String^ fileName = tempFile->Path;
+
+            basicLoader->LoadTexture(fileName, &terrainTexture, &terrainShaderResourceView);
+            m_deviceResources->SetTerrainHeightMap(terrainTexture);
+            m_deviceResources->SetTerrainHeightShaderResourceView(terrainShaderResourceView);
+            D3D11_TEXTURE2D_DESC desc;
+            terrainTexture->GetDesc(&desc);
+            m_sceneRenderer->SetTextureSize(desc.Width, desc.Height);
+            DeleteFile(tempFile->Path->Data());
+        }
+    });
 }
 
 // Updates the application state once per frame.

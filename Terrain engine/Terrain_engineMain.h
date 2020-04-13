@@ -27,6 +27,7 @@ namespace Terrain_engine
         void UpdateTerrainSettings(DirectX::XMFLOAT3 terrainParams);
 		void UseTessellation(bool useTessellation);
 		void DrawLOD(bool drawLOD);
+		void LoadBitmap(Windows::Storage::StorageFile^ file);
 
 		// IDeviceNotify
 		virtual void OnDeviceLost();
