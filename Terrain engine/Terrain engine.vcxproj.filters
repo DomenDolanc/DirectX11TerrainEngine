@@ -90,6 +90,15 @@
     <ClCompile Include="Common\Graphics\Sphere.cpp">
       <Filter>Common\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Common\BasicLoader.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\BasicReaderWriter.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="DDSTextureLoader.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Terrain_engineMain.h" />
@@ -120,6 +129,15 @@
     </ClInclude>
     <ClInclude Include="Common\Graphics\Sphere.h">
       <Filter>Common\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\BasicLoader.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\BasicReaderWriter.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="DDSTextureLoader.h">
+      <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
