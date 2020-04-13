@@ -159,6 +159,8 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
     m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
     m_drawParamsConstantBufferData.tessellationParams.drawLOD = m_drawLOD ? 1.0f : 0.0f;
+    m_drawParamsConstantBufferData.gridSize = m_Terrain->getGridSize();
+    m_drawParamsConstantBufferData.drawTerrain = 1.0f;
 
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
 
@@ -200,6 +202,11 @@ void SceneRenderer::Render()
     context->HSSetShader(nullptr, nullptr, 0);
     context->DSSetShader(nullptr, nullptr, 0);
 
+    ID3D11ShaderResourceView* nullSRV[1] = { nullptr };
+    ID3D11SamplerState* nullSampler[1] = { nullptr };
+    context->VSSetShaderResources(0, 1, nullSRV);
+    context->VSSetSamplers(0, 1, nullSampler);
+
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixTranslation(m_lightPos.x, m_lightPos.y, m_lightPos.z)));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
@@ -210,6 +217,7 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.eyePos = m_Camera->GetEye();
     m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
     m_drawParamsConstantBufferData.tessellationParams.drawLOD = 0.0f;
+    m_drawParamsConstantBufferData.drawTerrain = 0.0f;
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     m_Light->Draw();

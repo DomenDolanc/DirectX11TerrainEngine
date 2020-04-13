@@ -16,7 +16,10 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float renderShadows;
     float usesTessallation;
     float drawLOD;
+    float2 gridSize;
     float2 textureSize;
+    float drawTerrain;
+    float padding;
 };
 
 struct VertexShaderInput
@@ -47,27 +50,31 @@ GeometryShaderInput main(VertexShaderInput input)
     {
         output.worldPos = pos;
         output.normal = input.normal;
-        output.color = input.color;
+        output.color = float3(1.0f, 1.0f, 1.0f);
     } else
     {
-        float2 outTex = float2((pos.x / scaling) + 0.5, (input.pos.z / scaling) + 0.5);
-    
-        const float heightScale = scaling / 8.0f;
-        float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0);
-    
-        float zb = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, -stepY), 0).r * heightScale;
-        float zc = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(stepX, 0), 0).r * heightScale;
-        float zd = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, stepY), 0).r * heightScale;
-        float ze = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(-stepX, 0), 0).r * heightScale;
-    
-        output.normal = normalize(float3(ze - zc, 2.0f, zb - zd));
-        pos.y = sampledTexture.r * heightScale;
-        
         output.worldPos = mul(pos, model);
+        output.color = input.color;
+        if (drawTerrain)
+        {
+            float2 outTex = float2((pos.x / scaling) + 0.5, (input.pos.z / scaling) + 0.5);
+    
+            const float heightScale = scaling / 8.0f;
+            float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0);
+    
+            float zb = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, -stepY), 0).r * heightScale;
+            float zc = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(stepX, 0), 0).r * heightScale;
+            float zd = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, stepY), 0).r * heightScale;
+            float ze = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(-stepX, 0), 0).r * heightScale;
+    
+            output.normal = normalize(float3(ze - zc, 2.0f, zb - zd));
+            pos.y = sampledTexture.r * heightScale;
+            output.color = sampledTexture;
+        }
+
         pos = mul(pos, model);  
         pos = mul(pos, view);
         pos = mul(pos, projection);
-        output.color = sampledTexture;
     }
     output.pos = pos;
 

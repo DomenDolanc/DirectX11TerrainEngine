@@ -149,6 +149,11 @@ void Terrain::setScaling(double scaling)
     m_scaling = scaling;
 }
 
+XMFLOAT2 Terrain::getGridSize()
+{
+    return XMFLOAT2((float)m_Columns, (float)m_Rows);
+}
+
 void Terrain::ResetBuffers()
 {
     m_vertexBuffer.Reset();

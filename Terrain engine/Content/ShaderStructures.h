@@ -22,7 +22,10 @@ namespace Terrain_engine
         DirectX::XMFLOAT3 eyePos;
         float renderShadows;
         TessellationParams tessellationParams;
+        DirectX::XMFLOAT2 gridSize;
         DirectX::XMFLOAT2 textureSize;
+        float drawTerrain;
+        float padding;
     };
 
     struct VertexPositionColor

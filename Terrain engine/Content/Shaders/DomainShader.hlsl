@@ -16,7 +16,10 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float renderShadows;
     float usesTessallation;
     float drawLOD;
+    float2 gridSize;
     float2 textureSize;
+    float drawTerrain;
+    float padding;
 };
 
 struct DS_OUTPUT

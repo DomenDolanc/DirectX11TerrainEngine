@@ -25,6 +25,8 @@ namespace Terrain_engine
 
         void setScaling(double scaling);
 
+        DirectX::XMFLOAT2 getGridSize();
+
         void ResetBuffers();
 
         void Draw();
