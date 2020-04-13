@@ -26,6 +26,7 @@ namespace Terrain_engine
         void UpdateLightPosition(DirectX::XMFLOAT3 lightPos);
         void UpdateTerrainSettings(TerrainParams params);
 		void UseTessellation(bool useTessellation);
+		void UseTexture(bool useTexture);
 		void DrawLOD(bool drawLOD);
 		void LoadBitmap(Windows::Storage::StorageFile^ file);
 

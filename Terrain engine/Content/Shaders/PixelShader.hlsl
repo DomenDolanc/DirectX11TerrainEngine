@@ -1,20 +1,7 @@
-Texture2D shadowMap;
+Texture2D terrainTexture;
 SamplerState simpleSampler;
 
-cbuffer DrawParamsConstantBuffer : register(b1)
-{
-    float3 lightPos;
-    float scaling;
-    float3 eyePos;
-    float renderShadows;
-    float usesTessallation;
-    float drawLOD;
-    float2 textureSize;
-    float columns;
-    float rows;
-    float amplitude;
-    float drawTerrain;
-};
+#include "IncludeDrawParams.hlsli"
 
 struct PixelShaderInput
 {
@@ -34,8 +21,13 @@ static const float attQuad = 0.95f;
 
 float4 main(PixelShaderInput input) : SV_TARGET
 {
-    //return float4(1, 1, 1, 1);
-    float4 color = float4(input.color, 1.0);
+    float4 color;
+    if (drawTerrain == 1.0f && useTexture == 1.0f)
+    {
+        float2 tex = input.worldPos.xz / scaling + 0.5f;
+        color = terrainTexture.Sample(simpleSampler, tex);
+    } else
+        color = float4(input.color, 1.0);
     if (renderShadows == 0.0)
         return color;
 	

@@ -32,6 +32,8 @@ namespace Terrain_engine
         DirectX::XMFLOAT2 textureSize;
         TerrainParams terrainParams;
         float drawTerrain;
+        float useTexture;
+        DirectX::XMFLOAT3 padding;
     };
 
     struct VertexPositionColor

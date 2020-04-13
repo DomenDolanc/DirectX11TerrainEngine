@@ -271,6 +271,8 @@
     <Image Include="Assets\Square44x44Logo.scale-200.png" />
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
+    <Image Include="Assets\Textures\Rock_039_baseColor.jpg" />
+    <Image Include="Assets\Textures\Rock_039_normal.jpg" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
@@ -346,6 +348,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Common\DirectXMesh.inl" />
+    <None Include="Content\Shaders\IncludeDrawParams.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Content\Shaders\DomainShader.hlsl">

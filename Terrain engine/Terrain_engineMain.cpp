@@ -151,6 +151,11 @@ void Terrain_engine::Terrain_engineMain::UseTessellation(bool useTessellation)
     m_sceneRenderer->UseTessellation(useTessellation);
 }
 
+void Terrain_engine::Terrain_engineMain::UseTexture(bool useTexture)
+{
+    m_sceneRenderer->UseTexture(useTexture);
+}
+
 void Terrain_engine::Terrain_engineMain::DrawLOD(bool drawLOD)
 {
     m_sceneRenderer->DrawLOD(drawLOD);

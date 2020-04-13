@@ -8,20 +8,7 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
     matrix projection;
 };
 
-cbuffer DrawParamsConstantBuffer : register(b1)
-{
-    float3 lightPos;
-    float scaling;
-    float3 eyePos;
-    float renderShadows;
-    float usesTessallation;
-    float drawLOD;
-    float2 textureSize;
-    float columns;
-    float rows;
-    float amplitude;
-    float drawTerrain;
-};
+#include "IncludeDrawParams.hlsli"
 
 struct DS_OUTPUT
 {

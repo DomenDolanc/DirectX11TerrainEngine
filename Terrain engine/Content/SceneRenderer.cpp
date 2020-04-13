@@ -144,6 +144,11 @@ void Terrain_engine::SceneRenderer::UseTessellation(bool useTessellation)
     m_loadingComplete = true;
 }
 
+void Terrain_engine::SceneRenderer::UseTexture(bool useTexture)
+{
+    m_drawParamsConstantBufferData.useTexture = (useTexture ? 1.0f : 0.0f);
+}
+
 void Terrain_engine::SceneRenderer::DrawLOD(bool drawLOD)
 {
     m_drawLOD = drawLOD;
@@ -202,6 +207,10 @@ void SceneRenderer::Render()
         context->VSSetShaderResources(0, 1, &terrainShaderResouce);
         context->VSSetSamplers(0, 1, sampler);
     }
+
+    auto terrainTextureShaderResouce = m_deviceResources->GetTerrainTextureShaderResourceView();
+    context->PSSetSamplers(0, 1, sampler);
+    context->PSSetShaderResources(0, 1, &terrainTextureShaderResouce);
 
     context->IASetInputLayout(m_inputLayout.Get());
     context->VSSetShader(m_vertexShader.Get(), nullptr, 0);

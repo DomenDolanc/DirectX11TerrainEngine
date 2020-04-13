@@ -2,6 +2,7 @@
 #include "DeviceResources.h"
 #include "DirectXHelper.h"
 #include <windows.ui.xaml.media.dxinterop.h>
+#include "Common/DirectXHelpers/BasicLoader.h"
 
 using namespace D2D1;
 using namespace DirectX;
@@ -11,6 +12,8 @@ using namespace Windows::Graphics::Display;
 using namespace Windows::UI::Core;
 using namespace Windows::UI::Xaml::Controls;
 using namespace Platform;
+using namespace Concurrency;
+using namespace Windows::Storage;
 
 namespace DisplayMetrics
 {
@@ -358,6 +361,16 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 
 		bool drawSolid = true;
 		ChangeDrawMode(drawSolid);
+
+		auto tempFolder = Windows::ApplicationModel::Package::Current->InstalledLocation;
+		
+		BasicLoader^ basicLoader = ref new BasicLoader(m_d3dDevice.Get(), m_wicFactory.Get());
+
+		ID3D11Texture2D* terrainTexture;
+		ID3D11ShaderResourceView* terrainShaderResourceView;
+		Platform::String^ fileName = tempFolder->Path + "\\Assets\\Textures\\Rock_039_baseColor.jpg";
+
+		basicLoader->LoadTexture(fileName, &m_d3dTerrainTexture, &m_d3dTerrainTextureShaderView);
 	}
 
 	// Set the proper orientation for the swap chain, and generate 2D and

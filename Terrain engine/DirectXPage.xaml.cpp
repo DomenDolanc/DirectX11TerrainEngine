@@ -272,7 +272,14 @@ void Terrain_engine::DirectXPage::TessellationParams_Changed(Platform::Object^ s
 	if (!this->IsLoaded)
 		return;
 
-
 	m_main->UseTessellation(UseTessellationCheckBox->IsChecked->Value);
 	m_main->DrawLOD(DrawLODCheckBox->IsChecked->Value);
+}
+
+void Terrain_engine::DirectXPage::TextureParams_Changed(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	if (!this->IsLoaded)
+		return;
+
+	m_main->UseTexture(UseTextureCheckBox->IsChecked->Value);
 }

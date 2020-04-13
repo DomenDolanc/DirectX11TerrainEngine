@@ -53,6 +53,9 @@
     <Filter Include="Common\DirectXHelpers">
       <UniqueIdentifier>{3ba4d948-86f9-47d7-857e-084c1e045628}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets\Textures">
+      <UniqueIdentifier>{e3b751a5-e7e8-4eec-95e2-661df9631ce1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml" />
@@ -141,6 +144,12 @@
     <Image Include="Assets\StoreLogo.png">
       <Filter>Assets</Filter>
     </Image>
+    <Image Include="Assets\Textures\Rock_039_baseColor.jpg">
+      <Filter>Assets\Textures</Filter>
+    </Image>
+    <Image Include="Assets\Textures\Rock_039_normal.jpg">
+      <Filter>Assets\Textures</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -151,6 +160,9 @@
   <ItemGroup>
     <None Include="Common\DirectXMesh.inl">
       <Filter>Common</Filter>
+    </None>
+    <None Include="Content\Shaders\IncludeDrawParams.hlsli">
+      <Filter>Content\Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
