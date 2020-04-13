@@ -4,9 +4,9 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float scaling;
     float3 eyePos;
     float renderShadows;
-    float2 padding4;
     float usesTessallation;
     float drawLOD;
+    float2 padding4;
 };
 
 // Input control point

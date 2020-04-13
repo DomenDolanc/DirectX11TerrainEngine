@@ -9,15 +9,20 @@ namespace Terrain_engine
         DirectX::XMFLOAT4X4 projection;
     };
 
+    struct TessellationParams
+    {
+        float usesTessellation;
+        float drawLOD;
+        DirectX::XMFLOAT2 padding;
+    };
+
     struct DrawParamsConstantBuffer
     {
         DirectX::XMFLOAT3 lightPos;
         float scaling;
         DirectX::XMFLOAT3 eyePos;
         float renderShadows;
-        DirectX::XMFLOAT2 padding;
-        float usesTessellation;
-        float drawLOD;
+        TessellationParams tessellationParams;
     };
 
     struct VertexPositionColor

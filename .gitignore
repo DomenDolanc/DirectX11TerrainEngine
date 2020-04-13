@@ -43,3 +43,6 @@ Debug/Terrain engine/resources.pri
 Debug/Terrain engine/Terrain engine.exp
 Debug/Terrain engine/Terrain engine.lib
 Debug/Terrain engine/AppX/resources.pri
+x64/
+Terrain engine/Generated Files/DirectXPage.xaml
+.vs/Terrain engine/v16/ipch/ddbddadeb9e7af2d.ipch
