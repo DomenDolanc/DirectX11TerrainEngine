@@ -142,6 +142,11 @@ void Terrain_engine::SceneRenderer::DrawLOD(bool drawLOD)
     m_drawLOD = drawLOD;
 }
 
+bool Terrain_engine::SceneRenderer::IsReadyToRender()
+{
+    return m_loadingComplete;
+}
+
 std::shared_ptr<Camera> Terrain_engine::SceneRenderer::getCamera()
 {
     return m_Camera;

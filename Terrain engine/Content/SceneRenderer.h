@@ -33,6 +33,8 @@ namespace Terrain_engine
         void UseTessellation(bool useTessellation);
         void DrawLOD(bool drawLOD);
 
+        bool IsReadyToRender();
+
         std::shared_ptr<Camera> getCamera();
 
     private:

@@ -184,7 +184,7 @@ void Terrain_engineMain::ProcessInput()
 bool Terrain_engineMain::Render() 
 {
 	// Don't try to render anything before the first Update.
-	if (m_timer.GetFrameCount() == 0)
+	if (m_timer.GetFrameCount() == 0 || !m_sceneRenderer->IsReadyToRender())
 	{
 		return false;
 	}
