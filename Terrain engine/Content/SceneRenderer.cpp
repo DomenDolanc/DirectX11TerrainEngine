@@ -18,9 +18,9 @@ SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceR
     m_Terrain = std::make_shared<Terrain>(m_deviceResources);
     m_Terrain->setScaling(m_sceneScaling);
 
-    m_lightPos = { -m_sceneScaling / 4.0f, m_sceneScaling / 2.0f, 0.0f };
+    m_lightPos = { 0.0f, 0.0f, 0.0f};
     m_Light = std::make_shared<Sphere>(m_deviceResources, m_lightPos, 250.0f);
-    m_Light->setScaling(10);
+    m_Light->setScaling(100);
     XMFLOAT2 gridSize = m_Terrain->getGridSize();
     m_drawParamsConstantBufferData.terrainParams.amplitude = 2500.0f;
     m_drawParamsConstantBufferData.terrainParams.columns = gridSize.x;
@@ -36,24 +36,7 @@ Terrain_engine::SceneRenderer::~SceneRenderer()
 
 void SceneRenderer::CreateWindowSizeDependentResources()
 {
-    Size outputSize = m_deviceResources->GetOutputSize();
-    float aspectRatio = outputSize.Width / outputSize.Height;
-    float fovAngleY = 70.0f * XM_PI / 180.0f;
-    float lightFovAngleY = 40.0f * XM_PI / 180.0f;
-
-    if (aspectRatio < 1.0f)
-    {
-        fovAngleY *= 2.0f;
-    }
-
-    XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, 10000.0f);
-    XMMATRIX lightPerspectiveMatrix = XMMatrixPerspectiveFovRH(lightFovAngleY, aspectRatio, 0.1f, 10000.0f);
-
-    XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
-
-    XMMATRIX orientationMatrix = XMLoadFloat4x4(&orientation);
-
-    XMStoreFloat4x4(&m_constantBufferData.projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
+    SetProjection(10000.0f);
     XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationX(0.0)));
 }
@@ -159,6 +142,11 @@ void Terrain_engine::SceneRenderer::SetTextureSize(int width, int height)
     m_drawParamsConstantBufferData.textureSize.y = (float)height;
 }
 
+void Terrain_engine::SceneRenderer::UpdateViewDistance(double viewDistance)
+{
+    SetProjection(viewDistance);
+}
+
 bool Terrain_engine::SceneRenderer::IsReadyToRender()
 {
     return m_loadingComplete;
@@ -239,6 +227,27 @@ void SceneRenderer::Render()
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     m_Light->Draw();
+}
+
+void Terrain_engine::SceneRenderer::SetProjection(double viewDistance)
+{
+    Size outputSize = m_deviceResources->GetOutputSize();
+    float aspectRatio = outputSize.Width / outputSize.Height;
+    float fovAngleY = 70.0f * XM_PI / 180.0f;
+    float lightFovAngleY = 40.0f * XM_PI / 180.0f;
+
+    if (aspectRatio < 1.0f)
+    {
+        fovAngleY *= 2.0f;
+    }
+
+    XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, viewDistance);
+
+    XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
+
+    XMMATRIX orientationMatrix = XMLoadFloat4x4(&orientation);
+
+    XMStoreFloat4x4(&m_constantBufferData.projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
 }
 
 void Terrain_engine::SceneRenderer::RenderFromCameraView()

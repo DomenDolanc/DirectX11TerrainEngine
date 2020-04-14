@@ -29,6 +29,7 @@ namespace Terrain_engine
 		void UseTexture(bool useTexture);
 		void DrawLOD(bool drawLOD);
 		void LoadBitmap(Windows::Storage::StorageFile^ file);
+		void UpdateViewDistance(double viewDistance);
 
 		// IDeviceNotify
 		virtual void OnDeviceLost();

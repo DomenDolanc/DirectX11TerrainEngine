@@ -185,6 +185,11 @@ void Terrain_engine::Terrain_engineMain::LoadBitmap(StorageFile^ file)
     });
 }
 
+void Terrain_engine::Terrain_engineMain::UpdateViewDistance(double viewDistance)
+{
+    m_sceneRenderer->UpdateViewDistance(viewDistance);
+}
+
 // Updates the application state once per frame.
 void Terrain_engineMain::Update() 
 {

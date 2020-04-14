@@ -283,3 +283,12 @@ void Terrain_engine::DirectXPage::TextureParams_Changed(Platform::Object^ sender
 
 	m_main->UseTexture(UseTextureCheckBox->IsChecked->Value);
 }
+
+void Terrain_engine::DirectXPage::TerrainViewDistanceSlider_ValueChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs^ e)
+{
+	if (!this->IsLoaded)
+		return;
+
+	TerrainViewDistanceText->Text = "View distance: " + TerrainViewDistanceSlider->Value.ToString() + "m";
+	m_main->UpdateViewDistance(TerrainViewDistanceSlider->Value);
+}

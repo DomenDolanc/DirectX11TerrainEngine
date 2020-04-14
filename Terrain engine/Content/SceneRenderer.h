@@ -33,6 +33,7 @@ namespace Terrain_engine
         void UseTexture(bool useTexture);
         void DrawLOD(bool drawLOD);
         void SetTextureSize(int width, int height);
+        void UpdateViewDistance(double viewDistance);
 
         bool IsReadyToRender();
 
@@ -40,6 +41,7 @@ namespace Terrain_engine
 
     private:
         void Render();
+        void SetProjection(double viewDistance);
 
     private:
         std::shared_ptr<DX::DeviceResources> m_deviceResources;
@@ -73,7 +75,7 @@ namespace Terrain_engine
         bool	m_loadingComplete;
         float	m_degreesPerSecond;
         bool	m_tracking;
-        const float m_sceneScaling = 10000;
+        const float m_sceneScaling = 50000;
     };
 }
 

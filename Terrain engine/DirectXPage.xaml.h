@@ -66,6 +66,7 @@ namespace Terrain_engine
         void TerrainOptionsSlider_ValueChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs^ e);
         void TessellationParams_Changed(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
         void TextureParams_Changed(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e);
+		void TerrainViewDistanceSlider_ValueChanged(Platform::Object^ sender, Windows::UI::Xaml::Controls::Primitives::RangeBaseValueChangedEventArgs^ e);
     };
 }
 
