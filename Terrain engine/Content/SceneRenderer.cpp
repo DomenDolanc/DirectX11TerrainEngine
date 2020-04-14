@@ -117,7 +117,6 @@ void Terrain_engine::SceneRenderer::UpdateTerrainSettings(TerrainParams params)
 
     m_loadingComplete = false;
     
-    params.amplitude *= 500;
     m_drawParamsConstantBufferData.terrainParams = params;
     XMFLOAT2 oldGridSize = m_Terrain->getGridSize();
     if (oldGridSize.x == params.columns && oldGridSize.y == params.rows)
