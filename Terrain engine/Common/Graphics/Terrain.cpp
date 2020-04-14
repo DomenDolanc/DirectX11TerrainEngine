@@ -50,10 +50,10 @@ void Terrain::CreateVertices()
 
     float tempX = startX;
 
-    for (size_t i = 0; i < m_Columns; i++)
+    for (int i = 0; i < m_Columns; i++)
     {
         float tempZ = startZ;
-        for (size_t j = 0; j < m_Rows; j++)
+        for (int j = 0; j < m_Rows; j++)
         {
             VertexPositionColor vertex;
             vertex.pos = XMFLOAT3(tempX, 0.0, tempZ);
@@ -79,9 +79,9 @@ void Terrain::CreateIndices()
 {
     m_indexBuffer.Reset();
     m_indices.clear();
-    for (size_t i = 0; i < m_Columns - 1; i++)
+    for (int i = 0; i < m_Columns - 1; i++)
     {
-        for (size_t j = 0; j < m_Rows - 1; j++)
+        for (int j = 0; j < m_Rows - 1; j++)
         {
             m_indices.emplace_back(i * m_Rows + j);             // 0
             m_indices.emplace_back((i + 1) * m_Rows + j);       // 2
@@ -107,9 +107,9 @@ void Terrain::CreateQuadIndices()
 {
     m_indexBuffer.Reset();
     m_indices.clear();
-    for (size_t i = 0; i < m_Columns - 1; i++)
+    for (int i = 0; i < m_Columns - 1; i++)
     {
-        for (size_t j = 0; j < m_Rows - 1; j++)
+        for (int j = 0; j < m_Rows - 1; j++)
         {
             m_indices.emplace_back(i * m_Rows + j);             // 0
             m_indices.emplace_back((i + 1) * m_Rows + j);       // 2
@@ -151,8 +151,8 @@ XMFLOAT2 Terrain::getGridSize()
 
 void Terrain_engine::Terrain::setGridSize(float columns, float rows)
 {
-    m_Columns = columns;
-    m_Rows = rows;
+    m_Columns = (int) columns;
+    m_Rows = (int) rows;
 }
 
 void Terrain::ResetBuffers()

@@ -34,20 +34,23 @@ GeometryShaderInput main(VertexShaderInput input)
     
     float4 pos = float4(input.pos, 1.0f);
 
+    output.normal = input.normal;
+    output.color = input.color;
+    
     if (usesTessallation == 1.0f)
     {
-        output.worldPos = pos;
+        output.worldPos = pos.xyz;
         output.normal = input.normal;
         output.color = float3(1.0f, 1.0f, 1.0f);
     } else
     {
-        output.worldPos = mul(pos, model);
+        output.worldPos = mul(pos, model).xyz;
         output.color = input.color;
         if (drawTerrain)
         {
             float2 outTex = float2((pos.x / scaling) + 0.5, (input.pos.z / scaling) + 0.5);
     
-            float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0);
+            float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0).rgb;
     
             float zb = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, -stepY), 0).r * amplitude;
             float zc = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(stepX, 0), 0).r * amplitude;

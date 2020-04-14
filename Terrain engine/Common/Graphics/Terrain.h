@@ -37,7 +37,7 @@ namespace Terrain_engine
 
         int m_Columns = 64;
         int m_Rows = 64;
-        double m_scaling;
+        float m_scaling;
 
         std::vector<VertexPositionColor> m_vertices;
         std::vector<uint32_t> m_indices;

@@ -148,7 +148,7 @@ void Sphere::CreateIndices()
     DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&indexBufferDesc, &indexBufferData, &m_indexBuffer));
 }
 
-void Sphere::setScaling(double scaling)
+void Sphere::setScaling(float scaling)
 {
     m_scaling = scaling;
 }

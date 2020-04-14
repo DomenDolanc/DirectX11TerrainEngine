@@ -63,14 +63,14 @@ void Terrain_engine::SceneRenderer::UpdateMousePosition(DirectX::XMFLOAT2 mouseP
     m_MousePoint = mousePoint;
 
     constexpr double PI = 3.141592653589;
-    double pitch = m_Camera->getPitch() - (deltaY / 150);
+    float pitch = m_Camera->getPitch() - (deltaY / 150);
     pitch = fmod(pitch + PI, 2 * PI);
     if (pitch < 0)
         pitch += 2 * PI;
     pitch = pitch - PI;
     m_Camera->setPitch(pitch);
 
-    double yaw = m_Camera->getYaw();
+    float yaw = m_Camera->getYaw();
     yaw = yaw - deltaX / 150;
     m_Camera->setYaw(yaw);
 
@@ -241,7 +241,7 @@ void Terrain_engine::SceneRenderer::SetProjection(double viewDistance)
         fovAngleY *= 2.0f;
     }
 
-    XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, viewDistance);
+    XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, (float)viewDistance);
 
     XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
 

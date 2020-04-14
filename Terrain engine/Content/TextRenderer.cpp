@@ -95,7 +95,7 @@ void TextRenderer::Render()
     Windows::Foundation::Size logicalSize = m_deviceResources->GetLogicalSize();
 
     BeginDraw();
-    DrawText(m_FPSText, logicalSize.Width - 100, 0);
+    DrawText(m_FPSText, (int)logicalSize.Width - 100, 0);
 
     EndDraw();
 }

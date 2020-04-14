@@ -17,7 +17,7 @@ namespace Terrain_engine
         void CreateVertices();
         void CreateIndices();
 
-        void setScaling(double scaling);
+        void setScaling(float scaling);
 
         void ResetBuffers();
 
@@ -35,7 +35,7 @@ namespace Terrain_engine
         size_t	m_verticesCount;
         size_t	m_indexCount;
 
-        double m_scaling;
+        float m_scaling;
 
         bool m_loadingComplete = true;
 
