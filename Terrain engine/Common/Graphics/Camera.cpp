@@ -59,7 +59,7 @@ void Terrain_engine::Camera::Stop()
     m_TravelSpeed = INITIAL_TRAVEL_SPEED;
 }
 
-void Terrain_engine::Camera::setYaw(double yaw)
+void Terrain_engine::Camera::setYaw(float yaw)
 {
     m_Yaw = yaw;
 }
@@ -69,7 +69,7 @@ double Terrain_engine::Camera::getYaw()
     return m_Yaw;
 }
 
-void Terrain_engine::Camera::setPitch(double pitch)
+void Terrain_engine::Camera::setPitch(float pitch)
 {
     m_Pitch = pitch;
 }

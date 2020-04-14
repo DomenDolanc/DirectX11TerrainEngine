@@ -14,7 +14,8 @@
                         Margin="0 24 0 0"
                         Padding="8 0 0 0"
                         Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left"
-                        Width="300" Background="Black">
+                        Width="300" Background="Black"
+                    PointerMoved="OnPointerMoved">
             <Button
                     Content="Load height map"
                     Foreground="White"

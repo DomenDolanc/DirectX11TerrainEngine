@@ -77,6 +77,11 @@ void Terrain_engine::SceneRenderer::UpdateMousePosition(DirectX::XMFLOAT2 mouseP
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationX(0.0)));
 }
 
+void Terrain_engine::SceneRenderer::SetMousePosition(DirectX::XMFLOAT2 mousePoint)
+{
+    m_MousePoint = mousePoint;
+}
+
 void Terrain_engine::SceneRenderer::TogglePrimitiveRendering()
 {
     m_renderTriangles = !m_renderTriangles;

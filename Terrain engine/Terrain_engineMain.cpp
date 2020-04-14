@@ -131,9 +131,9 @@ void Terrain_engine::Terrain_engineMain::HandleMouseEvent(Windows::Foundation::P
 {
     DirectX::XMFLOAT2 point2D{ point.X, point.Y };
     if (m_isEscKeyPressed)
-        return;
-
-    m_sceneRenderer->UpdateMousePosition(point2D);
+        m_sceneRenderer->SetMousePosition(point2D);
+    else
+        m_sceneRenderer->UpdateMousePosition(point2D);
 }
 
 void Terrain_engine::Terrain_engineMain::UpdateLightPosition(DirectX::XMFLOAT3 lightPos)

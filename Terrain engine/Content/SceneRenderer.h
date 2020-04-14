@@ -23,6 +23,7 @@ namespace Terrain_engine
         void RenderFromCameraView();
 
         void UpdateMousePosition(DirectX::XMFLOAT2 mousePoint);
+        void SetMousePosition(DirectX::XMFLOAT2 mousePoint);
 
         void TogglePrimitiveRendering();
         void ToggleShadowsRendering();

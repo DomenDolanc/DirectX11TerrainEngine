@@ -20,10 +20,10 @@ namespace Terrain_engine
         void UpdateSpeed();
         void Stop();
 
-        void setYaw(double yaw);
+        void setYaw(float yaw);
         double getYaw();
 
-        void setPitch(double pitch);
+        void setPitch(float pitch);
         double getPitch();
 
         DirectX::XMMATRIX GetMatrix();
@@ -38,8 +38,8 @@ namespace Terrain_engine
 
         DirectX::XMFLOAT3 m_position = { 0.0f, 0.0f, 0.0f };
         DirectX::XMFLOAT3 m_CurrentPositon = { 0.0f, 0.0f, 0.0f };
-        double m_Pitch;
-        double m_Yaw;
+        float m_Pitch;
+        float m_Yaw;
         float m_TravelSpeed = INITIAL_TRAVEL_SPEED;
         const float m_Acceleration = 0.5f;
     };
