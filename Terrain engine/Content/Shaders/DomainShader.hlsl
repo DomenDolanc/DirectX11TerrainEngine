@@ -49,8 +49,6 @@ DS_OUTPUT main(
     DS_OUTPUT Output;
 
     Output.pos = lerp(lerp(patch[0].pos, patch[1].pos, domain.x), lerp(patch[2].pos, patch[3].pos, domain.x), domain.y);
-    Output.normal = lerp(lerp(patch[0].normal, patch[1].normal, domain.x), lerp(patch[2].normal, patch[3].normal, domain.x), domain.y);
-    Output.color = lerp(lerp(patch[0].color, patch[1].color, domain.x), lerp(patch[2].color, patch[3].color, domain.x), domain.y);
 	
     float2 outTex = float2((Output.pos.x / scaling) + 0.5, (Output.pos.z / scaling) + 0.5);
     float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0).rgb;

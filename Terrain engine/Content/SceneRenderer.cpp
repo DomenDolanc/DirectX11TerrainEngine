@@ -36,7 +36,7 @@ Terrain_engine::SceneRenderer::~SceneRenderer()
 
 void SceneRenderer::CreateWindowSizeDependentResources()
 {
-    SetProjection(10000.0f);
+    SetProjection(20000.0f);
     XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationX(0.0)));
 }

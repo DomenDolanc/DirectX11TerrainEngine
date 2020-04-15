@@ -307,6 +307,26 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 		swapChainDesc.Scaling = scaling;
 		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
 
+
+		D3D11_BLEND_DESC blendStateDesc;
+		ZeroMemory(&blendStateDesc, sizeof(D3D11_BLEND_DESC));
+		blendStateDesc.AlphaToCoverageEnable = false;
+		blendStateDesc.IndependentBlendEnable = false;
+		blendStateDesc.RenderTarget[0].BlendEnable = true;
+		blendStateDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		blendStateDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		blendStateDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		blendStateDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_SRC_ALPHA;
+		blendStateDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_DEST_ALPHA;
+		blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+		m_d3dDevice->CreateBlendState(&blendStateDesc, &m_blendState);
+		
+		float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		UINT sampleMask = 0xffffffff;
+		m_d3dContext->OMSetBlendState(m_blendState.Get(), blendFactor, sampleMask);
+
 		// This sequence obtains the DXGI factory that was used to create the Direct3D device above.
 		ComPtr<IDXGIDevice3> dxgiDevice;
 		DX::ThrowIfFailed(

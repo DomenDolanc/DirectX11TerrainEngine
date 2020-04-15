@@ -18,6 +18,9 @@ static const float diffueIntensity = 1.0f;
 static const float attConst = 1.0f;
 static const float attLin = 0.55f;
 static const float attQuad = 0.95f;
+static const float4 fogColor = float4(0.9f, 0.9f, 0.9f, 0.0f);
+static const float fogStart = 12000.0f;
+static const float fogRange = 8000.0f;
 
 float4 main(PixelShaderInput input) : SV_TARGET
 {
@@ -26,8 +29,15 @@ float4 main(PixelShaderInput input) : SV_TARGET
     {
         float2 tex = input.worldPos.xz / scaling + 0.5f;
         color = terrainTexture.Sample(simpleSampler, tex);
-    } else
+    } 
+    else
         color = float4(input.color, 1.0);
+    
+    if (drawTerrain == 1.0f)
+    {
+        float fogLerp = saturate((distance(input.worldPos, eyePos) - fogStart) / fogRange);
+        color = lerp(color, fogColor, fogLerp);
+    }
     if (renderShadows == 0.0)
         return color;
 	
