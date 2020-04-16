@@ -200,9 +200,13 @@ void SceneRenderer::Render()
         context->VSSetSamplers(0, 1, sampler);
     }
 
-    auto terrainTextureShaderResouce = m_deviceResources->GetTerrainTextureShaderResourceView();
+    auto dirtTextureShaderResouce = m_deviceResources->GetDirtTextureShaderResourceView();
+    auto rockTextureShaderResouce = m_deviceResources->GetRockTextureShaderResourceView();
+    //auto snowTextureShaderResouce = m_deviceResources->GetSnowTextureShaderResourceView();
     context->PSSetSamplers(0, 1, sampler);
-    context->PSSetShaderResources(0, 1, &terrainTextureShaderResouce);
+    context->PSSetShaderResources(0, 1, &dirtTextureShaderResouce);
+    context->PSSetShaderResources(1, 1, &rockTextureShaderResouce);
+    //context->PSSetShaderResources(2, 1, &snowTextureShaderResouce);
 
     context->IASetInputLayout(m_inputLayout.Get());
     context->VSSetShader(m_vertexShader.Get(), nullptr, 0);

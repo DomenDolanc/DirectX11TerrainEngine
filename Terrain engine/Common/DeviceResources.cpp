@@ -386,11 +386,14 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 		
 		BasicLoader^ basicLoader = ref new BasicLoader(m_d3dDevice.Get(), m_wicFactory.Get());
 
-		ID3D11Texture2D* terrainTexture;
-		ID3D11ShaderResourceView* terrainShaderResourceView;
-		Platform::String^ fileName = tempFolder->Path + "\\Assets\\Textures\\Rock_039_baseColor.jpg";
+		Platform::String^ fileName = tempFolder->Path + "\\Assets\\Textures\\Ground Seamless Texture.jpg";
+		basicLoader->LoadTexture(fileName, &m_d3dDirtTexture, &m_d3dDirtTextureShaderView);
 
-		basicLoader->LoadTexture(fileName, &m_d3dTerrainTexture, &m_d3dTerrainTextureShaderView);
+		fileName = tempFolder->Path + "\\Assets\\Textures\\mountain_stone_rock.jpg";
+		basicLoader->LoadTexture(fileName, &m_d3dRockTexture, &m_d3dRockTextureShaderView);
+
+		//fileName = tempFolder->Path + "\\Assets\\Textures\\Snow_Seamless_Texture_6758_1024x1024.jpg";
+		//basicLoader->LoadTexture(fileName, &m_d3dSnowTexture, &m_d3dSnowTextureShaderView);
 	}
 
 	// Set the proper orientation for the swap chain, and generate 2D and

@@ -45,8 +45,14 @@ namespace DX
 		D3D11_VIEWPORT				GetScreenViewport() const				{ return m_screenViewport; }
 		DirectX::XMFLOAT4X4			GetOrientationTransform3D() const		{ return m_orientationTransform3D; }
 
-		ID3D11Texture2D* GetTerrainTexture() const { return m_d3dTerrainTexture.Get(); }
-		ID3D11ShaderResourceView* GetTerrainTextureShaderResourceView() const { return m_d3dTerrainTextureShaderView.Get(); }
+		ID3D11Texture2D* GetDirtTexture() const { return m_d3dDirtTexture.Get(); }
+		ID3D11ShaderResourceView* GetDirtTextureShaderResourceView() const { return m_d3dDirtTextureShaderView.Get(); }
+
+		ID3D11Texture2D* GetRockTexture() const { return m_d3dRockTexture.Get(); }
+		ID3D11ShaderResourceView* GetRockTextureShaderResourceView() const { return m_d3dRockTextureShaderView.Get(); }
+
+		//ID3D11Texture2D* GetSnowTexture() const { return m_d3dSnowTexture.Get(); }
+		//ID3D11ShaderResourceView* GetSnowTextureShaderResourceView() const { return m_d3dSnowTextureShaderView.Get(); }
 
 		ID3D11Texture2D* GetTerrainHeightMap() const { return m_d3dTerrainHeightMap.Get(); }
 		ID3D11ShaderResourceView* GetTerrainHeightShaderResourceView() const { return m_d3dTerrainHeightMapShaderView.Get(); }
@@ -87,8 +93,14 @@ namespace DX
 		Microsoft::WRL::ComPtr<ID3D11DepthStencilView>	m_d3dDepthStencilView;
 		D3D11_VIEWPORT									m_screenViewport;
 
-        Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dTerrainTexture;
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dTerrainTextureShaderView;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dDirtTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dDirtTextureShaderView;
+
+		Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dRockTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dRockTextureShaderView;
+
+		//Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dSnowTexture;
+		//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dSnowTextureShaderView;
 
         Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dTerrainHeightMap;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dTerrainHeightMapShaderView;

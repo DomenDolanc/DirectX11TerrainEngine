@@ -271,8 +271,19 @@
     <Image Include="Assets\Square44x44Logo.scale-200.png" />
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
+    <Image Include="Assets\Textures\Ground Seamless Texture.jpg" />
+    <Image Include="Assets\Textures\Ground_Dirt_007_basecolor.jpg" />
+    <Image Include="Assets\Textures\Ground_Dirt_007_normal.jpg" />
+    <Image Include="Assets\Textures\Ground_Forest_003_baseColor.jpg" />
+    <Image Include="Assets\Textures\Ground_Forest_003_normal.jpg" />
+    <Image Include="Assets\Textures\mountain_stone_rock.jpg" />
     <Image Include="Assets\Textures\Rock_039_baseColor.jpg" />
     <Image Include="Assets\Textures\Rock_039_normal.jpg" />
+    <Image Include="Assets\Textures\Snow_001_DISP.png" />
+    <Image Include="Assets\Textures\Snow_001_NORM.jpg" />
+    <Image Include="Assets\Textures\Snow_Seamless_Texture_6758_1024x1024.jpg" />
+    <Image Include="Assets\Textures\Stone Path 002_Albedo.jpg" />
+    <Image Include="Assets\Textures\Stone Path 002_Normal.jpg" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
