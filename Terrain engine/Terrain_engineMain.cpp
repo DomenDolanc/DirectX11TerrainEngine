@@ -161,6 +161,11 @@ void Terrain_engine::Terrain_engineMain::DrawLOD(bool drawLOD)
     m_sceneRenderer->DrawLOD(drawLOD);
 }
 
+void Terrain_engine::Terrain_engineMain::UseFrustumCulling(bool useFrustumCulling)
+{
+    m_sceneRenderer->UseFrustumCulling(useFrustumCulling);
+}
+
 void Terrain_engine::Terrain_engineMain::LoadBitmap(StorageFile^ file)
 {
     auto tempFolder = Windows::Storage::ApplicationData::Current->TemporaryFolder;

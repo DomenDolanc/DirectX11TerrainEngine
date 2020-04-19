@@ -274,6 +274,7 @@ void Terrain_engine::DirectXPage::TessellationParams_Changed(Platform::Object^ s
 
 	m_main->UseTessellation(UseTessellationCheckBox->IsChecked->Value);
 	m_main->DrawLOD(DrawLODCheckBox->IsChecked->Value);
+	m_main->UseFrustumCulling(UseFrustumCullingCheckBox->IsChecked->Value);
 }
 
 void Terrain_engine::DirectXPage::TextureParams_Changed(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)

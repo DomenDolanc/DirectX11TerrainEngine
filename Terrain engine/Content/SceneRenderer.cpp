@@ -141,6 +141,11 @@ void Terrain_engine::SceneRenderer::DrawLOD(bool drawLOD)
     m_drawLOD = drawLOD;
 }
 
+void Terrain_engine::SceneRenderer::UseFrustumCulling(bool useFrustumCulling)
+{
+    m_useFrustumCulling = useFrustumCulling;
+}
+
 void Terrain_engine::SceneRenderer::SetTextureSize(int width, int height)
 {
     m_drawParamsConstantBufferData.textureSize.x = (float)width;
@@ -249,6 +254,7 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
     m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
     m_drawParamsConstantBufferData.tessellationParams.drawLOD = m_drawLOD ? 1.0f : 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.useCulling = m_useFrustumCulling ? 1.0f : 0.0f;
     m_drawParamsConstantBufferData.drawTerrain = 1.0f;
 
     GetViewFrustum(m_drawParamsConstantBufferData.planes);

@@ -33,6 +33,7 @@ namespace Terrain_engine
         void UseTessellation(bool useTessellation);
         void UseTexture(bool useTexture);
         void DrawLOD(bool drawLOD);
+        void UseFrustumCulling(bool useFrustumCulling);
         void SetTextureSize(int width, int height);
         void UpdateViewDistance(double viewDistance);
         void GetViewFrustum(DirectX::XMFLOAT4 planes[6]);
@@ -71,6 +72,7 @@ namespace Terrain_engine
         bool m_renderShadows = true;
         bool m_usesTessellation = false;
         bool m_drawLOD = false;
+        bool m_useFrustumCulling = false;
 
         DirectX::XMFLOAT2 m_MousePoint;
 

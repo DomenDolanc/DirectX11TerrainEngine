@@ -28,6 +28,7 @@ namespace Terrain_engine
 		void UseTessellation(bool useTessellation);
 		void UseTexture(bool useTexture);
 		void DrawLOD(bool drawLOD);
+		void UseFrustumCulling(bool useFrustumCulling);
 		void LoadBitmap(Windows::Storage::StorageFile^ file);
 		void UpdateViewDistance(double viewDistance);
 

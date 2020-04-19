@@ -13,6 +13,7 @@ namespace Terrain_engine
     {
         float usesTessellation;
         float drawLOD;
+        float useCulling;
     };
 
     struct TerrainParams
@@ -28,12 +29,12 @@ namespace Terrain_engine
         float scaling;
         DirectX::XMFLOAT3 eyePos;
         float renderShadows;
-        TessellationParams tessellationParams;
-        DirectX::XMFLOAT2 textureSize;
         TerrainParams terrainParams;
         float drawTerrain;
         float useTexture;
-        DirectX::XMFLOAT3 padding;
+        TessellationParams tessellationParams;
+        DirectX::XMFLOAT2 textureSize;
+        DirectX::XMFLOAT2 padding;
         DirectX::XMFLOAT4 planes[6];
     };
 

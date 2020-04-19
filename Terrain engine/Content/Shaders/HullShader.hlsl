@@ -90,16 +90,11 @@ bool aabbOutsideFrustumTest(float3 center, float3 extents, float4 frustumPlanes[
     return false;
 }
 
-// Patch Constant Function
-HS_CONSTANT_DATA_OUTPUT CalcHSPatchConstants(
-	InputPatch<VS_CONTROL_POINT_OUTPUT, NUM_CONTROL_POINTS> ip,
-	uint PatchID : SV_PrimitiveID)
+bool isPatchCulled(InputPatch<VS_CONTROL_POINT_OUTPUT, NUM_CONTROL_POINTS> patch)
 {
-	HS_CONSTANT_DATA_OUTPUT Output;
-    
-    float4 pos0 = ip[0].pos / scaling * 2;
+    float4 pos0 = patch[0].pos / scaling * 2;
     pos0.y = -1.0f;
-    float4 pos3 = ip[3].pos / scaling * 2;
+    float4 pos3 = patch[3].pos / scaling * 2;
     pos3.y = 1.0f;
 
     
@@ -117,13 +112,23 @@ HS_CONSTANT_DATA_OUTPUT CalcHSPatchConstants(
     pos3.z *= -1.0f;
     
     float3 vMin = (float3(pos0.x, pos0.y, pos0.z));
-    float3 vMax = (float3(pos3.x, pos3.y, pos3.z ));
+    float3 vMax = (float3(pos3.x, pos3.y, pos3.z));
      
     // center/extents representation.
     float3 boxCenter = 0.5f * (vMin + vMax);
     float3 boxExtents = 0.5f * (vMax - vMin);
  
-    if (aabbOutsideFrustumTest(boxCenter, boxExtents, frustum))
+    return aabbOutsideFrustumTest(boxCenter, boxExtents, frustum);
+}
+ 
+// Patch Constant Function
+HS_CONSTANT_DATA_OUTPUT CalcHSPatchConstants(
+	InputPatch<VS_CONTROL_POINT_OUTPUT, NUM_CONTROL_POINTS> ip,
+	uint PatchID : SV_PrimitiveID)
+{
+	HS_CONSTANT_DATA_OUTPUT Output;
+    
+    if (useCulling && isPatchCulled(ip))
     {
         Output.EdgeTessFactor[0] = 0.0f;
         Output.EdgeTessFactor[1] = 0.0f;
