@@ -36,7 +36,7 @@ Terrain_engine::SceneRenderer::~SceneRenderer()
 
 void SceneRenderer::CreateWindowSizeDependentResources()
 {
-    SetProjection(20000.0f);
+    SetProjection(25000.0f);
     XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationX(0.0)));
 }
@@ -288,11 +288,11 @@ void SceneRenderer::Render()
 
     auto dirtTextureShaderResouce = m_deviceResources->GetDirtTextureShaderResourceView();
     auto rockTextureShaderResouce = m_deviceResources->GetRockTextureShaderResourceView();
-    //auto snowTextureShaderResouce = m_deviceResources->GetSnowTextureShaderResourceView();
+    auto grassTextureShaderResouce = m_deviceResources->GetGrassTextureShaderResourceView();
     context->PSSetSamplers(0, 1, sampler);
     context->PSSetShaderResources(0, 1, &dirtTextureShaderResouce);
     context->PSSetShaderResources(1, 1, &rockTextureShaderResouce);
-    //context->PSSetShaderResources(2, 1, &snowTextureShaderResouce);
+    context->PSSetShaderResources(2, 1, &grassTextureShaderResouce);
 
     context->IASetInputLayout(m_inputLayout.Get());
     context->VSSetShader(m_vertexShader.Get(), nullptr, 0);

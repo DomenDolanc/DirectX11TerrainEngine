@@ -51,8 +51,8 @@ namespace DX
 		ID3D11Texture2D* GetRockTexture() const { return m_d3dRockTexture.Get(); }
 		ID3D11ShaderResourceView* GetRockTextureShaderResourceView() const { return m_d3dRockTextureShaderView.Get(); }
 
-		//ID3D11Texture2D* GetSnowTexture() const { return m_d3dSnowTexture.Get(); }
-		//ID3D11ShaderResourceView* GetSnowTextureShaderResourceView() const { return m_d3dSnowTextureShaderView.Get(); }
+		ID3D11Texture2D* GetGrassTexture() const { return m_d3dGrassTexture.Get(); }
+		ID3D11ShaderResourceView* GetGrassTextureShaderResourceView() const { return m_d3dGrassTextureShaderView.Get(); }
 
 		ID3D11Texture2D* GetTerrainHeightMap() const { return m_d3dTerrainHeightMap.Get(); }
 		ID3D11ShaderResourceView* GetTerrainHeightShaderResourceView() const { return m_d3dTerrainHeightMapShaderView.Get(); }
@@ -99,8 +99,8 @@ namespace DX
 		Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dRockTexture;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dRockTextureShaderView;
 
-		//Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dSnowTexture;
-		//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dSnowTextureShaderView;
+		Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dGrassTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dGrassTextureShaderView;
 
         Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dTerrainHeightMap;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dTerrainHeightMapShaderView;

@@ -156,7 +156,7 @@
                     Minimum="100"
                     Maximum="50000"
                     StepFrequency="100"
-                    Value="20000"
+                    Value="25000"
                     ValueChanged="TerrainViewDistanceSlider_ValueChanged"
                 />
 

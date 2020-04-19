@@ -389,11 +389,11 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 		Platform::String^ fileName = tempFolder->Path + "\\Assets\\Textures\\Ground Seamless Texture.jpg";
 		basicLoader->LoadTexture(fileName, &m_d3dDirtTexture, &m_d3dDirtTextureShaderView);
 
-		fileName = tempFolder->Path + "\\Assets\\Textures\\mountain_stone_rock.jpg";
+		fileName = tempFolder->Path + "\\Assets\\Textures\\rsz_cliff_seamless_texture_#6624.jpg";
 		basicLoader->LoadTexture(fileName, &m_d3dRockTexture, &m_d3dRockTextureShaderView);
 
-		//fileName = tempFolder->Path + "\\Assets\\Textures\\Snow_Seamless_Texture_6758_1024x1024.jpg";
-		//basicLoader->LoadTexture(fileName, &m_d3dSnowTexture, &m_d3dSnowTextureShaderView);
+		fileName = tempFolder->Path + "\\Assets\\Textures\\rsz_grass_seamless_texture_#1405.jpg";
+		basicLoader->LoadTexture(fileName, &m_d3dGrassTexture, &m_d3dGrassTextureShaderView);
 	}
 
 	// Set the proper orientation for the swap chain, and generate 2D and
