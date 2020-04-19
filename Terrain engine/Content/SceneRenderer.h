@@ -35,6 +35,7 @@ namespace Terrain_engine
         void DrawLOD(bool drawLOD);
         void SetTextureSize(int width, int height);
         void UpdateViewDistance(double viewDistance);
+        void GetViewFrustum(DirectX::XMFLOAT4 planes[6]);
 
         bool IsReadyToRender();
 
@@ -77,6 +78,7 @@ namespace Terrain_engine
         float	m_degreesPerSecond;
         bool	m_tracking;
         const float m_sceneScaling = 50000;
+        float m_viewDistance = 0.0f;
     };
 }
 

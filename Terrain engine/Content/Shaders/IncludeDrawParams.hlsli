@@ -13,4 +13,5 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float drawTerrain;
     float useTexture;
     float3 padding;
+    float4 frustum[6];
 };

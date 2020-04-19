@@ -152,6 +152,83 @@ void Terrain_engine::SceneRenderer::UpdateViewDistance(double viewDistance)
     SetProjection(viewDistance);
 }
 
+void Terrain_engine::SceneRenderer::GetViewFrustum(XMFLOAT4 planes[6])
+{
+    XMFLOAT4X4 M;
+
+    //Size outputSize = m_deviceResources->GetOutputSize();
+    //float aspectRatio = outputSize.Width / outputSize.Height;
+    //float fovAngleY = 70.0f * XM_PI / 180.0f;
+    //float lightFovAngleY = 40.0f * XM_PI / 180.0f;
+
+    //if (aspectRatio < 1.0f)
+    //{
+    //    fovAngleY *= 2.0f;
+    //}
+
+    //XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, (float)m_viewDistance);
+
+    //XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
+
+    //XMMATRIX orientationMatrix = XMLoadFloat4x4(&orientation);
+    //XMFLOAT4X4 projFloat;
+    //XMStoreFloat4x4(&projFloat, perspectiveMatrix);
+    ////projFloat._43 *= -1.0f;
+    //perspectiveMatrix = XMLoadFloat4x4(&projFloat);
+    //XMMATRIX proj = (perspectiveMatrix * orientationMatrix);
+
+    XMMATRIX proj = XMLoadFloat4x4(&m_constantBufferData.projection);
+    //proj = XMMatrixTranspose(proj);
+
+    //XMMATRIX view = m_Camera->GetMatrix(); 
+    XMMATRIX view = XMLoadFloat4x4(&m_constantBufferData.view);
+    //view = XMMatrixTranspose(view);
+
+    XMStoreFloat4x4(&M, proj * view);
+
+    // left
+    planes[0].x = M(0, 3) + M(0, 0);
+    planes[0].y = M(1, 3) + M(1, 0);
+    planes[0].z = M(2, 3) + M(2, 0);
+    planes[0].w = M(3, 3) + M(3, 0);
+
+    // right
+    planes[1].x = M(0, 3) - M(0, 0);
+    planes[1].y = M(1, 3) - M(1, 0);
+    planes[1].z = M(2, 3) - M(2, 0);
+    planes[1].w = M(3, 3) - M(3, 0);
+
+    // bottom
+    planes[2].x = M(0, 3) + M(0, 1);
+    planes[2].y = M(1, 3) + M(1, 1);
+    planes[2].z = M(2, 3) + M(2, 1);
+    planes[2].w = M(3, 3) + M(3, 1);
+
+    // top
+    planes[3].x = M(0, 3) - M(0, 1);
+    planes[3].y = M(1, 3) - M(1, 1);
+    planes[3].z = M(2, 3) - M(2, 1);
+    planes[3].w = M(3, 3) - M(3, 1);
+
+    // near
+    planes[4].x = M(0, 3) + M(0, 2);
+    planes[4].y = M(1, 3) + M(1, 2);
+    planes[4].z = M(2, 3) + M(2, 2);
+    planes[4].w = M(3, 3) + M(3, 2);
+
+    // far
+    planes[5].x = M(0, 3) - M(0, 2);
+    planes[5].y = M(1, 3) - M(1, 2);
+    planes[5].z = M(2, 3) - M(2, 2);
+    planes[5].w = M(3, 3) - M(3, 2);
+
+    // normalize all planes
+    for (auto i = 0; i < 6; ++i) {
+        XMVECTOR v = XMPlaneNormalize(XMLoadFloat4(&planes[i]));
+        XMStoreFloat4(&planes[i], v);
+    }
+}
+
 bool Terrain_engine::SceneRenderer::IsReadyToRender()
 {
     return m_loadingComplete;
@@ -174,7 +251,9 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.tessellationParams.drawLOD = m_drawLOD ? 1.0f : 0.0f;
     m_drawParamsConstantBufferData.drawTerrain = 1.0f;
 
-    context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
+    GetViewFrustum(m_drawParamsConstantBufferData.planes);
+
+     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
 
     auto terrainShaderResouce = m_deviceResources->GetTerrainHeightShaderResourceView();
     ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
@@ -188,6 +267,7 @@ void SceneRenderer::Render()
         context->DSSetSamplers(0, 1, sampler);
         context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
         context->DSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+        context->HSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
         context->HSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     }
     else
@@ -249,6 +329,8 @@ void Terrain_engine::SceneRenderer::SetProjection(double viewDistance)
     {
         fovAngleY *= 2.0f;
     }
+
+    m_viewDistance = viewDistance;
 
     XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, (float)viewDistance);
 

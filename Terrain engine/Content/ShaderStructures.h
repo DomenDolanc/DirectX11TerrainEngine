@@ -34,6 +34,7 @@ namespace Terrain_engine
         float drawTerrain;
         float useTexture;
         DirectX::XMFLOAT3 padding;
+        DirectX::XMFLOAT4 planes[6];
     };
 
     struct VertexPositionColor
