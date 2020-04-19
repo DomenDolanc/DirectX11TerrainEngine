@@ -64,7 +64,10 @@ DS_OUTPUT main(
     Output.pos = mul(Output.pos, model);
     Output.pos = mul(Output.pos, view);
     Output.pos = mul(Output.pos, projection);
-    Output.color = sampledTexture;
+    if (drawLOD)
+        Output.color = lerp(lerp(patch[0].color, patch[1].color, domain.x), lerp(patch[2].color, patch[3].color, domain.x), domain.y);
+    else
+        Output.color = sampledTexture;
 
     return Output;
 }
