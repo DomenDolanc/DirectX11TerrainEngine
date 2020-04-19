@@ -7,6 +7,7 @@
 #include "..\Common\Graphics\Terrain.h"
 #include "..\Common\Graphics\Sphere.h"
 #include "..\Common\Graphics\Camera.h"
+#include "..\Common\Graphics\Water.h"
 #include "..\Common\DirectXMesh.h"
 
 namespace Terrain_engine
@@ -56,6 +57,9 @@ namespace Terrain_engine
         Microsoft::WRL::ComPtr<ID3D11HullShader>	    m_hullShader;
         Microsoft::WRL::ComPtr<ID3D11DomainShader>	    m_domainShader;
 
+        Microsoft::WRL::ComPtr<ID3D11VertexShader>	    m_waterVertexShader;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader>	    m_waterPixelShader;
+
         Microsoft::WRL::ComPtr<ID3D11Buffer>		    m_constantBuffer;
         Microsoft::WRL::ComPtr<ID3D11Buffer>		    m_drawParamsConstantBuffer;
 
@@ -65,6 +69,7 @@ namespace Terrain_engine
         std::shared_ptr<Camera> m_Camera;
         std::shared_ptr<Terrain> m_Terrain;
         std::shared_ptr<Sphere> m_Light;
+        std::shared_ptr<Water> m_Water;
 
         DirectX::XMFLOAT3 m_lightPos;
 

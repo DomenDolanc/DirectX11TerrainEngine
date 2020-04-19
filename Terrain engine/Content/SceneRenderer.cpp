@@ -21,6 +21,10 @@ SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceR
     m_lightPos = { 0.0f, 0.0f, 0.0f};
     m_Light = std::make_shared<Sphere>(m_deviceResources, m_lightPos, 250.0f);
     m_Light->setScaling(100);
+
+    m_Water = std::make_shared<Water>(m_deviceResources);
+    m_Water->setScaling(m_sceneScaling);
+
     XMFLOAT2 gridSize = m_Terrain->getGridSize();
     m_drawParamsConstantBufferData.terrainParams.amplitude = 2500.0f;
     m_drawParamsConstantBufferData.terrainParams.columns = gridSize.x;
@@ -259,7 +263,7 @@ void SceneRenderer::Render()
 
     GetViewFrustum(m_drawParamsConstantBufferData.planes);
 
-     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
+    context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
 
     auto terrainShaderResouce = m_deviceResources->GetTerrainHeightShaderResourceView();
     ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
@@ -322,6 +326,21 @@ void SceneRenderer::Render()
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     m_Light->Draw();
+
+    ID3D11Buffer* const constBuff[1] = { nullptr };
+
+    context->IASetInputLayout(m_inputLayout.Get());
+
+    context->VSSetShader(m_waterVertexShader.Get(), nullptr, 0);
+    context->VSSetConstantBuffers1(1, 1, constBuff, nullptr, nullptr);
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
+    context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
+    context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+
+    context->PSSetShader(m_waterPixelShader.Get(), nullptr, 0);
+    context->PSSetConstantBuffers1(1, 1, constBuff, nullptr, nullptr);
+    context->RSSetState(rasterizer);
+    m_Water->Draw();
 }
 
 void Terrain_engine::SceneRenderer::SetProjection(double viewDistance)
@@ -370,6 +389,8 @@ void SceneRenderer::CreateDeviceDependentResources()
     auto loadGSTask = DX::ReadDataAsync(L"GeometryShader.cso");
     auto loadHSTask = DX::ReadDataAsync(L"HullShader.cso");
     auto loadDSTask = DX::ReadDataAsync(L"DomainShader.cso");
+    auto loadWaterVSTask = DX::ReadDataAsync(L"WaterVertexShader.cso");
+    auto loadWaterPSTask = DX::ReadDataAsync(L"WaterPixelShader.cso");
 
     auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) {
         DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateVertexShader(&fileData[0], fileData.size(), nullptr, &m_vertexShader));
@@ -406,6 +427,14 @@ void SceneRenderer::CreateDeviceDependentResources()
         DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateDomainShader(&fileData[0], fileData.size(), nullptr, &m_domainShader));
         });
 
+    auto createWaterVSTask = loadWaterVSTask.then([this](const std::vector<byte>& fileData) {
+        DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateVertexShader(&fileData[0], fileData.size(), nullptr, &m_waterVertexShader));
+    });
+
+    auto createWaterPSTask = loadWaterPSTask.then([this](const std::vector<byte>& fileData) {
+        DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreatePixelShader(&fileData[0], fileData.size(), nullptr, &m_waterPixelShader));
+        });
+
     auto createTerrainTask = (createPSTask && createVSTask).then([this]()
         {
             m_Terrain->CreateIndices();
@@ -418,7 +447,13 @@ void SceneRenderer::CreateDeviceDependentResources()
             m_Light->CreateVertices();
         });
 
-    auto meshesTask = (createTerrainTask && createLightTask).then([this]() {
+    auto createWaterTask = (createWaterPSTask && createWaterVSTask).then([this]()
+        {
+            m_Water->CreateIndices();
+            m_Water->CreateVertices();
+        });
+
+    auto meshesTask = (createTerrainTask && createLightTask && createWaterTask).then([this]() {
         m_loadingComplete = true;
         });
 }
@@ -434,4 +469,5 @@ void SceneRenderer::ReleaseDeviceDependentResources()
     m_drawParamsConstantBuffer.Reset();
     m_Terrain->ResetBuffers();
     m_Light->ResetBuffers();
+    m_Water->ResetBuffers();
 }

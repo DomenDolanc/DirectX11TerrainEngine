@@ -102,6 +102,9 @@
     <ClCompile Include="Common\DirectXHelpers\DDSTextureLoader.cpp">
       <Filter>Common\DirectXHelpers</Filter>
     </ClCompile>
+    <ClCompile Include="Common\Graphics\Water.cpp">
+      <Filter>Common\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Terrain_engineMain.h" />
@@ -138,6 +141,9 @@
     </ClInclude>
     <ClInclude Include="Common\DirectXHelpers\DDSTextureLoader.h">
       <Filter>Common\DirectXHelpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Graphics\Water.h">
+      <Filter>Common\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -212,6 +218,12 @@
       <Filter>Content\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Content\Shaders\DomainShader.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterVertexShader.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="WaterPixelShader.hlsl">
       <Filter>Content\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
