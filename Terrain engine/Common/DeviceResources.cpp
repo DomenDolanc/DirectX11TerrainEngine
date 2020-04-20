@@ -272,6 +272,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 			lround(m_d3dRenderTargetSize.Height),
 			DXGI_FORMAT_B8G8R8A8_UNORM,
 			0
+			//DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING	// this turns off vsync
 			);
 
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
@@ -304,6 +305,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 		swapChainDesc.BufferCount = 2;									// Use double-buffering to minimize latency.
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;	// All Microsoft Store apps must use _FLIP_ SwapEffects.
 		swapChainDesc.Flags = 0;
+		//swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;		// this turns off vsync
 		swapChainDesc.Scaling = scaling;
 		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
 
@@ -773,6 +775,7 @@ void DX::DeviceResources::Present()
 	// frames that will never be displayed to the screen.
 	DXGI_PRESENT_PARAMETERS parameters = { 0 };
 	HRESULT hr = m_swapChain->Present1(1, 0, &parameters);
+	//HRESULT hr = m_swapChain->Present1(0, DXGI_PRESENT_ALLOW_TEARING, &parameters);		// this turns off vsync
 
 	// Discard the contents of the render target.
 	// This is a valid operation only when the existing contents will be entirely
