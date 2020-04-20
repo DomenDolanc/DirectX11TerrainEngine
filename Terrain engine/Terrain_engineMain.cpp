@@ -243,12 +243,6 @@ bool Terrain_engineMain::Render()
 void Terrain_engine::Terrain_engineMain::RenderFromCameraView()
 {
     auto context = m_deviceResources->GetD3DDeviceContext();
-    ID3D11RenderTargetView* const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
-
-    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
-    context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
-    context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
     m_sceneRenderer->RenderFromCameraView();
 }
 

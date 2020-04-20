@@ -374,6 +374,12 @@ void Terrain_engine::SceneRenderer::RenderFromCameraView()
     }
     auto context = m_deviceResources->GetD3DDeviceContext();
 
+    ID3D11RenderTargetView* const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
+
+    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
+    context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
+    context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
     XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
