@@ -249,9 +249,6 @@ void Terrain_engine::Terrain_engineMain::RenderFromCameraView()
     context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
     context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-    ID3D11ShaderResourceView* const resourceView[1] = { m_deviceResources->GetShadowMapShaderResourceView() };
-    context->PSSetShaderResources(0, 1, resourceView);
-
     m_sceneRenderer->RenderFromCameraView();
 }
 

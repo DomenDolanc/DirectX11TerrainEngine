@@ -60,9 +60,6 @@ namespace DX
 		void SetTerrainHeightMap(ID3D11Texture2D* texture);
 		void SetTerrainHeightShaderResourceView(ID3D11ShaderResourceView* resourceView);
 
-        ID3D11Texture2D* GetShadowMap() const { return m_d3dShadowMap.Get(); }
-        ID3D11DepthStencilView* GetShadowMapDepthView() const { return m_d3dShadowMapDepthView.Get(); }
-        ID3D11ShaderResourceView* GetShadowMapShaderResourceView() const { return m_d3dShadowMapShaderView.Get(); }
         ID3D11SamplerState* GetSampler() const { return m_d3dSampler.Get(); }
 
 		// D2D Accessors.
@@ -105,9 +102,6 @@ namespace DX
         Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dTerrainHeightMap;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dTerrainHeightMapShaderView;
 
-        Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dShadowMap;
-        Microsoft::WRL::ComPtr<ID3D11DepthStencilView>  m_d3dShadowMapDepthView;
-        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dShadowMapShaderView;
         Microsoft::WRL::ComPtr<ID3D11SamplerState>      m_d3dSampler;
 
 		// Direct2D drawing components.

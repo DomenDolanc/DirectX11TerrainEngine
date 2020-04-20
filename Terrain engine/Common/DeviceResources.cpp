@@ -535,37 +535,6 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 	m_d2dContext->SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE_GRAYSCALE);
 
 
-    D3D11_TEXTURE2D_DESC texDesc;
-    texDesc.Width = lround(m_d3dRenderTargetSize.Width);
-    texDesc.Height = lround(m_d3dRenderTargetSize.Height);
-    texDesc.MipLevels = 1;
-    texDesc.ArraySize = 1;
-    texDesc.Format = DXGI_FORMAT_R32_TYPELESS;
-    texDesc.SampleDesc.Count = 1;
-    texDesc.SampleDesc.Quality = 0;
-    texDesc.Usage = D3D11_USAGE_DEFAULT;
-    texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-    texDesc.CPUAccessFlags = 0;
-    texDesc.MiscFlags = 0;
-
-    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
-    ZeroMemory(&descDSV, sizeof(descDSV));
-    descDSV.Format = DXGI_FORMAT_D32_FLOAT;
-    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    descDSV.Texture2D.MipSlice = 0;
-
-    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-    ZeroMemory(&srvDesc, sizeof(srvDesc));
-    srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
-    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
-    srvDesc.Texture2D.MostDetailedMip = 0;
-
-    DX::ThrowIfFailed(m_d3dDevice->CreateTexture2D(&texDesc, NULL, &m_d3dShadowMap));
-    DX::ThrowIfFailed(m_d3dDevice->CreateDepthStencilView(m_d3dShadowMap.Get(), &descDSV, &m_d3dShadowMapDepthView));
-    DX::ThrowIfFailed(m_d3dDevice->CreateShaderResourceView(m_d3dShadowMap.Get(), &srvDesc, &m_d3dShadowMapShaderView));
-
-
     D3D11_SAMPLER_DESC samplerDesc;
     ZeroMemory(&samplerDesc, sizeof(samplerDesc));
     samplerDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
