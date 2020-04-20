@@ -27,6 +27,8 @@ Water::~Water()
     m_d3dRefractionTexture.Reset();
     m_d3dReflectionTextureShaderView.Reset();
     m_d3dRefractionTextureShaderView.Reset();
+    m_d3dReflectionRenderTarget.Reset();
+    m_d3dRefractionRenderTarget.Reset();
 }
 
 void Terrain_engine::Water::CreateReflectionTexture()
@@ -52,6 +54,8 @@ void Terrain_engine::Water::CreateReflectionTexture()
     srvDesc.Texture2D.MostDetailedMip = 0;
     srvDesc.Texture2D.MipLevels = 1;
     DX::ThrowIfFailed(device->CreateShaderResourceView(m_d3dReflectionTexture.Get(), &srvDesc, &m_d3dReflectionTextureShaderView));
+
+    DX::ThrowIfFailed(device->CreateRenderTargetView1(m_d3dReflectionTexture.Get(), nullptr, &m_d3dReflectionRenderTarget));
 }
 
 void Terrain_engine::Water::CreateRefrationTexture()
@@ -77,6 +81,8 @@ void Terrain_engine::Water::CreateRefrationTexture()
     srvDesc.Texture2D.MostDetailedMip = 0;
     srvDesc.Texture2D.MipLevels = 1;
     DX::ThrowIfFailed(device->CreateShaderResourceView(m_d3dReflectionTexture.Get(), &srvDesc, &m_d3dRefractionTextureShaderView));
+
+    DX::ThrowIfFailed(device->CreateRenderTargetView1(m_d3dRefractionTexture.Get(), nullptr, &m_d3dRefractionRenderTarget));
 }
 
 void Water::CreateVertices()
