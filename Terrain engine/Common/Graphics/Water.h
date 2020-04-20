@@ -13,6 +13,9 @@ namespace Terrain_engine
         Water(std::shared_ptr<DX::DeviceResources> deviceResources);
         ~Water();
 
+        void CreateReflectionTexture();
+        void CreateRefrationTexture();
+
         void CreateVertices();
         void CreateIndices();
 
@@ -36,5 +39,11 @@ namespace Terrain_engine
 
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertexBuffer;
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_indexBuffer;
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dReflectionTexture;
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dReflectionTextureShaderView;
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dRefractionTexture;
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dRefractionTextureShaderView;
     };
 }

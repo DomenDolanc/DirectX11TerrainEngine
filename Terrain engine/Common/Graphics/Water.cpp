@@ -9,15 +9,74 @@ using namespace Terrain_engine;
 using namespace DirectX;
 using namespace Windows::Foundation;
 
+static const UINT TextureWidth = 512;
+static const UINT TextureHeight = 512;
+
 Water::Water(std::shared_ptr<DX::DeviceResources> deviceResources)
 {
     m_deviceResources = deviceResources;
+    CreateReflectionTexture();
+    CreateRefrationTexture();
 }
 
 Water::~Water()
 {
     m_vertices.clear();
     m_indices.clear();
+    m_d3dReflectionTexture.Reset();
+    m_d3dRefractionTexture.Reset();
+    m_d3dReflectionTextureShaderView.Reset();
+    m_d3dRefractionTextureShaderView.Reset();
+}
+
+void Terrain_engine::Water::CreateReflectionTexture()
+{
+    auto device = m_deviceResources->GetD3DDevice();
+
+    D3D11_TEXTURE2D_DESC textureDesc;
+    ZeroMemory(&textureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+    textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+    textureDesc.Width = TextureWidth;
+    textureDesc.Height = TextureWidth;
+    textureDesc.SampleDesc.Count = 1;
+    textureDesc.Usage = D3D11_USAGE_DEFAULT;
+    textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+    textureDesc.MipLevels = 1;
+    textureDesc.ArraySize = 1;
+
+    DX::ThrowIfFailed(device->CreateTexture2D(&textureDesc, NULL, &m_d3dReflectionTexture));
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format = textureDesc.Format;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    srvDesc.Texture2D.MipLevels = 1;
+    DX::ThrowIfFailed(device->CreateShaderResourceView(m_d3dReflectionTexture.Get(), &srvDesc, &m_d3dReflectionTextureShaderView));
+}
+
+void Terrain_engine::Water::CreateRefrationTexture()
+{
+    auto device = m_deviceResources->GetD3DDevice();
+
+    D3D11_TEXTURE2D_DESC textureDesc;
+    ZeroMemory(&textureDesc, sizeof(D3D11_TEXTURE2D_DESC));
+    textureDesc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+    textureDesc.Width = TextureWidth;
+    textureDesc.Height = TextureWidth;
+    textureDesc.SampleDesc.Count = 1;
+    textureDesc.Usage = D3D11_USAGE_DEFAULT;
+    textureDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+    textureDesc.MipLevels = 1;
+    textureDesc.ArraySize = 1;
+
+    DX::ThrowIfFailed(device->CreateTexture2D(&textureDesc, NULL, &m_d3dRefractionTexture));
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format = textureDesc.Format;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    srvDesc.Texture2D.MipLevels = 1;
+    DX::ThrowIfFailed(device->CreateShaderResourceView(m_d3dReflectionTexture.Get(), &srvDesc, &m_d3dRefractionTextureShaderView));
 }
 
 void Water::CreateVertices()
