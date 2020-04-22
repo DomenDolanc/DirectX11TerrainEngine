@@ -4,6 +4,7 @@ struct GSInputOutput
     float3 color : COLOR0;
     float3 normal : NORMAL0;
     float3 worldPos : POSITIONT;
+    float clip : SV_ClipDistance0;
 };
 
 [maxvertexcount(3)]

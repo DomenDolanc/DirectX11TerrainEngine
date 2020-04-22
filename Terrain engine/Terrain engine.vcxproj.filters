@@ -220,10 +220,10 @@
     <FxCompile Include="Content\Shaders\DomainShader.hlsl">
       <Filter>Content\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="WaterVertexShader.hlsl">
+    <FxCompile Include="Content\Shaders\WaterPixelShader.hlsl">
       <Filter>Content\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="WaterPixelShader.hlsl">
+    <FxCompile Include="Content\Shaders\WaterVertexShader.hlsl">
       <Filter>Content\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

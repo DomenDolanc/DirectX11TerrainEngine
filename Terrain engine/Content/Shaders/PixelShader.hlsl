@@ -11,6 +11,7 @@ struct PixelShaderInput
     float3 color : COLOR0;
     float3 normal : NORMAL0;
     float3 worldPos : POSITIONT;
+    float clip : SV_ClipDistance0;
 };
 
 static const float3 materialColor = float3(0.7f, 0.7f, 0.9f);

@@ -14,6 +14,7 @@ struct VS_CONTROL_POINT_OUTPUT
     float3 color : COLOR0;
     float3 normal : NORMAL0;
     float3 worldPos : POSITIONT;
+    float clip : SV_ClipDistance0;
 };
 
 // Output control point
@@ -23,6 +24,7 @@ struct HS_CONTROL_POINT_OUTPUT
     float3 color : COLOR0;
     float3 normal : NORMAL0;
     float3 worldPos : POSITIONT;
+    float clip : SV_ClipDistance0;
 };
 
 // Output patch constant data.
@@ -177,6 +179,7 @@ HS_CONTROL_POINT_OUTPUT main(
         Output.color = colorLOD[min(CalcTessFactor(0.25f * (ip[0].pos + ip[1].pos + ip[2].pos + ip[3].pos).xyz), 5)];
     else
         Output.color = ip[i].color;
+    Output.clip = ip[i].clip;
 
 	return Output;
 }

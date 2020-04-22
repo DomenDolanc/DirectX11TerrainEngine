@@ -43,6 +43,10 @@ void SceneRenderer::CreateWindowSizeDependentResources()
     SetProjection(25000.0f);
     XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationX(0.0)));
+
+    Windows::Foundation::Size targetSize = m_deviceResources->GetRenderTargetSize();
+    m_Water->CreateReflectionTexture(targetSize);
+    m_Water->CreateRefrationTexture(targetSize);
 }
 
 void SceneRenderer::Update(DX::StepTimer const& timer)
@@ -248,7 +252,100 @@ std::shared_ptr<Camera> Terrain_engine::SceneRenderer::getCamera()
     return m_Camera;
 }
 
-void SceneRenderer::Render()
+void Terrain_engine::SceneRenderer::SetProjection(double viewDistance)
+{
+    Size outputSize = m_deviceResources->GetOutputSize();
+    float aspectRatio = outputSize.Width / outputSize.Height;
+    float fovAngleY = 70.0f * XM_PI / 180.0f;
+    float lightFovAngleY = 40.0f * XM_PI / 180.0f;
+
+    if (aspectRatio < 1.0f)
+    {
+        fovAngleY *= 2.0f;
+    }
+
+    m_viewDistance = viewDistance;
+
+    XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, (float)viewDistance);
+
+    XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
+
+    XMMATRIX orientationMatrix = XMLoadFloat4x4(&orientation);
+
+    XMStoreFloat4x4(&m_constantBufferData.projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
+}
+
+void Terrain_engine::SceneRenderer::Render()
+{
+    if (!m_loadingComplete)
+    {
+        return;
+    }
+    auto context = m_deviceResources->GetD3DDeviceContext();
+    ID3D11RenderTargetView* const targets[1] = { nullptr };
+    ID3D11ShaderResourceView* const resourceView[1] = { nullptr };
+
+    float cameraYaw = m_Camera->getYaw();
+    float cameraPitch = m_Camera->getPitch();
+    XMFLOAT3 cameraPos = m_Camera->getEye();
+    
+    context->PSSetShaderResources(0, 1, resourceView);
+    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
+
+    m_Camera->setPitch(-cameraPitch);
+    //m_Camera->setYaw(0.0f); 
+    m_Camera->setEye({ cameraPos.x, -cameraPos.y, cameraPos.z });
+    RenderToWaterReflection();
+
+    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
+    m_Camera->setPitch(cameraPitch);
+    m_Camera->setYaw(cameraYaw); 
+    m_Camera->setEye(cameraPos);
+    RenderToBackBuffer();
+}
+
+void Terrain_engine::SceneRenderer::RenderToWaterReflection()
+{
+    if (!m_loadingComplete)
+    {
+        return;
+    }
+    auto context = m_deviceResources->GetD3DDeviceContext();
+
+    ID3D11RenderTargetView* const targets[1] = { m_Water->GetReflectionRenderTarget() };
+
+    context->OMSetRenderTargets(1, targets, m_Water->GetReflectionDepthStencilView());
+    context->ClearRenderTargetView(m_Water->GetReflectionRenderTarget(), DirectX::Colors::CornflowerBlue);
+    context->ClearDepthStencilView(m_Water->GetReflectionDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
+    context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
+    context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+
+    RenderScene();
+}
+
+void Terrain_engine::SceneRenderer::RenderToBackBuffer()
+{
+    auto context = m_deviceResources->GetD3DDeviceContext();
+
+    ID3D11RenderTargetView* const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
+
+    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
+    context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
+    context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
+    context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
+    context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+
+    RenderScene();
+    RenderWater();
+}
+
+void SceneRenderer::RenderScene()
 {
     auto context = m_deviceResources->GetD3DDeviceContext();
     auto rasterizer = m_deviceResources->GetRasterizerState();
@@ -319,73 +416,33 @@ void SceneRenderer::Render()
     m_drawParamsConstantBufferData.scaling = m_sceneScaling;
     m_drawParamsConstantBufferData.renderShadows = 0.0f;
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
-    m_drawParamsConstantBufferData.eyePos = m_Camera->GetEye();
+    m_drawParamsConstantBufferData.eyePos = m_Camera->getEye();
     m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
     m_drawParamsConstantBufferData.tessellationParams.drawLOD = 0.0f;
     m_drawParamsConstantBufferData.drawTerrain = 0.0f;
     context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     m_Light->Draw();
+}
 
+void Terrain_engine::SceneRenderer::RenderWater()
+{
+    auto context = m_deviceResources->GetD3DDeviceContext();
     ID3D11Buffer* const constBuff[1] = { nullptr };
+    ID3D11ShaderResourceView* const resourceView[1] = { m_Water->GetReflectionTextureResourceView() };
 
     context->IASetInputLayout(m_inputLayout.Get());
 
     context->VSSetShader(m_waterVertexShader.Get(), nullptr, 0);
-    context->VSSetConstantBuffers1(1, 1, constBuff, nullptr, nullptr);
+    context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
     context->PSSetShader(m_waterPixelShader.Get(), nullptr, 0);
-    context->PSSetConstantBuffers1(1, 1, constBuff, nullptr, nullptr);
-    context->RSSetState(rasterizer);
+    //context->PSSetConstantBuffers1(1, 1, constBuff, nullptr, nullptr);
+    context->PSSetShaderResources(0, 1, resourceView);
     m_Water->Draw();
-}
-
-void Terrain_engine::SceneRenderer::SetProjection(double viewDistance)
-{
-    Size outputSize = m_deviceResources->GetOutputSize();
-    float aspectRatio = outputSize.Width / outputSize.Height;
-    float fovAngleY = 70.0f * XM_PI / 180.0f;
-    float lightFovAngleY = 40.0f * XM_PI / 180.0f;
-
-    if (aspectRatio < 1.0f)
-    {
-        fovAngleY *= 2.0f;
-    }
-
-    m_viewDistance = viewDistance;
-
-    XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, (float)viewDistance);
-
-    XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
-
-    XMMATRIX orientationMatrix = XMLoadFloat4x4(&orientation);
-
-    XMStoreFloat4x4(&m_constantBufferData.projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
-}
-
-void Terrain_engine::SceneRenderer::RenderFromCameraView()
-{
-    if (!m_loadingComplete)
-    {
-        return;
-    }
-    auto context = m_deviceResources->GetD3DDeviceContext();
-
-    ID3D11RenderTargetView* const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
-
-    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
-    context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
-    context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
-    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
-    context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
-    context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
-
-    Render();
 }
 
 void SceneRenderer::CreateDeviceDependentResources()

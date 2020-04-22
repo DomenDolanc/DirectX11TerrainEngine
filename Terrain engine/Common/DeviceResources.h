@@ -44,6 +44,7 @@ namespace DX
 		ID3D11BlendState*			GetBlendState() const					{ return m_blendState.Get(); }
 		D3D11_VIEWPORT				GetScreenViewport() const				{ return m_screenViewport; }
 		DirectX::XMFLOAT4X4			GetOrientationTransform3D() const		{ return m_orientationTransform3D; }
+		Windows::Foundation::Size	GetRenderTargetSize() const				{ return m_d3dRenderTargetSize; }
 
 		ID3D11Texture2D* GetDirtTexture() const { return m_d3dDirtTexture.Get(); }
 		ID3D11ShaderResourceView* GetDirtTextureShaderResourceView() const { return m_d3dDirtTextureShaderView.Get(); }

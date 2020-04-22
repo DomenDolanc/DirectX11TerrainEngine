@@ -775,7 +775,7 @@ void DX::DeviceResources::ChangeDrawMode(bool drawSolid)
 		rasterizerDesc.FillMode = D3D11_FILL_SOLID;
 	else
 		rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
-	rasterizerDesc.CullMode = D3D11_CULL_BACK;
+	rasterizerDesc.CullMode = D3D11_CULL_NONE;
 
 	DX::ThrowIfFailed(m_d3dDevice->CreateRasterizerState(&rasterizerDesc, &m_rasterizerState));
 }

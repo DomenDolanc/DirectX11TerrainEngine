@@ -56,7 +56,8 @@ void Camera::UpdateSpeed()
 
 void Terrain_engine::Camera::Stop()
 {
-    m_TravelSpeed = INITIAL_TRAVEL_SPEED;
+    m_TravelSpeed = 0.0;
+    m_position = { 0.0, 0.0, 0.0 };
 }
 
 void Terrain_engine::Camera::setYaw(float yaw)
@@ -90,9 +91,14 @@ DirectX::XMMATRIX Terrain_engine::Camera::GetMatrix()
     return XMMatrixLookAtRH(camPositon, camTarget, m_Up);
 }
 
-DirectX::XMFLOAT3 Terrain_engine::Camera::GetEye()
+DirectX::XMFLOAT3 Terrain_engine::Camera::getEye()
 {
     return m_CurrentPositon;
+}
+
+void Terrain_engine::Camera::setEye(DirectX::XMFLOAT3 position)
+{
+    m_Eye = XMLoadFloat3(&position);
 }
 
 void StopCameraMovement()

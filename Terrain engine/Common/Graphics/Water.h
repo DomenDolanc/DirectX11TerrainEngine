@@ -13,11 +13,13 @@ namespace Terrain_engine
         Water(std::shared_ptr<DX::DeviceResources> deviceResources);
         ~Water();
 
-        void CreateReflectionTexture();
-        void CreateRefrationTexture();
+        void CreateReflectionTexture(Windows::Foundation::Size textureSize);
+        void CreateRefrationTexture(Windows::Foundation::Size textureSize);
 
         void CreateVertices();
         void CreateIndices();
+
+        void UpdateTextureSize(Windows::Foundation::Size textureSize);
 
         void ResetBuffers();
 

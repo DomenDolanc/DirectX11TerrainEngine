@@ -21,7 +21,7 @@ namespace Terrain_engine
         void CreateWindowSizeDependentResources();
         void ReleaseDeviceDependentResources();
         void Update(DX::StepTimer const& timer);
-        void RenderFromCameraView();
+        void Render();
 
         void UpdateMousePosition(DirectX::XMFLOAT2 mousePoint);
         void SetMousePosition(DirectX::XMFLOAT2 mousePoint);
@@ -44,7 +44,11 @@ namespace Terrain_engine
         std::shared_ptr<Camera> getCamera();
 
     private:
-        void Render();
+        void RenderToBackBuffer();
+        void RenderToWaterReflection();
+
+        void RenderScene();
+        void RenderWater();
         void SetProjection(double viewDistance);
 
     private:

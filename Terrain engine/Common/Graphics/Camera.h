@@ -26,8 +26,10 @@ namespace Terrain_engine
         void setPitch(float pitch);
         double getPitch();
 
+        DirectX::XMFLOAT3 getEye();
+        void setEye(DirectX::XMFLOAT3 position);
+
         DirectX::XMMATRIX GetMatrix();
-        DirectX::XMFLOAT3 GetEye();
 
         static const float INITIAL_TRAVEL_SPEED;
     private:

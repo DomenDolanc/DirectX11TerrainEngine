@@ -40,7 +40,6 @@ namespace Terrain_engine
 		void ProcessInput();
 		void Update();
 		bool Render();
-        void RenderFromCameraView();
 
 		// Cached pointer to device resources.
 		std::shared_ptr<DX::DeviceResources> m_deviceResources;

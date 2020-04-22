@@ -233,17 +233,10 @@ bool Terrain_engineMain::Render()
     ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
     context->PSSetSamplers(0, 1, sampler);
 
-    RenderFromCameraView();
-
+    m_sceneRenderer->Render();
     m_textRenderer->Render();
 
 	return true;
-}
-
-void Terrain_engine::Terrain_engineMain::RenderFromCameraView()
-{
-    auto context = m_deviceResources->GetD3DDeviceContext();
-    m_sceneRenderer->RenderFromCameraView();
 }
 
 // Notifies renderers that device resources need to be released.
