@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <algorithm>
 #include <math.h>
+#include "Common/DirectXHelpers/BasicLoader.h"
 
 using namespace Terrain_engine;
 
@@ -12,6 +13,16 @@ using namespace Windows::Foundation;
 Water::Water(std::shared_ptr<DX::DeviceResources> deviceResources)
 {
     m_deviceResources = deviceResources;
+
+    auto device = m_deviceResources->GetD3DDevice();
+    auto wicFactory = m_deviceResources->GetWicImagingFactory();
+
+    auto tempFolder = Windows::ApplicationModel::Package::Current->InstalledLocation;
+
+    BasicLoader^ basicLoader = ref new BasicLoader(device, wicFactory);
+
+    Platform::String^ fileName = tempFolder->Path + "\\Assets\\Textures\\waterDuDV.png";
+    basicLoader->LoadTexture(fileName, &m_d3dDUDVTexture, &m_d3dDUDVTextureShaderView);
 }
 
 Water::~Water()

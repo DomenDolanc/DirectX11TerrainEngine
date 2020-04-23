@@ -5,6 +5,9 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
     matrix projection;
 };
 
+
+#include "IncludeDrawParams.hlsli"
+
 struct VertexShaderInput
 {
     float3 pos : POSITION;
@@ -19,6 +22,7 @@ struct PixelShaderInput
     float3 normal : NORMAL0;
     float3 worldPos : POSITION0;
     float4 texCoord : TEXCOORD0;
+    float2 dudvTexCoord : TEXCOORD1;
 };
 
 PixelShaderInput main(VertexShaderInput input)
@@ -39,6 +43,8 @@ PixelShaderInput main(VertexShaderInput input)
     pos = mul(pos, view);
     pos = mul(pos, projection);
     output.pos = pos;
+    
+    output.dudvTexCoord = (output.worldPos.xz / scaling + 0.5f) * 6.0f;
 
     return output;
 }

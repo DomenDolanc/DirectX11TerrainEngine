@@ -18,7 +18,7 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     
     float2 textureSize;
     float clipForReflection;
-    float padding;
+    float waterMoveFactor;
     
     float4 frustum[6];
 };

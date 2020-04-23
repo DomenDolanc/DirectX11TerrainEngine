@@ -90,6 +90,7 @@ namespace Terrain_engine
         bool	m_tracking;
         const float m_sceneScaling = 50000;
         float m_viewDistance = 0.0f;
+        float m_waveMoveFactor = 0.0f;
     };
 }
 

@@ -8,6 +8,8 @@ using namespace Terrain_engine;
 using namespace DirectX;
 using namespace Windows::Foundation;
 
+const float WAVE_SPEED = 0.0003f;
+
 SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
     m_loadingComplete(false),
     m_degreesPerSecond(45),
@@ -281,6 +283,9 @@ void Terrain_engine::SceneRenderer::Render()
     {
         return;
     }
+    m_waveMoveFactor += WAVE_SPEED;
+    m_waveMoveFactor = fmod(m_waveMoveFactor, 1.0f);
+
     auto context = m_deviceResources->GetD3DDeviceContext();
     ID3D11RenderTargetView* const targets[1] = { nullptr };
     ID3D11ShaderResourceView* const resourceView[1] = { nullptr };
@@ -359,6 +364,7 @@ void SceneRenderer::RenderScene()
     m_drawParamsConstantBufferData.tessellationParams.drawLOD = m_drawLOD ? 1.0f : 0.0f;
     m_drawParamsConstantBufferData.tessellationParams.useCulling = m_useFrustumCulling ? 1.0f : 0.0f;
     m_drawParamsConstantBufferData.drawTerrain = 1.0f;
+    m_drawParamsConstantBufferData.waterMoveFactor = m_waveMoveFactor;
 
     GetViewFrustum(m_drawParamsConstantBufferData.planes);
 
@@ -432,18 +438,20 @@ void Terrain_engine::SceneRenderer::RenderWater()
     auto context = m_deviceResources->GetD3DDeviceContext();
     ID3D11Buffer* const constBuff[1] = { nullptr };
     ID3D11ShaderResourceView* const resourceView[1] = { m_Water->GetReflectionTextureResourceView() };
+    ID3D11ShaderResourceView* const dudvResourceView[1] = { m_Water->GetDUDVTextureShaderResourceView() };
 
     context->IASetInputLayout(m_inputLayout.Get());
 
     context->VSSetShader(m_waterVertexShader.Get(), nullptr, 0);
-    context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+    context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
 
     context->PSSetShader(m_waterPixelShader.Get(), nullptr, 0);
     //context->PSSetConstantBuffers1(1, 1, constBuff, nullptr, nullptr);
     context->PSSetShaderResources(0, 1, resourceView);
+    context->PSSetShaderResources(1, 1, dudvResourceView);
     m_Water->Draw();
 }
 

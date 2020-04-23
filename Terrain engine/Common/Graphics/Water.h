@@ -23,6 +23,9 @@ namespace Terrain_engine
 
         void ResetBuffers();
 
+        ID3D11Texture2D* GetDUDVTexture() const { return m_d3dDUDVTexture.Get(); }
+        ID3D11ShaderResourceView* GetDUDVTextureShaderResourceView() const { return m_d3dDUDVTextureShaderView.Get(); }
+
         ID3D11Texture2D* GetReflectionTexture() const { return m_d3dReflectionTexture.Get(); }
         ID3D11ShaderResourceView* GetReflectionTextureResourceView() const { return m_d3dReflectionTextureShaderView.Get(); }
         ID3D11RenderTargetView1* GetReflectionRenderTarget() const { return m_d3dReflectionRenderTarget.Get(); }
@@ -51,6 +54,9 @@ namespace Terrain_engine
 
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_vertexBuffer;
         Microsoft::WRL::ComPtr<ID3D11Buffer> m_indexBuffer;
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dDUDVTexture;
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dDUDVTextureShaderView;
 
         Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dReflectionTexture;
         Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dReflectionTextureShaderView;

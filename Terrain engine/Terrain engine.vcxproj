@@ -284,6 +284,7 @@
     <Image Include="Assets\Textures\Snow_Seamless_Texture_6758_1024x1024.jpg" />
     <Image Include="Assets\Textures\Stone Path 002_Albedo.jpg" />
     <Image Include="Assets\Textures\Stone Path 002_Normal.jpg" />
+    <Image Include="Assets\Textures\waterDuDV.png" />
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>

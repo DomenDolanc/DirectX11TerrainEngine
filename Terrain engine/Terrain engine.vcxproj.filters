@@ -189,6 +189,9 @@
     <Image Include="Assets\Textures\rsz_grass_seamless_texture_#1405.jpg">
       <Filter>Assets\Textures</Filter>
     </Image>
+    <Image Include="Assets\Textures\waterDuDV.png">
+      <Filter>Assets\Textures</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
