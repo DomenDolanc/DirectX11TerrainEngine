@@ -23,5 +23,5 @@ float4 main(PixelShaderInput input) : SV_TARGET
     //    return float4(0.0f, 0.0f, 0.0f, 1.0f);
     float3 sampledColor = reflectionTexture.Sample(simpleSampler, input.texCoord.xy).rgb;
     //return float4(sampledColor, 1.0f);
-    return float4(lerp(float3(0.0f, 0.0f, 1.0f), sampledColor, 0.5f), 0.8f);
+    return float4(lerp(float3(0.0f, 0.5f, 1.0f), sampledColor, 0.5f), 0.8f);
 }

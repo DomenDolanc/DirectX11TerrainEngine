@@ -295,12 +295,14 @@ void Terrain_engine::SceneRenderer::Render()
     m_Camera->setPitch(-cameraPitch);
     //m_Camera->setYaw(0.0f); 
     m_Camera->setEye({ cameraPos.x, -cameraPos.y, cameraPos.z });
+    m_drawParamsConstantBufferData.clipForReflection = 1.0f;
     RenderToWaterReflection();
 
     context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
     m_Camera->setPitch(cameraPitch);
     m_Camera->setYaw(cameraYaw); 
     m_Camera->setEye(cameraPos);
+    m_drawParamsConstantBufferData.clipForReflection = 0.0f;
     RenderToBackBuffer();
 }
 

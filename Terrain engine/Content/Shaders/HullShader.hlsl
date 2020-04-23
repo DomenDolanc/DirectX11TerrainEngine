@@ -13,7 +13,7 @@ struct VS_CONTROL_POINT_OUTPUT
     float4 pos : SV_POSITION;
     float3 color : COLOR0;
     float3 normal : NORMAL0;
-    float3 worldPos : POSITIONT;
+    float3 worldPos : POSITION0;
     float clip : SV_ClipDistance0;
 };
 
@@ -23,7 +23,7 @@ struct HS_CONTROL_POINT_OUTPUT
     float4 pos : SV_POSITION;
     float3 color : COLOR0;
     float3 normal : NORMAL0;
-    float3 worldPos : POSITIONT;
+    float3 worldPos : POSITION0;
     float clip : SV_ClipDistance0;
 };
 

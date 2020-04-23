@@ -88,7 +88,7 @@ namespace Terrain_engine
         bool	m_loadingComplete;
         float	m_degreesPerSecond;
         bool	m_tracking;
-        const float m_sceneScaling = 10000;
+        const float m_sceneScaling = 50000;
         float m_viewDistance = 0.0f;
     };
 }
