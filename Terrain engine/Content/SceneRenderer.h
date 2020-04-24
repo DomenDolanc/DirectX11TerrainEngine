@@ -49,6 +49,8 @@ namespace Terrain_engine
 
         void RenderScene();
         void RenderWater();
+        void RenderTerrain();
+        void RenderLightSource();
         void SetProjection(double viewDistance);
 
     private:

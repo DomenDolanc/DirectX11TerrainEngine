@@ -298,9 +298,9 @@ void Terrain_engine::SceneRenderer::Render()
     context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
 
     m_Camera->setPitch(-cameraPitch);
-    //m_Camera->setYaw(0.0f); 
     m_Camera->setEye({ cameraPos.x, -cameraPos.y, cameraPos.z });
     m_drawParamsConstantBufferData.clipForReflection = 1.0f;
+    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
     RenderToWaterReflection();
 
     context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
@@ -308,6 +308,7 @@ void Terrain_engine::SceneRenderer::Render()
     m_Camera->setYaw(cameraYaw); 
     m_Camera->setEye(cameraPos);
     m_drawParamsConstantBufferData.clipForReflection = 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
     RenderToBackBuffer();
 }
 
@@ -354,83 +355,8 @@ void Terrain_engine::SceneRenderer::RenderToBackBuffer()
 
 void SceneRenderer::RenderScene()
 {
-    auto context = m_deviceResources->GetD3DDeviceContext();
-    auto rasterizer = m_deviceResources->GetRasterizerState();
-
-    m_drawParamsConstantBufferData.scaling = m_sceneScaling;
-    m_drawParamsConstantBufferData.renderShadows = (float)m_renderShadows;
-    m_drawParamsConstantBufferData.lightPos = m_lightPos;
-    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
-    m_drawParamsConstantBufferData.tessellationParams.drawLOD = m_drawLOD ? 1.0f : 0.0f;
-    m_drawParamsConstantBufferData.tessellationParams.useCulling = m_useFrustumCulling ? 1.0f : 0.0f;
-    m_drawParamsConstantBufferData.drawTerrain = 1.0f;
-    m_drawParamsConstantBufferData.waterMoveFactor = m_waveMoveFactor;
-
-    GetViewFrustum(m_drawParamsConstantBufferData.planes);
-
-    context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
-
-    auto terrainShaderResouce = m_deviceResources->GetTerrainHeightShaderResourceView();
-    ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
-
-    if (m_usesTessellation)
-    {
-        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
-        context->HSSetShader(m_hullShader.Get(), nullptr, 0);
-        context->DSSetShader(m_domainShader.Get(), nullptr, 0);
-        context->DSSetShaderResources(0, 1, &terrainShaderResouce);
-        context->DSSetSamplers(0, 1, sampler);
-        context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
-        context->DSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
-        context->HSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
-        context->HSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
-    }
-    else
-    {
-        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-        context->HSSetShader(nullptr, nullptr, 0);
-        context->DSSetShader(nullptr, nullptr, 0);
-
-        context->VSSetShaderResources(0, 1, &terrainShaderResouce);
-        context->VSSetSamplers(0, 1, sampler);
-    }
-
-    auto dirtTextureShaderResouce = m_deviceResources->GetDirtTextureShaderResourceView();
-    auto rockTextureShaderResouce = m_deviceResources->GetRockTextureShaderResourceView();
-    auto grassTextureShaderResouce = m_deviceResources->GetGrassTextureShaderResourceView();
-    context->PSSetSamplers(0, 1, sampler);
-    context->PSSetShaderResources(0, 1, &dirtTextureShaderResouce);
-    context->PSSetShaderResources(1, 1, &rockTextureShaderResouce);
-    context->PSSetShaderResources(2, 1, &grassTextureShaderResouce);
-
-    context->IASetInputLayout(m_inputLayout.Get());
-    context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
-    context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
-
-    context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
-    context->PSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
-    context->RSSetState(rasterizer);
-    m_Terrain->Draw();
-
-
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    context->HSSetShader(nullptr, nullptr, 0);
-    context->DSSetShader(nullptr, nullptr, 0);
-
-    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixTranslation(m_lightPos.x, m_lightPos.y, m_lightPos.z)));
-    context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
-    context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
-
-    m_drawParamsConstantBufferData.scaling = m_sceneScaling;
-    m_drawParamsConstantBufferData.renderShadows = 0.0f;
-    m_drawParamsConstantBufferData.lightPos = m_lightPos;
-    m_drawParamsConstantBufferData.eyePos = m_Camera->getEye();
-    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
-    m_drawParamsConstantBufferData.tessellationParams.drawLOD = 0.0f;
-    m_drawParamsConstantBufferData.drawTerrain = 0.0f;
-    context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
-    context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
-    m_Light->Draw();
+    RenderTerrain();
+    RenderLightSource();
 }
 
 void Terrain_engine::SceneRenderer::RenderWater()
@@ -449,10 +375,93 @@ void Terrain_engine::SceneRenderer::RenderWater()
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
 
     context->PSSetShader(m_waterPixelShader.Get(), nullptr, 0);
-    //context->PSSetConstantBuffers1(1, 1, constBuff, nullptr, nullptr);
     context->PSSetShaderResources(0, 1, resourceView);
     context->PSSetShaderResources(1, 1, dudvResourceView);
     m_Water->Draw();
+}
+
+void Terrain_engine::SceneRenderer::RenderTerrain()
+{
+    auto context = m_deviceResources->GetD3DDeviceContext();
+    auto rasterizer = m_deviceResources->GetRasterizerState();
+
+    m_drawParamsConstantBufferData.scaling = m_sceneScaling;
+    m_drawParamsConstantBufferData.renderShadows = (float)m_renderShadows;
+    m_drawParamsConstantBufferData.lightPos = m_lightPos;
+    m_drawParamsConstantBufferData.tessellationParams.drawLOD = m_drawLOD ? 1.0f : 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.useCulling = m_useFrustumCulling ? 1.0f : 0.0f;
+    m_drawParamsConstantBufferData.drawTerrain = 1.0f;
+    m_drawParamsConstantBufferData.waterMoveFactor = m_waveMoveFactor;
+
+    GetViewFrustum(m_drawParamsConstantBufferData.planes);
+
+    context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
+
+    auto terrainShaderResouce = m_deviceResources->GetTerrainHeightShaderResourceView();
+    ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
+
+    if (m_drawParamsConstantBufferData.tessellationParams.usesTessellation)
+    {
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST);
+        context->HSSetShader(m_hullShader.Get(), nullptr, 0);
+        context->DSSetShader(m_domainShader.Get(), nullptr, 0);
+        context->DSSetShaderResources(0, 1, &terrainShaderResouce);
+        context->DSSetSamplers(0, 1, sampler);
+    }
+    else
+    {
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+        context->HSSetShader(nullptr, nullptr, 0);
+        context->DSSetShader(nullptr, nullptr, 0);
+
+        context->VSSetShaderResources(0, 1, &terrainShaderResouce);
+        context->VSSetSamplers(0, 1, sampler);
+    }
+
+    context->DSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+    context->DSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+    context->HSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+    context->HSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+
+    auto dirtTextureShaderResouce = m_deviceResources->GetDirtTextureShaderResourceView();
+    auto rockTextureShaderResouce = m_deviceResources->GetRockTextureShaderResourceView();
+    auto grassTextureShaderResouce = m_deviceResources->GetGrassTextureShaderResourceView();
+    context->PSSetSamplers(0, 1, sampler);
+    context->PSSetShaderResources(0, 1, &dirtTextureShaderResouce);
+    context->PSSetShaderResources(1, 1, &rockTextureShaderResouce);
+    context->PSSetShaderResources(2, 1, &grassTextureShaderResouce);
+
+    context->IASetInputLayout(m_inputLayout.Get());
+    context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
+    context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+
+    context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
+    context->PSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+    context->RSSetState(rasterizer);
+    m_Terrain->Draw();
+}
+
+void Terrain_engine::SceneRenderer::RenderLightSource()
+{
+    auto context = m_deviceResources->GetD3DDeviceContext();
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+    context->HSSetShader(nullptr, nullptr, 0);
+    context->DSSetShader(nullptr, nullptr, 0);
+
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixTranslation(m_lightPos.x, m_lightPos.y, m_lightPos.z)));
+    context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
+    context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+
+    m_drawParamsConstantBufferData.scaling = m_sceneScaling;
+    m_drawParamsConstantBufferData.renderShadows = 0.0f;
+    m_drawParamsConstantBufferData.lightPos = m_lightPos;
+    m_drawParamsConstantBufferData.eyePos = m_Camera->getEye();
+    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.drawLOD = 0.0f;
+    m_drawParamsConstantBufferData.drawTerrain = 0.0f;
+    context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
+    context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+    m_Light->Draw();
 }
 
 void SceneRenderer::CreateDeviceDependentResources()
