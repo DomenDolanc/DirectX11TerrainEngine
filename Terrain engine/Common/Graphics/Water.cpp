@@ -127,7 +127,7 @@ void Water::CreateVertices()
 
     int vertexCount = 0;
     float halfScaling = m_scaling / 2.0f;
-    float heightPos = 100.0f;
+    float heightPos = 10.0f;
 
     VertexPositionColor vertex;
     XMVECTOR normal;

@@ -11,7 +11,7 @@ struct PixelShaderInput
     float4 pos : SV_POSITION;
     float3 color : COLOR0;
     float3 normal : NORMAL0;
-    float3 worldPos : POSITION0;
+    float3 vectorToCamera : POSITION0;
     float4 texCoord : TEXCOORD0;
     float2 dudvTexCoord : TEXCOORD1;
 };
@@ -25,9 +25,13 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float2 distortion = (dudvTexture.Sample(simpleSampler, input.dudvTexCoord).rg * 2.0f - 1.0f) * waveStrength;
 
     input.texCoord.xy += distortion;
+    input.texCoord = clamp(input.texCoord, 0.001f, 0.999f);
     
-    float3 sampledColor = reflectionTexture.Sample(simpleSampler, input.texCoord.xy).rgb;
+    float3 viewVector = normalize(input.vectorToCamera);
+    float refractiveFactor = 1.0f - dot(viewVector, input.normal);
+    
+    float3 sampledColor = reflectionTexture.Sample(simpleSampler, input.texCoord.xy);
     
     
-    return float4(lerp(float3(0.0f, 0.5f, 1.0f), sampledColor, 0.5f), 0.8f);
+    return float4(lerp(float3(0.0f, 0.5f, 1.0f), sampledColor, 0.3f), refractiveFactor);
 }

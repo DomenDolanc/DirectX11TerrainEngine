@@ -20,7 +20,7 @@ struct PixelShaderInput
     float4 pos : SV_POSITION;
     float3 color : COLOR0;
     float3 normal : NORMAL0;
-    float3 worldPos : POSITION0;
+    float3 vectorToCamera : POSITION0;
     float4 texCoord : TEXCOORD0;
     float2 dudvTexCoord : TEXCOORD1;
 };
@@ -33,7 +33,8 @@ PixelShaderInput main(VertexShaderInput input)
     
     output.normal = input.normal;
     output.color = input.color;
-    output.worldPos = pos.xyz;
+    output.vectorToCamera = eyePos - pos.xyz;
+    output.dudvTexCoord = (pos.xz / scaling + 0.5f) * 6.0f;
     
     output.texCoord = mul(pos, model);
     output.texCoord = mul(output.texCoord, view);
@@ -43,8 +44,6 @@ PixelShaderInput main(VertexShaderInput input)
     pos = mul(pos, view);
     pos = mul(pos, projection);
     output.pos = pos;
-    
-    output.dudvTexCoord = (output.worldPos.xz / scaling + 0.5f) * 6.0f;
 
     return output;
 }
