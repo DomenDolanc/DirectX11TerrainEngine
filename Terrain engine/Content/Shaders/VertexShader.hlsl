@@ -29,7 +29,7 @@ struct GeometryShaderInput
 static const float stepX = 1.0f / textureSize.x;
 static const float stepY = 1.0f / textureSize.y;
 
-static const float4 clipPlane = float4(0.0f, -500.0f, 0.0f, 0.0f);
+static const float4 clipPlane = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
 GeometryShaderInput main(VertexShaderInput input)
 {
