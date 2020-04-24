@@ -290,23 +290,18 @@ void Terrain_engine::SceneRenderer::Render()
     ID3D11RenderTargetView* const targets[1] = { nullptr };
     ID3D11ShaderResourceView* const resourceView[1] = { nullptr };
 
-    float cameraYaw = m_Camera->getYaw();
     float cameraPitch = m_Camera->getPitch();
-    XMFLOAT3 cameraPos = m_Camera->getEye();
     
     context->PSSetShaderResources(0, 1, resourceView);
     context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
 
     m_Camera->setPitch(-cameraPitch);
-    m_Camera->setEye({ cameraPos.x, -cameraPos.y, cameraPos.z });
     m_drawParamsConstantBufferData.clipForReflection = 1.0f;
     m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
     RenderToWaterReflection();
 
     context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
     m_Camera->setPitch(cameraPitch);
-    m_Camera->setYaw(cameraYaw); 
-    m_Camera->setEye(cameraPos);
     m_drawParamsConstantBufferData.clipForReflection = 0.0f;
     m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
     RenderToBackBuffer();
@@ -327,7 +322,7 @@ void Terrain_engine::SceneRenderer::RenderToWaterReflection()
     context->ClearDepthStencilView(m_Water->GetReflectionDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
-    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetReflectionMatrix()));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
