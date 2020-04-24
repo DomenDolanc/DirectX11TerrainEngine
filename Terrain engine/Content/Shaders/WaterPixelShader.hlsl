@@ -29,9 +29,10 @@ float4 main(PixelShaderInput input) : SV_TARGET
     
     float3 viewVector = normalize(input.vectorToCamera);
     float refractiveFactor = 1.0f - dot(viewVector, input.normal);
+    refractiveFactor = pow(refractiveFactor, 0.5f);
     
     float3 sampledColor = reflectionTexture.Sample(simpleSampler, input.texCoord.xy);
     
     
-    return float4(lerp(float3(0.0f, 0.5f, 1.0f), sampledColor, 0.3f), refractiveFactor);
+    return float4(lerp(float3(0.0f, 0.5f, 0.8f), sampledColor, 0.3f), refractiveFactor);
 }
