@@ -328,9 +328,9 @@ void Terrain_engine::SceneRenderer::RenderToWaterReflection()
 
     ID3D11RenderTargetView* const targets[1] = { m_Water->GetReflectionRenderTarget() };
 
-    context->OMSetRenderTargets(1, targets, m_Water->GetReflectionDepthStencilView());
+    context->OMSetRenderTargets(1, targets, m_Water->GetWaterDepthStencilView());
     context->ClearRenderTargetView(m_Water->GetReflectionRenderTarget(), DirectX::Colors::CornflowerBlue);
-    context->ClearDepthStencilView(m_Water->GetReflectionDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+    context->ClearDepthStencilView(m_Water->GetWaterDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
     XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetReflectionMatrix()));
@@ -350,9 +350,9 @@ void Terrain_engine::SceneRenderer::RenderToWaterRefraction()
 
     ID3D11RenderTargetView* const targets[1] = { m_Water->GetRefractionRenderTarget() };
 
-    context->OMSetRenderTargets(1, targets, m_Water->GetRefractionDepthStencilView());
+    context->OMSetRenderTargets(1, targets, m_Water->GetWaterDepthStencilView());
     context->ClearRenderTargetView(m_Water->GetRefractionRenderTarget(), DirectX::Colors::CornflowerBlue);
-    context->ClearDepthStencilView(m_Water->GetRefractionDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+    context->ClearDepthStencilView(m_Water->GetWaterDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
     XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
@@ -377,8 +377,8 @@ void Terrain_engine::SceneRenderer::RenderToBackBuffer()
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
-    RenderScene();
     RenderWater();
+    RenderScene();
 }
 
 void SceneRenderer::RenderScene()

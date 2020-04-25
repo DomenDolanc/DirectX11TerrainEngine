@@ -73,7 +73,7 @@ void Terrain_engine::Water::CreateReflectionTexture(Windows::Foundation::Size te
     DX::ThrowIfFailed(device->CreateTexture2D1(&depthStencilDesc, nullptr, &depthStencil));
 
     CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
-    DX::ThrowIfFailed(device->CreateDepthStencilView(depthStencil.Get(), &depthStencilViewDesc, &m_d3dReflectionDepthStencilView));
+    DX::ThrowIfFailed(device->CreateDepthStencilView(depthStencil.Get(), &depthStencilViewDesc, &m_d3dWaterDepthStencilView));
 }
 
 void Terrain_engine::Water::CreateRefrationTexture(Windows::Foundation::Size textureSize)
@@ -101,18 +101,6 @@ void Terrain_engine::Water::CreateRefrationTexture(Windows::Foundation::Size tex
     DX::ThrowIfFailed(device->CreateShaderResourceView(m_d3dRefractionTexture.Get(), &srvDesc, &m_d3dRefractionTextureShaderView));
 
     DX::ThrowIfFailed(device->CreateRenderTargetView1(m_d3dRefractionTexture.Get(), nullptr, &m_d3dRefractionRenderTarget));
-
-    CD3D11_TEXTURE2D_DESC1 depthStencilDesc(DXGI_FORMAT_D32_FLOAT,
-        lround(textureSize.Width),
-        lround(textureSize.Height),
-        1, 1, D3D11_BIND_DEPTH_STENCIL
-    );
-
-    Microsoft::WRL::ComPtr<ID3D11Texture2D1> depthStencil;
-    DX::ThrowIfFailed(device->CreateTexture2D1(&depthStencilDesc, nullptr, &depthStencil));
-
-    CD3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc(D3D11_DSV_DIMENSION_TEXTURE2D);
-    DX::ThrowIfFailed(device->CreateDepthStencilView(depthStencil.Get(), &depthStencilViewDesc, &m_d3dRefractionDepthStencilView));
 }
 
 void Water::CreateVertices()
