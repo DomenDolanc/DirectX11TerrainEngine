@@ -18,9 +18,9 @@ struct VertexShaderInput
 struct PixelShaderInput
 {
     float4 pos : SV_POSITION;
-    float3 color : COLOR0;
+    float3 worldPos : POSITION0;
     float3 normal : NORMAL0;
-    float3 vectorToCamera : POSITION0;
+    float3 vectorToCamera : POSITION1;
     float4 texCoord : TEXCOORD0;
     float2 dudvTexCoord : TEXCOORD1;
 };
@@ -32,7 +32,7 @@ PixelShaderInput main(VertexShaderInput input)
     float4 pos = float4(input.pos, 1.0f);
     
     output.normal = input.normal;
-    output.color = input.color;
+    output.worldPos = input.pos;
     output.vectorToCamera = eyePos - pos.xyz;
     output.dudvTexCoord = (pos.xz / scaling + 0.5f) * 6.0f;
     

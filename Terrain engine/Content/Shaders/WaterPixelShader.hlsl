@@ -5,14 +5,18 @@ SamplerState simpleSampler;
 
 #include "IncludeDrawParams.hlsli"
 
-static const float waveStrength = 0.02f;    
+static const float waveStrength = 0.02f;   
+static const float4 waterTintColor = float4(0.0f, 0.3f, 0.5f, 1.0f);
+static const float4 fogColor = float4(0.9f, 0.9f, 0.9f, 0.0f);
+static const float fogStart = 23000.0f;
+static const float fogRange = 8000.0f;
 
 struct PixelShaderInput
 {
     float4 pos : SV_POSITION;
-    float3 color : COLOR0;
+    float3 worldPos : POSITION0;
     float3 normal : NORMAL0;
-    float3 vectorToCamera : POSITION0;
+    float3 vectorToCamera : POSITION1;
     float4 texCoord : TEXCOORD0;
     float2 dudvTexCoord : TEXCOORD1;
 };
@@ -41,6 +45,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float3 reflectColor = reflectionTexture.Sample(simpleSampler, reflectionTexCoord);
     
     float4 combinedWaterColor = float4(lerp(reflectColor, refractColor, refractiveFactor), 1.0f);
-    static const float4 waterTintColor = float4(0.0f, 0.3f, 0.5f, 1.0f);
-    return lerp(combinedWaterColor, waterTintColor, 0.2f);
+    float4 finalWaterColor = lerp(combinedWaterColor, waterTintColor, 0.2f);
+    float fogLerp = saturate((distance(input.worldPos, eyePos) - fogStart) / fogRange);
+    return lerp(finalWaterColor, fogColor, fogLerp);
 }
