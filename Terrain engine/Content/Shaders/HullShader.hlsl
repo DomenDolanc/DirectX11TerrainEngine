@@ -11,20 +11,20 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
 struct VS_CONTROL_POINT_OUTPUT
 {
     float4 pos : SV_POSITION;
+    float clip : SV_ClipDistance0;
     float3 color : COLOR0;
     float3 normal : NORMAL0;
     float3 worldPos : POSITION0;
-    float clip : SV_ClipDistance0;
 };
 
 // Output control point
 struct HS_CONTROL_POINT_OUTPUT
 {
     float4 pos : SV_POSITION;
+    float clip : SV_ClipDistance0;
     float3 color : COLOR0;
     float3 normal : NORMAL0;
     float3 worldPos : POSITION0;
-    float clip : SV_ClipDistance0;
 };
 
 // Output patch constant data.

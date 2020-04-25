@@ -8,10 +8,10 @@ SamplerState simpleSampler;
 struct PixelShaderInput
 {
     float4 pos : SV_POSITION;
+    float clip : SV_ClipDistance0;
     float3 color : COLOR0;
     float3 normal : NORMAL0;
     float3 worldPos : POSITION0;
-    float clip : SV_ClipDistance0;
 };
 
 static const float3 materialColor = float3(0.7f, 0.7f, 0.9f);
