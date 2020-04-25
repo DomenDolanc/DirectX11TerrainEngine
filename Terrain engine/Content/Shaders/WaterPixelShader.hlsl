@@ -31,7 +31,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float2 refractionTexCoord = float2(ndc.x, -ndc.y);
     
     float3 viewVector = normalize(input.vectorToCamera);
-    float refractiveFactor = dot(viewVector, input.normal);
+    float refractiveFactor = saturate(dot(viewVector, input.normal));
     refractiveFactor = pow(refractiveFactor, 0.7f);
 
     input.dudvTexCoord += waterMoveFactor;
