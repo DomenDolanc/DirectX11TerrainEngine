@@ -34,13 +34,13 @@ float4 main(PixelShaderInput input) : SV_TARGET
     refractionTexCoord.y = clamp(refractionTexCoord.y, -0.999f, -0.001f);
     
     float3 viewVector = normalize(input.vectorToCamera);
-    float refractiveFactor = 1.0f - dot(viewVector, input.normal);
-    refractiveFactor = pow(refractiveFactor, 0.5f);
+    float refractiveFactor = dot(viewVector, input.normal);
+    refractiveFactor = pow(refractiveFactor, 0.7f);
     
     float3 refractColor = refractionTexture.Sample(simpleSampler, refractionTexCoord);
     float3 reflectColor = reflectionTexture.Sample(simpleSampler, reflectionTexCoord);
     
-    float4 combinedWaterColor = float4(lerp(refractColor, reflectColor, 0.5f), 1.0f);
+    float4 combinedWaterColor = float4(lerp(reflectColor, refractColor, refractiveFactor), 1.0f);
     static const float4 waterTintColor = float4(0.0f, 0.3f, 0.5f, 1.0f);
     return lerp(combinedWaterColor, waterTintColor, 0.2f);
 }
