@@ -98,7 +98,7 @@ void Terrain_engine::Water::CreateRefrationTexture(Windows::Foundation::Size tex
     srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
     srvDesc.Texture2D.MostDetailedMip = 0;
     srvDesc.Texture2D.MipLevels = 1;
-    DX::ThrowIfFailed(device->CreateShaderResourceView(m_d3dReflectionTexture.Get(), &srvDesc, &m_d3dRefractionTextureShaderView));
+    DX::ThrowIfFailed(device->CreateShaderResourceView(m_d3dRefractionTexture.Get(), &srvDesc, &m_d3dRefractionTextureShaderView));
 
     DX::ThrowIfFailed(device->CreateRenderTargetView1(m_d3dRefractionTexture.Get(), nullptr, &m_d3dRefractionRenderTarget));
 
