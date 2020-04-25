@@ -63,7 +63,7 @@ void Terrain_engine::Water::CreateReflectionTexture(Windows::Foundation::Size te
 
     DX::ThrowIfFailed(device->CreateRenderTargetView1(m_d3dReflectionTexture.Get(), nullptr, &m_d3dReflectionRenderTarget));
 
-    CD3D11_TEXTURE2D_DESC1 depthStencilDesc(DXGI_FORMAT_D24_UNORM_S8_UINT,
+    CD3D11_TEXTURE2D_DESC1 depthStencilDesc(DXGI_FORMAT_D32_FLOAT,
         lround(textureSize.Width),
         lround(textureSize.Height),
         1, 1, D3D11_BIND_DEPTH_STENCIL
@@ -102,7 +102,7 @@ void Terrain_engine::Water::CreateRefrationTexture(Windows::Foundation::Size tex
 
     DX::ThrowIfFailed(device->CreateRenderTargetView1(m_d3dRefractionTexture.Get(), nullptr, &m_d3dRefractionRenderTarget));
 
-    CD3D11_TEXTURE2D_DESC1 depthStencilDesc(DXGI_FORMAT_D24_UNORM_S8_UINT,
+    CD3D11_TEXTURE2D_DESC1 depthStencilDesc(DXGI_FORMAT_D32_FLOAT,
         lround(textureSize.Width),
         lround(textureSize.Height),
         1, 1, D3D11_BIND_DEPTH_STENCIL
