@@ -72,11 +72,11 @@ GeometryShaderInput main(VertexShaderInput input)
         pos = mul(pos, projection);
     }
     
-    if (drawTerrain == 0.0f || clipForReflection == 0.0f)
+    if (drawTerrain == 0.0f || clipPlaneType == 0.0f)
         output.clip = 1.0f;
-    else if (clipForReflection == 1.0f && output.worldPos.y >= 0.0f)
+    else if (clipPlaneType == 1.0f && output.worldPos.y >= 0.0f)
         output.clip = 1.0f;
-    else if (clipForReflection == -1.0f && output.worldPos.y <= 0.0f)
+    else if (clipPlaneType == -1.0f && output.worldPos.y <= 0.0f)
         output.clip = 1.0f;
     else
         output.clip = -1.0f;

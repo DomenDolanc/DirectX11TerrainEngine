@@ -287,44 +287,34 @@ void Terrain_engine::SceneRenderer::Render()
     m_waveMoveFactor = fmod(m_waveMoveFactor, 1.0f);
 
     auto context = m_deviceResources->GetD3DDeviceContext();
-    ID3D11RenderTargetView* const targets[1] = { nullptr };
-    ID3D11ShaderResourceView* const resourceView[1] = { nullptr };
-
     float cameraPitch = m_Camera->getPitch();
 
     m_Camera->setPitch(-cameraPitch);
-    m_drawParamsConstantBufferData.clipForReflection = 1.0f;
-    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
-    context->PSSetShaderResources(0, 1, resourceView);
-    context->PSSetShaderResources(1, 1, resourceView);
-    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
     RenderToWaterReflection();
 
-
-
     m_Camera->setPitch(cameraPitch);
-    m_drawParamsConstantBufferData.clipForReflection = -1.0f;
-    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
-    context->PSSetShaderResources(0, 1, resourceView);
-    context->PSSetShaderResources(1, 1, resourceView);
-    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
     RenderToWaterRefraction();
 
-
-
-    m_drawParamsConstantBufferData.clipForReflection = 0.0f;
-    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
-    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
     RenderToBackBuffer();
 }
 
 void Terrain_engine::SceneRenderer::RenderToWaterReflection()
 {
     if (!m_loadingComplete)
-    {
         return;
-    }
+
+    m_drawParamsConstantBufferData.clipPlaneType = 1.0f;
+    //m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
+
     auto context = m_deviceResources->GetD3DDeviceContext();
+
+    ID3D11RenderTargetView* const nullTargets[1] = { nullptr };
+    ID3D11ShaderResourceView* const nullResourceView[1] = { nullptr };
+
+    context->PSSetShaderResources(0, 1, nullResourceView);
+    context->PSSetShaderResources(1, 1, nullResourceView);
+    context->OMSetRenderTargets(1, nullTargets, m_deviceResources->GetDepthStencilView());
 
     ID3D11RenderTargetView* const targets[1] = { m_Water->GetReflectionRenderTarget() };
 
@@ -343,10 +333,20 @@ void Terrain_engine::SceneRenderer::RenderToWaterReflection()
 void Terrain_engine::SceneRenderer::RenderToWaterRefraction()
 {
     if (!m_loadingComplete)
-    {
         return;
-    }
+
+    m_drawParamsConstantBufferData.clipPlaneType = -1.0f;
+    //m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
+
     auto context = m_deviceResources->GetD3DDeviceContext();
+
+    ID3D11RenderTargetView* const nullTargets[1] = { nullptr };
+    ID3D11ShaderResourceView* const nullResourceView[1] = { nullptr };
+
+    context->PSSetShaderResources(0, 1, nullResourceView);
+    context->PSSetShaderResources(1, 1, nullResourceView);
+    context->OMSetRenderTargets(1, nullTargets, m_deviceResources->GetDepthStencilView());
 
     ID3D11RenderTargetView* const targets[1] = { m_Water->GetRefractionRenderTarget() };
 
@@ -364,10 +364,12 @@ void Terrain_engine::SceneRenderer::RenderToWaterRefraction()
 
 void Terrain_engine::SceneRenderer::RenderToBackBuffer()
 {
+    m_drawParamsConstantBufferData.clipPlaneType = 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
+
     auto context = m_deviceResources->GetD3DDeviceContext();
 
     ID3D11RenderTargetView* const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
-
     context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
     context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
     context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);

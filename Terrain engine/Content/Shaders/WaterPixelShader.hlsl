@@ -41,8 +41,8 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float refractiveFactor = dot(viewVector, input.normal);
     refractiveFactor = pow(refractiveFactor, 0.7f);
     
-    float3 refractColor = refractionTexture.Sample(simpleSampler, refractionTexCoord);
-    float3 reflectColor = reflectionTexture.Sample(simpleSampler, reflectionTexCoord);
+    float3 refractColor = refractionTexture.Sample(simpleSampler, refractionTexCoord).rgb;
+    float3 reflectColor = reflectionTexture.Sample(simpleSampler, reflectionTexCoord).rgb;
     
     float4 combinedWaterColor = float4(lerp(reflectColor, refractColor, refractiveFactor), 1.0f);
     float4 finalWaterColor = lerp(combinedWaterColor, waterTintColor, 0.2f);

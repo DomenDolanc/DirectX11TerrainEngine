@@ -34,7 +34,7 @@ namespace Terrain_engine
         float useTexture;
         TessellationParams tessellationParams;
         DirectX::XMFLOAT2 textureSize;
-        float clipForReflection;
+        float clipPlaneType;
         float waterMoveFactor;
         DirectX::XMFLOAT4 planes[6];
     };
