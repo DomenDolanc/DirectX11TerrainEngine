@@ -32,6 +32,11 @@ namespace Terrain_engine
 		void LoadBitmap(Windows::Storage::StorageFile^ file);
 		void UpdateViewDistance(double viewDistance);
 
+		void DrawWater(bool drawWater);
+		void ReflectWater(bool reflectWater);
+		void RefractWater(bool refractWater);
+		void UseWaterTessellation(bool useWaterTessellation);
+
 		// IDeviceNotify
 		virtual void OnDeviceLost();
 		virtual void OnDeviceRestored();

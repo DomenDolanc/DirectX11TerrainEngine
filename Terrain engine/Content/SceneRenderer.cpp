@@ -244,6 +244,26 @@ void Terrain_engine::SceneRenderer::GetViewFrustum(XMFLOAT4 planes[6])
     }
 }
 
+void Terrain_engine::SceneRenderer::DrawWater(bool drawWater)
+{
+    m_drawWater = drawWater;
+}
+
+void Terrain_engine::SceneRenderer::ReflectWater(bool reflectWater)
+{
+    m_reflectWater = reflectWater;
+}
+
+void Terrain_engine::SceneRenderer::RefractWater(bool refractWater)
+{
+    m_refractWater = refractWater;
+}
+
+void Terrain_engine::SceneRenderer::UseWaterTessellation(bool useWaterTessellation)
+{
+    m_useWaterTessellation = useWaterTessellation;
+}
+
 bool Terrain_engine::SceneRenderer::IsReadyToRender()
 {
     return m_loadingComplete;
@@ -289,11 +309,17 @@ void Terrain_engine::SceneRenderer::Render()
     auto context = m_deviceResources->GetD3DDeviceContext();
     float cameraPitch = m_Camera->getPitch();
 
-    m_Camera->setPitch(-cameraPitch);
-    RenderToWaterReflection();
+    if (m_drawWater && m_reflectWater)
+    {
+        m_Camera->setPitch(-cameraPitch);
+        RenderToWaterReflection();
+    }
 
     m_Camera->setPitch(cameraPitch);
-    RenderToWaterRefraction();
+    if (m_drawWater && m_refractWater)
+    {
+        RenderToWaterRefraction();
+    }
 
     RenderToBackBuffer();
 }
@@ -304,8 +330,7 @@ void Terrain_engine::SceneRenderer::RenderToWaterReflection()
         return;
 
     m_drawParamsConstantBufferData.clipPlaneType = 1.0f;
-    //m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
-    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_useWaterTessellation ? 1.0f : 0.0f;
 
     auto context = m_deviceResources->GetD3DDeviceContext();
 
@@ -336,8 +361,7 @@ void Terrain_engine::SceneRenderer::RenderToWaterRefraction()
         return;
 
     m_drawParamsConstantBufferData.clipPlaneType = -1.0f;
-    //m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
-    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_useWaterTessellation ? 1.0f : 0.0f;
 
     auto context = m_deviceResources->GetD3DDeviceContext();
 
@@ -379,7 +403,8 @@ void Terrain_engine::SceneRenderer::RenderToBackBuffer()
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
-    RenderWater();
+    if (m_drawWater)
+        RenderWater();
     RenderScene();
 }
 
@@ -397,15 +422,22 @@ void Terrain_engine::SceneRenderer::RenderWater()
     ID3D11ShaderResourceView* const resourceView2[1] = { m_Water->GetRefractionTextureResourceView() };
     ID3D11ShaderResourceView* const dudvResourceView[1] = { m_Water->GetDUDVTextureShaderResourceView() };
 
-    context->IASetInputLayout(m_inputLayout.Get());
+    m_waterParamsConstantBufferData.eyePos = m_Camera->getEye();
+    m_waterParamsConstantBufferData.scaling = m_sceneScaling;
+    m_waterParamsConstantBufferData.reflectWater = (m_reflectWater ? 1.0f : 0.0f);
+    m_waterParamsConstantBufferData.refractWater = (m_refractWater ? 1.0f : 0.0f);
+    m_waterParamsConstantBufferData.waterMoveFactor = m_waveMoveFactor;
 
-    context->VSSetShader(m_waterVertexShader.Get(), nullptr, 0);
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
+    context->UpdateSubresource1(m_waterParamsConstantBuffer.Get(), 0, NULL, &m_waterParamsConstantBufferData, 0, 0, 0);
+
+    context->VSSetShader(m_waterVertexShader.Get(), nullptr, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
-    context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+    context->VSSetConstantBuffers1(1, 1, m_waterParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
 
     context->PSSetShader(m_waterPixelShader.Get(), nullptr, 0);
+    context->PSSetConstantBuffers1(1, 1, m_waterParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     context->PSSetShaderResources(0, 1, resourceView);
     context->PSSetShaderResources(1, 1, resourceView2);
     context->PSSetShaderResources(2, 1, dudvResourceView);
@@ -423,7 +455,6 @@ void Terrain_engine::SceneRenderer::RenderTerrain()
     m_drawParamsConstantBufferData.tessellationParams.drawLOD = m_drawLOD ? 1.0f : 0.0f;
     m_drawParamsConstantBufferData.tessellationParams.useCulling = m_useFrustumCulling ? 1.0f : 0.0f;
     m_drawParamsConstantBufferData.drawTerrain = 1.0f;
-    m_drawParamsConstantBufferData.waterMoveFactor = m_waveMoveFactor;
 
     GetViewFrustum(m_drawParamsConstantBufferData.planes);
 
@@ -527,6 +558,9 @@ void SceneRenderer::CreateDeviceDependentResources()
 
         CD3D11_BUFFER_DESC drawDataConstantBufferDesc(sizeof(DrawParamsConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
         DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&drawDataConstantBufferDesc, nullptr, &m_drawParamsConstantBuffer));
+
+        CD3D11_BUFFER_DESC waterDataConstantBufferDesc(sizeof(WaterParamsConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
+        DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&waterDataConstantBufferDesc, nullptr, &m_waterParamsConstantBuffer));
         });
 
     auto createGSTask = loadGSTask.then([this](const std::vector<byte>& fileData) {

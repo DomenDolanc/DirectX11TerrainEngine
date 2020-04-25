@@ -23,6 +23,17 @@ namespace Terrain_engine
         float amplitude;
     };
 
+    struct WaterParamsConstantBuffer
+    {
+        float scaling;
+        DirectX::XMFLOAT3 eyePos;
+
+        float reflectWater;
+        float refractWater;
+        float waterMoveFactor;
+        float padding;
+    };
+
     struct DrawParamsConstantBuffer
     {
         DirectX::XMFLOAT3 lightPos;
@@ -35,7 +46,7 @@ namespace Terrain_engine
         TessellationParams tessellationParams;
         DirectX::XMFLOAT2 textureSize;
         float clipPlaneType;
-        float waterMoveFactor;
+        float padding;
         DirectX::XMFLOAT4 planes[6];
     };
 

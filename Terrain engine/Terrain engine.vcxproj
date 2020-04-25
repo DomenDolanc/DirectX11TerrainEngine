@@ -363,6 +363,7 @@
   <ItemGroup>
     <None Include="Common\DirectXMesh.inl" />
     <None Include="Content\Shaders\IncludeDrawParams.hlsli" />
+    <None Include="Content\Shaders\IncludeWaterParams.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Content\Shaders\DomainShader.hlsl">

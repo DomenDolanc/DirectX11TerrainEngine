@@ -293,3 +293,14 @@ void Terrain_engine::DirectXPage::TerrainViewDistanceSlider_ValueChanged(Platfor
 	TerrainViewDistanceText->Text = "View distance: " + TerrainViewDistanceSlider->Value.ToString() + "m";
 	m_main->UpdateViewDistance(TerrainViewDistanceSlider->Value);
 }
+
+void Terrain_engine::DirectXPage::WaterParams_Changed(Platform::Object^ sender, Windows::UI::Xaml::RoutedEventArgs^ e)
+{
+	if (!this->IsLoaded)
+		return;
+
+	m_main->DrawWater(DrawWaterCheckBox->IsChecked->Value);
+	m_main->ReflectWater(ReflectWaterCheckBox->IsChecked->Value);
+	m_main->RefractWater(RefractWaterCheckBox->IsChecked->Value);
+	m_main->UseWaterTessellation(UseWaterTesselationCheckBox->IsChecked->Value);
+}

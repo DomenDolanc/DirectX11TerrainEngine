@@ -20,7 +20,7 @@
                     Content="Load height map"
                     Foreground="White"
                     Click="LoadTextureButton_Click"/>
-            
+
             <StackPanel Name="LightPanel"
                         Margin="0 24 0 0"
                         Padding="8 0 0 0"
@@ -78,7 +78,7 @@
                  />
             </StackPanel>
 
-            <StackPanel Name="TerrainPerlinPanel"
+            <StackPanel Name="TerrainPanel"
                         Margin="0 24 0 0"
                         Padding="8 0 0 0"
                         Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left"
@@ -227,6 +227,83 @@
                         Name = "UseTextureCheckBox"  
                         Checked="TextureParams_Changed"
                         Unchecked="TextureParams_Changed"
+                        Margin = "12, 0, 12, 0"/>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Name="WaterPanel"
+                        Margin="0 24 0 0"
+                        Padding="8 0 0 0"
+                        Orientation="Vertical" VerticalAlignment="Top" HorizontalAlignment="Left"
+                        Width="300" Background="Black" Opacity="0.7">
+
+
+                <TextBlock Text="Water options"
+                   Foreground="White"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="16" />
+                <StackPanel
+                Orientation="Horizontal"
+                VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                    <TextBlock 
+                    Text="Draw water" 
+                    Foreground="White" 
+                    FontSize="12"
+                    Margin="0, 6, 0 0"
+                />
+                    <CheckBox 
+                    Name = "DrawWaterCheckBox"  
+                    Checked="WaterParams_Changed"
+                    Unchecked="WaterParams_Changed"
+                    Margin = "12, 0, 12, 0"/>
+                </StackPanel>
+
+                <StackPanel
+                Orientation="Horizontal"
+                VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                    <TextBlock 
+                    Text="Reflect water" 
+                    Foreground="White" 
+                    FontSize="12"
+                    Margin="0, 6, 0 0"
+                />
+                    <CheckBox 
+                    Name = "ReflectWaterCheckBox"  
+                    Checked="WaterParams_Changed"
+                    Unchecked="WaterParams_Changed"
+                    Margin = "12, 0, 12, 0"/>
+                </StackPanel>
+
+                <StackPanel
+                Orientation="Horizontal"
+                VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                    <TextBlock 
+                    Text="Refract water" 
+                    Foreground="White" 
+                    FontSize="12"
+                    Margin="0, 6, 0 0"
+                />
+                    <CheckBox 
+                    Name = "RefractWaterCheckBox"  
+                    Checked="WaterParams_Changed"
+                    Unchecked="WaterParams_Changed"
+                    Margin = "12, 0, 12, 0"/>
+                </StackPanel>
+
+                <StackPanel
+                    Orientation="Horizontal"
+                    VerticalAlignment="Stretch" HorizontalAlignment="Left">
+                    <TextBlock 
+                        Text="Use tessellation" 
+                        Foreground="White" 
+                        FontSize="12"
+                        Margin="0, 6, 0 0"
+                    />
+                    <CheckBox 
+                        Name = "UseWaterTesselationCheckBox"  
+                        Checked="WaterParams_Changed"
+                        Unchecked="WaterParams_Changed"
                         Margin = "12, 0, 12, 0"/>
                 </StackPanel>
             </StackPanel>

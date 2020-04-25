@@ -195,6 +195,26 @@ void Terrain_engine::Terrain_engineMain::UpdateViewDistance(double viewDistance)
     m_sceneRenderer->UpdateViewDistance(viewDistance);
 }
 
+void Terrain_engine::Terrain_engineMain::DrawWater(bool drawWater)
+{
+    m_sceneRenderer->DrawWater(drawWater);
+}
+
+void Terrain_engine::Terrain_engineMain::ReflectWater(bool reflectWater)
+{
+    m_sceneRenderer->ReflectWater(reflectWater);
+}
+
+void Terrain_engine::Terrain_engineMain::RefractWater(bool refractWater)
+{
+    m_sceneRenderer->RefractWater(refractWater);
+}
+
+void Terrain_engine::Terrain_engineMain::UseWaterTessellation(bool useWaterTessellation)
+{
+    m_sceneRenderer->UseWaterTessellation(useWaterTessellation);
+}
+
 // Updates the application state once per frame.
 void Terrain_engineMain::Update() 
 {

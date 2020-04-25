@@ -39,6 +39,11 @@ namespace Terrain_engine
         void UpdateViewDistance(double viewDistance);
         void GetViewFrustum(DirectX::XMFLOAT4 planes[6]);
 
+        void DrawWater(bool drawWater);
+        void ReflectWater(bool reflectWater);
+        void RefractWater(bool refractWater);
+        void UseWaterTessellation(bool useWaterTessellation);
+
         bool IsReadyToRender();
 
         std::shared_ptr<Camera> getCamera();
@@ -69,9 +74,11 @@ namespace Terrain_engine
 
         Microsoft::WRL::ComPtr<ID3D11Buffer>		    m_constantBuffer;
         Microsoft::WRL::ComPtr<ID3D11Buffer>		    m_drawParamsConstantBuffer;
+        Microsoft::WRL::ComPtr<ID3D11Buffer>		    m_waterParamsConstantBuffer;
 
         ModelViewProjectionConstantBuffer	m_constantBufferData;
         DrawParamsConstantBuffer            m_drawParamsConstantBufferData;
+        WaterParamsConstantBuffer            m_waterParamsConstantBufferData;
 
         std::shared_ptr<Camera> m_Camera;
         std::shared_ptr<Terrain> m_Terrain;
@@ -85,6 +92,11 @@ namespace Terrain_engine
         bool m_usesTessellation = false;
         bool m_drawLOD = false;
         bool m_useFrustumCulling = false;
+
+        bool m_drawWater = false;
+        bool m_refractWater = false;
+        bool m_reflectWater = false;
+        bool m_useWaterTessellation = false;
 
         DirectX::XMFLOAT2 m_MousePoint;
 
