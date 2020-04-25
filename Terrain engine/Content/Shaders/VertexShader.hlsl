@@ -52,7 +52,7 @@ GeometryShaderInput main(VertexShaderInput input)
     } else
     {
         output.color = input.color;
-        if (drawTerrain)
+        if (drawTerrain == 1.0f)
         {
             float2 outTex = float2((pos.x / scaling) + 0.5, (input.pos.z / scaling) + 0.5);
             float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0).rgb;
@@ -72,7 +72,14 @@ GeometryShaderInput main(VertexShaderInput input)
         pos = mul(pos, projection);
     }
     
-    output.clip = (!clipForReflection || !drawTerrain || output.worldPos.y >= 0.0f ? 1.0f : -1.0f);
+    if (drawTerrain == 0.0f || clipForReflection == 0.0f)
+        output.clip = 1.0f;
+    else if (clipForReflection == 1.0f && output.worldPos.y >= 0.0f)
+        output.clip = 1.0f;
+    else if (clipForReflection == -1.0f && output.worldPos.y <= 0.0f)
+        output.clip = 1.0f;
+    else
+        output.clip = -1.0f;
     output.pos = pos;
     
     return output;

@@ -46,6 +46,7 @@ namespace Terrain_engine
     private:
         void RenderToBackBuffer();
         void RenderToWaterReflection();
+        void RenderToWaterRefraction();
 
         void RenderScene();
         void RenderWater();

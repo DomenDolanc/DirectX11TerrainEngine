@@ -291,19 +291,30 @@ void Terrain_engine::SceneRenderer::Render()
     ID3D11ShaderResourceView* const resourceView[1] = { nullptr };
 
     float cameraPitch = m_Camera->getPitch();
-    
-    context->PSSetShaderResources(0, 1, resourceView);
-    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
 
     m_Camera->setPitch(-cameraPitch);
     m_drawParamsConstantBufferData.clipForReflection = 1.0f;
     m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
+    context->PSSetShaderResources(0, 1, resourceView);
+    context->PSSetShaderResources(1, 1, resourceView);
+    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
     RenderToWaterReflection();
 
-    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
+
+
     m_Camera->setPitch(cameraPitch);
+    m_drawParamsConstantBufferData.clipForReflection = -1.0f;
+    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
+    context->PSSetShaderResources(0, 1, resourceView);
+    context->PSSetShaderResources(1, 1, resourceView);
+    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
+    RenderToWaterRefraction();
+
+
+
     m_drawParamsConstantBufferData.clipForReflection = 0.0f;
     m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
+    context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
     RenderToBackBuffer();
 }
 
@@ -323,6 +334,28 @@ void Terrain_engine::SceneRenderer::RenderToWaterReflection()
 
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
     XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetReflectionMatrix()));
+    context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
+    context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+
+    RenderScene();
+}
+
+void Terrain_engine::SceneRenderer::RenderToWaterRefraction()
+{
+    if (!m_loadingComplete)
+    {
+        return;
+    }
+    auto context = m_deviceResources->GetD3DDeviceContext();
+
+    ID3D11RenderTargetView* const targets[1] = { m_Water->GetRefractionRenderTarget() };
+
+    context->OMSetRenderTargets(1, targets, m_Water->GetRefractionDepthStencilView());
+    context->ClearRenderTargetView(m_Water->GetRefractionRenderTarget(), DirectX::Colors::CornflowerBlue);
+    context->ClearDepthStencilView(m_Water->GetRefractionDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
@@ -359,6 +392,7 @@ void Terrain_engine::SceneRenderer::RenderWater()
     auto context = m_deviceResources->GetD3DDeviceContext();
     ID3D11Buffer* const constBuff[1] = { nullptr };
     ID3D11ShaderResourceView* const resourceView[1] = { m_Water->GetReflectionTextureResourceView() };
+    ID3D11ShaderResourceView* const resourceView2[1] = { m_Water->GetRefractionTextureResourceView() };
     ID3D11ShaderResourceView* const dudvResourceView[1] = { m_Water->GetDUDVTextureShaderResourceView() };
 
     context->IASetInputLayout(m_inputLayout.Get());
@@ -371,7 +405,8 @@ void Terrain_engine::SceneRenderer::RenderWater()
 
     context->PSSetShader(m_waterPixelShader.Get(), nullptr, 0);
     context->PSSetShaderResources(0, 1, resourceView);
-    context->PSSetShaderResources(1, 1, dudvResourceView);
+    context->PSSetShaderResources(1, 1, resourceView2);
+    context->PSSetShaderResources(2, 1, dudvResourceView);
     m_Water->Draw();
 }
 

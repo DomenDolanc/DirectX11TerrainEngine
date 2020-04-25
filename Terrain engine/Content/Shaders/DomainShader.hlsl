@@ -64,7 +64,14 @@ DS_OUTPUT main(
     Output.normal = normalize(float3(ze - zc, 2.0f, zb - zd));
     Output.pos.y = (sampledTexture.r - 0.1f) * amplitude;
     Output.worldPos = mul(Output.pos, model).xyz;
-    Output.clip = (!clipForReflection || !drawTerrain || Output.worldPos.y >= 0.0f ? 1.0f : -1.0f);
+    if (drawTerrain == 0.0f || clipForReflection == 0.0f)
+        Output.clip = 1.0f;
+    else if (clipForReflection == 1.0f && Output.worldPos.y >= 0.0f)
+        Output.clip = 1.0f;
+    else if (clipForReflection == -1.0f && Output.worldPos.y <= 0.0f)
+        Output.clip = 1.0f;
+    else
+        Output.clip = -1.0f;
     Output.pos = mul(Output.pos, model);
     Output.pos = mul(Output.pos, view);
     Output.pos = mul(Output.pos, projection);
