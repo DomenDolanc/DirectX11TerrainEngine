@@ -21,9 +21,11 @@ static const float diffueIntensity = 1.0f;
 static const float attConst = 1.0f;
 static const float attLin = 0.55f;
 static const float attQuad = 0.95f;
-static const float4 fogColor = float4(0.9f, 0.9f, 0.9f, 0.0f);
+static const float4 fogColor = float4(0.5f, 0.6f, 0.7f, 0.0f);
 static const float fogStart = 23000.0f;
 static const float fogRange = 8000.0f;
+
+static const float tilingFactor = scaling / 5000.f;
 
 float4 slope_based_color(float slope, float4 colorSteep, float4 colorFlat)
 {
@@ -49,9 +51,9 @@ float4 height_and_slope_based_color(float3 pos, float slope)
     float height = pos.y;
     
     float2 tex = pos.xz / scaling;
-    float4 dirt = dirtTexture.Sample(simpleSampler, tex * 10 + 0.5f);
-    float4 rock = rockTexture.Sample(simpleSampler, tex * 10 + 0.5f);
-    float4 grass = grassTexture.Sample(simpleSampler, tex * 10 + 0.5f);
+    float4 dirt = dirtTexture.Sample(simpleSampler, tex * tilingFactor + 0.5f);
+    float4 rock = rockTexture.Sample(simpleSampler, tex * tilingFactor + 0.5f);
+    float4 grass = grassTexture.Sample(simpleSampler, tex * tilingFactor + 0.5f);
     float4 snow = float4(0.8f, 0.8f, 0.8f, 1.0f);
  
     float bounds = amplitude * 0.02f;

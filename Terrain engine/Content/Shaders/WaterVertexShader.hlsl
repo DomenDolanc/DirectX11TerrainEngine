@@ -24,6 +24,8 @@ struct PixelShaderInput
     float2 dudvTexCoord : TEXCOORD1;
 };
 
+static const float tilingFactor = scaling / 10000.0f;
+
 PixelShaderInput main(VertexShaderInput input)
 {
     PixelShaderInput output;
@@ -33,7 +35,7 @@ PixelShaderInput main(VertexShaderInput input)
     output.normal = input.normal;
     output.worldPos = input.pos;
     output.vectorToCamera = eyePos - pos.xyz;
-    output.dudvTexCoord = (pos.xz / scaling + 0.5f) * 6.0f;
+    output.dudvTexCoord = (pos.xz / scaling + 0.5f) * tilingFactor;
     
     output.texCoord = mul(pos, model);
     output.texCoord = mul(output.texCoord, view);
