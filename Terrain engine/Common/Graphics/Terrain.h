@@ -35,8 +35,8 @@ namespace Terrain_engine
     private:
         std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
-        int m_Columns = 64;
-        int m_Rows = 64;
+        int m_Columns = 100;
+        int m_Rows = 100;
         float m_scaling;
 
         std::vector<VertexPositionColor> m_vertices;
