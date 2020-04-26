@@ -51,9 +51,9 @@ DS_OUTPUT main(
     DS_OUTPUT Output;
 
     Output.pos = lerp(lerp(patch[0].pos, patch[1].pos, domain.x), lerp(patch[2].pos, patch[3].pos, domain.x), domain.y);
-    //Output.clip = lerp(lerp(patch[0].clip, patch[1].clip, domain.x), lerp(patch[2].clip, patch[3].clip, domain.x), domain.y);
 	
     float2 outTex = float2((Output.pos.x / scaling) + 0.5, (Output.pos.z / scaling) + 0.5);
+    outTex = clamp(outTex, 0.005f, 0.995f);
     float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0).rgb;
     
     float zb = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, -stepY), 0).r * amplitude;
