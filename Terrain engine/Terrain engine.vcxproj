@@ -365,6 +365,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Common\DirectXMesh.inl" />
+    <None Include="Content\Shaders\IncludeFogParams.hlsli" />
     <None Include="Content\Shaders\IncludeDrawParams.hlsli" />
     <None Include="Content\Shaders\IncludeWaterParams.hlsli" />
   </ItemGroup>
