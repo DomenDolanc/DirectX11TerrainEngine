@@ -291,7 +291,7 @@ void Terrain_engine::SceneRenderer::SetProjection(double viewDistance)
 
     m_viewDistance = viewDistance;
 
-    XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 1000.0f, (float)viewDistance);
+    XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 100.0f, (float)viewDistance);
 
     XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
 
