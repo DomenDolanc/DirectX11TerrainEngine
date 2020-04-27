@@ -135,9 +135,9 @@
                     Margin="12,0,12,0" 
                     Foreground="White"
                     Minimum="100"
-                    Maximum="10000"
+                    Maximum="25000"
                     StepFrequency="100"
-                    Value="2500"
+                    Value="5000"
                     ValueChanged="TerrainOptionsSlider_ValueChanged"
                 />
 
@@ -153,10 +153,10 @@
                     HorizontalAlignment="Stretch" VerticalAlignment="Top" 
                     Margin="12,0,12,0" 
                     Foreground="White"
-                    Minimum="100"
-                    Maximum="50000"
+                    Minimum="5000"
+                    Maximum="100000"
                     StepFrequency="100"
-                    Value="25000"
+                    Value="100000"
                     ValueChanged="TerrainViewDistanceSlider_ValueChanged"
                 />
 

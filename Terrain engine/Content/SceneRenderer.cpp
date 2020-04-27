@@ -31,7 +31,7 @@ SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceR
     m_Skybox->setScaling(m_sceneScaling);
 
     XMFLOAT2 gridSize = m_Terrain->getGridSize();
-    m_drawParamsConstantBufferData.terrainParams.amplitude = 2500.0f;
+    m_drawParamsConstantBufferData.terrainParams.amplitude = 5000.0f;
     m_drawParamsConstantBufferData.terrainParams.columns = gridSize.x;
     m_drawParamsConstantBufferData.terrainParams.rows = gridSize.y;
 
@@ -45,7 +45,7 @@ Terrain_engine::SceneRenderer::~SceneRenderer()
 
 void SceneRenderer::CreateWindowSizeDependentResources()
 {
-    SetProjection(25000.0f);
+    SetProjection(100000.0f);
     XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationX(0.0)));
 
