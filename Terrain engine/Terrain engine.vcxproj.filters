@@ -105,6 +105,9 @@
     <ClCompile Include="Common\Graphics\Water.cpp">
       <Filter>Common\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Common\Graphics\Skybox.cpp">
+      <Filter>Common\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Terrain_engineMain.h" />
@@ -143,6 +146,9 @@
       <Filter>Common\DirectXHelpers</Filter>
     </ClInclude>
     <ClInclude Include="Common\Graphics\Water.h">
+      <Filter>Common\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Graphics\Skybox.h">
       <Filter>Common\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
@@ -192,6 +198,9 @@
     <Image Include="Assets\Textures\waterDuDV.png">
       <Filter>Assets\Textures</Filter>
     </Image>
+    <Image Include="Assets\Textures\Skybox.dds">
+      <Filter>Assets\Textures</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
@@ -230,6 +239,12 @@
       <Filter>Content\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Content\Shaders\WaterVertexShader.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Content\Shaders\SkyboxVertexShader.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Content\Shaders\SkyboxPixelShader.hlsl">
       <Filter>Content\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

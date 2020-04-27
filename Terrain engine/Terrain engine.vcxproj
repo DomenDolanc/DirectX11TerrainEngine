@@ -279,6 +279,7 @@
     <Image Include="Assets\Textures\mountain_stone_rock.jpg" />
     <Image Include="Assets\Textures\rsz_cliff_seamless_texture_#6624.jpg" />
     <Image Include="Assets\Textures\rsz_grass_seamless_texture_#1405.jpg" />
+    <Image Include="Assets\Textures\Skybox.dds" />
     <Image Include="Assets\Textures\Snow_001_DISP.png" />
     <Image Include="Assets\Textures\Snow_001_NORM.jpg" />
     <Image Include="Assets\Textures\Snow_Seamless_Texture_6758_1024x1024.jpg" />
@@ -298,6 +299,7 @@
     <ClInclude Include="Common\DirectXMesh.h" />
     <ClInclude Include="Common\DirectXMeshP.h" />
     <ClInclude Include="Common\Graphics\Camera.h" />
+    <ClInclude Include="Common\Graphics\Skybox.h" />
     <ClInclude Include="Common\Graphics\Sphere.h" />
     <ClInclude Include="Common\Graphics\Terrain.h" />
     <ClInclude Include="Common\Graphics\Water.h" />
@@ -327,6 +329,7 @@
     <ClCompile Include="Common\DirectXMeshUtil.cpp" />
     <ClCompile Include="Common\DirectXMeshValidate.cpp" />
     <ClCompile Include="Common\Graphics\Camera.cpp" />
+    <ClCompile Include="Common\Graphics\Skybox.cpp" />
     <ClCompile Include="Common\Graphics\Sphere.cpp" />
     <ClCompile Include="Common\Graphics\Terrain.cpp" />
     <ClCompile Include="Common\Graphics\Water.cpp" />
@@ -405,6 +408,26 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Content\Shaders\SkyboxPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Content\Shaders\SkyboxVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
     <FxCompile Include="Content\Shaders\VertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>

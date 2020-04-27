@@ -8,6 +8,7 @@
 #include "..\Common\Graphics\Sphere.h"
 #include "..\Common\Graphics\Camera.h"
 #include "..\Common\Graphics\Water.h"
+#include "..\Common\Graphics\Skybox.h"
 #include "..\Common\DirectXMesh.h"
 
 namespace Terrain_engine
@@ -57,6 +58,8 @@ namespace Terrain_engine
         void RenderWater();
         void RenderTerrain();
         void RenderLightSource();
+        void RenderSkybox();
+
         void SetProjection(double viewDistance);
 
     private:
@@ -72,6 +75,9 @@ namespace Terrain_engine
         Microsoft::WRL::ComPtr<ID3D11VertexShader>	    m_waterVertexShader;
         Microsoft::WRL::ComPtr<ID3D11PixelShader>	    m_waterPixelShader;
 
+        Microsoft::WRL::ComPtr<ID3D11VertexShader>	    m_skyboxVertexShader;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader>	    m_skyboxPixelShader;
+
         Microsoft::WRL::ComPtr<ID3D11Buffer>		    m_constantBuffer;
         Microsoft::WRL::ComPtr<ID3D11Buffer>		    m_drawParamsConstantBuffer;
         Microsoft::WRL::ComPtr<ID3D11Buffer>		    m_waterParamsConstantBuffer;
@@ -84,6 +90,7 @@ namespace Terrain_engine
         std::shared_ptr<Terrain> m_Terrain;
         std::shared_ptr<Sphere> m_Light;
         std::shared_ptr<Water> m_Water;
+        std::shared_ptr<Skybox> m_Skybox;
 
         DirectX::XMFLOAT3 m_lightPos;
 
