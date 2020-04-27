@@ -23,6 +23,8 @@ static const float attConst = 1.0f;
 static const float attLin = 0.55f;
 static const float attQuad = 0.95f;
 
+static const float4 waterTintColor = float4(0.0f, 0.6f, 0.8f, 1.0f);
+
 static const float tilingFactor = scaling / 5000.f;
 
 float4 slope_based_color(float slope, float4 colorSteep, float4 colorFlat)
@@ -119,5 +121,10 @@ float4 main(PixelShaderInput input) : SV_TARGET
     const float att = 1.0f / (attConst + attLin * distTol + attQuad * (distTol * distTol));
 	
     const float3 diffuse = diffueColor * diffueIntensity * att * max(0.0f, dot(dirTol, input.normal));
-    return min(color, float4(saturate((diffuse + ambient)), 1.0f) * color);
+    
+    float shadedColor = min(color, float4(saturate((diffuse + ambient)), 1.0f) * color);
+    if (eyePos.y >= 0.0f)
+        return shadedColor;
+    else    
+        return lerp(waterTintColor, shadedColor, 0.5f);
 }
