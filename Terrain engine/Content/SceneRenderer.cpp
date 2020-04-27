@@ -406,18 +406,21 @@ void Terrain_engine::SceneRenderer::RenderToBackBuffer()
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
+    RenderScene();
     if (m_drawWater)
         RenderWater();
-    RenderScene();
 }
 
 void SceneRenderer::RenderScene()
 {
     auto context = m_deviceResources->GetD3DDeviceContext();
+    auto rasterizer = m_deviceResources->GetRasterizerState();
+
     context->IASetInputLayout(m_inputLayout.Get());
-    RenderTerrain();
-    RenderLightSource();
+    context->RSSetState(rasterizer);
+
     RenderSkybox();
+    RenderTerrain();
 }
 
 void Terrain_engine::SceneRenderer::RenderWater()
@@ -438,6 +441,8 @@ void Terrain_engine::SceneRenderer::RenderWater()
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->UpdateSubresource1(m_waterParamsConstantBuffer.Get(), 0, NULL, &m_waterParamsConstantBufferData, 0, 0, 0);
 
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+
     context->VSSetShader(m_waterVertexShader.Get(), nullptr, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
     context->VSSetConstantBuffers1(1, 1, m_waterParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
@@ -447,17 +452,25 @@ void Terrain_engine::SceneRenderer::RenderWater()
     context->PSSetShaderResources(0, 1, resourceView);
     context->PSSetShaderResources(1, 1, resourceView2);
     context->PSSetShaderResources(2, 1, dudvResourceView);
+
+    context->HSSetShader(nullptr, nullptr, 0);
+    context->DSSetShader(nullptr, nullptr, 0);
+
     m_Water->Draw();
 }
 
 void Terrain_engine::SceneRenderer::RenderTerrain()
 {
     auto context = m_deviceResources->GetD3DDeviceContext();
-    auto rasterizer = m_deviceResources->GetRasterizerState();
+
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
+    context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
 
     m_drawParamsConstantBufferData.scaling = m_sceneScaling;
     m_drawParamsConstantBufferData.renderShadows = (float)m_renderShadows;
     m_drawParamsConstantBufferData.lightPos = m_lightPos;
+    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = m_usesTessellation ? 1.0f : 0.0f;
     m_drawParamsConstantBufferData.tessellationParams.drawLOD = m_drawLOD ? 1.0f : 0.0f;
     m_drawParamsConstantBufferData.tessellationParams.useCulling = m_useFrustumCulling ? 1.0f : 0.0f;
     m_drawParamsConstantBufferData.drawTerrain = 1.0f;
@@ -505,7 +518,6 @@ void Terrain_engine::SceneRenderer::RenderTerrain()
 
     context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
     context->PSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
-    context->RSSetState(rasterizer);
     m_Terrain->Draw();
 }
 
@@ -513,8 +525,9 @@ void Terrain_engine::SceneRenderer::RenderLightSource()
 {
     auto context = m_deviceResources->GetD3DDeviceContext();
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
-    context->HSSetShader(nullptr, nullptr, 0);
-    context->DSSetShader(nullptr, nullptr, 0);
+
+    context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
+    context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
 
     XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixTranslation(m_lightPos.x, m_lightPos.y, m_lightPos.z)));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
@@ -538,6 +551,15 @@ void Terrain_engine::SceneRenderer::RenderSkybox()
     ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
     auto skyboxTextureShaderResouce = m_Skybox->GetSkyboxTextureShaderResourceView();
 
+    m_drawParamsConstantBufferData.scaling = m_sceneScaling;
+    m_drawParamsConstantBufferData.renderShadows = 0.0f;
+    m_drawParamsConstantBufferData.lightPos = m_lightPos;
+    m_drawParamsConstantBufferData.eyePos = m_Camera->getEye();
+    m_drawParamsConstantBufferData.tessellationParams.usesTessellation = 0.0f;
+    m_drawParamsConstantBufferData.tessellationParams.drawLOD = 0.0f;
+    m_drawParamsConstantBufferData.drawTerrain = 0.0f;
+    context->UpdateSubresource1(m_drawParamsConstantBuffer.Get(), 0, NULL, &m_drawParamsConstantBufferData, 0, 0, 0);
+
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     context->VSSetShader(m_skyboxVertexShader.Get(), nullptr, 0);
     context->PSSetShader(m_skyboxPixelShader.Get(), nullptr, 0);
@@ -555,6 +577,9 @@ void Terrain_engine::SceneRenderer::RenderSkybox()
     context->PSSetSamplers(0, 1, sampler);
     context->PSSetShaderResources(0, 1, &skyboxTextureShaderResouce);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+
+    context->HSSetShader(nullptr, nullptr, 0);
+    context->DSSetShader(nullptr, nullptr, 0);
 
     m_Skybox->Draw();
 }
