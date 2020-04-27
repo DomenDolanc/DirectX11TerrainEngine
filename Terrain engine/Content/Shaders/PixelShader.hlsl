@@ -4,6 +4,7 @@ Texture2D grassTexture : register(t2);
 SamplerState simpleSampler;
 
 #include "IncludeDrawParams.hlsli"
+#include "IncludeFogParams.hlsli"
 
 struct PixelShaderInput
 {
@@ -21,9 +22,6 @@ static const float diffueIntensity = 1.0f;
 static const float attConst = 1.0f;
 static const float attLin = 0.55f;
 static const float attQuad = 0.95f;
-static const float4 fogColor = float4(0.5f, 0.6f, 0.7f, 0.0f);
-static const float fogStart = 23000.0f;
-static const float fogRange = 8000.0f;
 
 static const float tilingFactor = scaling / 5000.f;
 

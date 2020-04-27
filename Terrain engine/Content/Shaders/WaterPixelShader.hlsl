@@ -4,12 +4,10 @@ Texture2D dudvTexture : register(t2);
 SamplerState simpleSampler;
 
 #include "IncludeWaterParams.hlsli"
+#include "IncludeFogParams.hlsli"
 
 static const float waveStrength = 0.02f;   
 static const float4 waterTintColor = float4(0.0f, 0.3f, 0.5f, 1.0f);
-static const float4 fogColor = float4(0.9f, 0.9f, 0.9f, 0.0f);
-static const float fogStart = 23000.0f;
-static const float fogRange = 8000.0f;
 
 struct PixelShaderInput
 {
