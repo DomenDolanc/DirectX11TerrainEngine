@@ -122,7 +122,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
 	
     const float3 diffuse = diffueColor * diffueIntensity * att * max(0.0f, dot(dirTol, input.normal));
     
-    float shadedColor = min(color, float4(saturate((diffuse + ambient)), 1.0f) * color);
+    float4 shadedColor = min(color, float4(saturate((diffuse + ambient)), 1.0f) * color);
     if (eyePos.y >= 0.0f)
         return shadedColor;
     else    
