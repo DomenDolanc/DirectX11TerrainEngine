@@ -218,6 +218,9 @@
     <None Include="Content\Shaders\IncludeWaterParams.hlsli">
       <Filter>Content\Shaders</Filter>
     </None>
+    <None Include="Content\Shaders\IncludeFogParams.hlsli">
+      <Filter>Content\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Content\Shaders\GeometryShader.hlsl">
