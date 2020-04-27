@@ -43,7 +43,7 @@ namespace Terrain_engine
         float m_Pitch;
         float m_Yaw;
         float m_TravelSpeed = INITIAL_TRAVEL_SPEED;
-        const float m_Acceleration = 0.5f;
+        const float m_Acceleration = 1.0f;
     };
 }
 

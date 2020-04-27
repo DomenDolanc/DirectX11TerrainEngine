@@ -47,7 +47,7 @@ void Terrain_engine::Camera::Translate(DirectX::XMFLOAT3 translation)
 
 void Camera::UpdateSpeed()
 {
-    const float MAX_TRAVEL_SPEED = 5.0f;
+    const float MAX_TRAVEL_SPEED = 15.0f;
     if (m_TravelSpeed > MAX_TRAVEL_SPEED)
         return;
 
