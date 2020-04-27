@@ -291,7 +291,7 @@ void Terrain_engine::SceneRenderer::SetProjection(double viewDistance)
 
     m_viewDistance = viewDistance;
 
-    XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, (float)viewDistance);
+    XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 1000.0f, (float)viewDistance);
 
     XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
 
@@ -636,7 +636,7 @@ void SceneRenderer::CreateDeviceDependentResources()
 
     auto createWaterVSTask = loadWaterVSTask.then([this](const std::vector<byte>& fileData) {
         DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateVertexShader(&fileData[0], fileData.size(), nullptr, &m_waterVertexShader));
-    });
+        });
 
     auto createWaterPSTask = loadWaterPSTask.then([this](const std::vector<byte>& fileData) {
         DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreatePixelShader(&fileData[0], fileData.size(), nullptr, &m_waterPixelShader));
