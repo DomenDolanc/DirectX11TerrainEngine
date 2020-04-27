@@ -107,6 +107,8 @@ namespace Terrain_engine
 
         DirectX::XMFLOAT2 m_MousePoint;
 
+        DirectX::XMMATRIX m_currentCameraView;
+
         bool	m_loadingComplete;
         float	m_degreesPerSecond;
         bool	m_tracking;
