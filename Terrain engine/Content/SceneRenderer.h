@@ -44,6 +44,8 @@ namespace Terrain_engine
         void ReflectWater(bool reflectWater);
         void RefractWater(bool refractWater);
         void UseWaterTessellation(bool useWaterTessellation);
+        void UpdateWaveSpeed(double waveSpeed);
+        void UpdateWaveStrength(double waveStrength);
 
         bool IsReadyToRender();
 
@@ -104,6 +106,7 @@ namespace Terrain_engine
         bool m_refractWater = false;
         bool m_reflectWater = false;
         bool m_useWaterTessellation = false;
+        float m_waveSpeed = 0.0f;
 
         DirectX::XMFLOAT2 m_MousePoint;
 

@@ -8,8 +8,6 @@ using namespace Terrain_engine;
 using namespace DirectX;
 using namespace Windows::Foundation;
 
-const float WAVE_SPEED = 0.0003f;
-
 SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
     m_loadingComplete(false),
     m_degreesPerSecond(45),
@@ -267,6 +265,16 @@ void Terrain_engine::SceneRenderer::UseWaterTessellation(bool useWaterTessellati
     m_useWaterTessellation = useWaterTessellation;
 }
 
+void Terrain_engine::SceneRenderer::UpdateWaveSpeed(double waveSpeed)
+{
+    m_waveSpeed = waveSpeed;
+}
+
+void Terrain_engine::SceneRenderer::UpdateWaveStrength(double waveStrength)
+{
+    m_waterParamsConstantBufferData.waterStrengthFactor = waveStrength;
+}
+
 bool Terrain_engine::SceneRenderer::IsReadyToRender()
 {
     return m_loadingComplete;
@@ -306,7 +314,7 @@ void Terrain_engine::SceneRenderer::Render()
     {
         return;
     }
-    m_waveMoveFactor += WAVE_SPEED;
+    m_waveMoveFactor += m_waveSpeed;
     m_waveMoveFactor = fmod(m_waveMoveFactor, 1.0f);
 
     auto context = m_deviceResources->GetD3DDeviceContext();

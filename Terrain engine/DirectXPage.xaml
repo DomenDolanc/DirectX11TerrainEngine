@@ -306,6 +306,45 @@
                         Unchecked="WaterParams_Changed"
                         Margin = "12, 0, 12, 0"/>
                 </StackPanel>
+
+
+                <TextBlock 
+                    Name="WaterWaveSpeedText"
+                    Text="Wave speed"
+                    Foreground="White"       
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    FontSize="12" />
+                <Slider
+                    Name="WaveSpeedSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="0.0001"
+                    Maximum="0.1"
+                    StepFrequency="0.0001"
+                    Value="0.0003"
+                    ValueChanged="WaterParams_Changed"
+                />
+
+                <TextBlock 
+                    Name="WaterWaveStrengthText"
+                    Text="Wave strength"
+                    Foreground="White"       
+                    HorizontalAlignment="Stretch"
+                    VerticalAlignment="Top"
+                    FontSize="12" />
+                <Slider
+                    Name="WaveStrengthSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="0.01"
+                    Maximum="0.3"
+                    StepFrequency="0.01"
+                    Value="0.08"
+                    ValueChanged="WaterParams_Changed"
+                />
             </StackPanel>
         </StackPanel>
 

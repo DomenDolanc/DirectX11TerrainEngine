@@ -303,4 +303,6 @@ void Terrain_engine::DirectXPage::WaterParams_Changed(Platform::Object^ sender, 
 	m_main->ReflectWater(ReflectWaterCheckBox->IsChecked->Value);
 	m_main->RefractWater(RefractWaterCheckBox->IsChecked->Value);
 	m_main->UseWaterTessellation(UseWaterTesselationCheckBox->IsChecked->Value);
+	m_main->UpdateWaveSpeed(WaveSpeedSlider->Value);
+	m_main->UpdateWaveStrength(WaveStrengthSlider->Value);
 }

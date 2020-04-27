@@ -5,8 +5,7 @@ SamplerState simpleSampler;
 
 #include "IncludeWaterParams.hlsli"
 #include "IncludeFogParams.hlsli"
-
-static const float waveStrength = 0.02f;   
+ 
 static const float4 waterTintColor = float4(0.0f, 0.6f, 0.8f, 1.0f);
 
 struct PixelShaderInput
@@ -33,7 +32,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     refractiveFactor = pow(refractiveFactor, 1.4f);
 
     input.dudvTexCoord += waterMoveFactor;
-    float2 distortion = (dudvTexture.Sample(simpleSampler, input.dudvTexCoord).rg * 2.0f - 1.0f) * waveStrength;
+    float2 distortion = (dudvTexture.Sample(simpleSampler, input.dudvTexCoord).rg * 2.0f - 1.0f) * waterStrengthFactor;
 
     float3 refractColor;
     float3 reflectColor;

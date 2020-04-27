@@ -6,5 +6,5 @@ cbuffer WaterParamsConstantBuffer : register(b1)
     float reflectWater;
     float refractWater;
     float waterMoveFactor;
-    float padding;
+    float waterStrengthFactor;
 };

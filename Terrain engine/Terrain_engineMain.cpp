@@ -215,6 +215,16 @@ void Terrain_engine::Terrain_engineMain::UseWaterTessellation(bool useWaterTesse
     m_sceneRenderer->UseWaterTessellation(useWaterTessellation);
 }
 
+void Terrain_engine::Terrain_engineMain::UpdateWaveSpeed(double waveSpeed)
+{
+    m_sceneRenderer->UpdateWaveSpeed(waveSpeed);
+}
+
+void Terrain_engine::Terrain_engineMain::UpdateWaveStrength(double waveStrength)
+{
+    m_sceneRenderer->UpdateWaveStrength(waveStrength);
+}
+
 // Updates the application state once per frame.
 void Terrain_engineMain::Update() 
 {

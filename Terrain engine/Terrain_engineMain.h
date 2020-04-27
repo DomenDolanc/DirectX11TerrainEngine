@@ -36,6 +36,8 @@ namespace Terrain_engine
 		void ReflectWater(bool reflectWater);
 		void RefractWater(bool refractWater);
 		void UseWaterTessellation(bool useWaterTessellation);
+		void UpdateWaveSpeed(double waveSpeed);
+		void UpdateWaveStrength(double waveStrength);
 
 		// IDeviceNotify
 		virtual void OnDeviceLost();

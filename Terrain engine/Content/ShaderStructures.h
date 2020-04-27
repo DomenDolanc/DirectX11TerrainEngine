@@ -31,7 +31,7 @@ namespace Terrain_engine
         float reflectWater;
         float refractWater;
         float waterMoveFactor;
-        float padding;
+        float waterStrengthFactor;
     };
 
     struct DrawParamsConstantBuffer
