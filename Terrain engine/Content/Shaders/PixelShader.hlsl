@@ -97,20 +97,17 @@ float4 height_and_slope_based_color(float3 pos, float slope)
 float4 main(PixelShaderInput input) : SV_TARGET
 {
     float4 color;
-    if (drawTerrain == 1.0f && useTexture == 1.0f)
+    if (useTexture == 1.0f)
     {
         float slope = acos(input.normal.y);
         color = height_and_slope_based_color(input.worldPos, slope);
-
     } 
     else
         color = float4(input.color, 1.0);
     
-    if (drawTerrain == 1.0f)
-    {
-        float fogLerp = saturate((distance(input.worldPos, eyePos) - fogStart) / fogRange);
-        color = lerp(color, fogColor, fogLerp);
-    }
+    float fogLerp = saturate((distance(input.worldPos, eyePos) - fogStart) / fogRange);
+    color = lerp(color, fogColor, fogLerp);
+    
     if (renderShadows == 0.0)
         return color;
 	

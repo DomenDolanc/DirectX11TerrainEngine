@@ -34,8 +34,8 @@ float4 main(PixelShaderInput input) : SV_TARGET
     input.dudvTexCoord += waterMoveFactor;
     float2 distortion = (dudvTexture.Sample(simpleSampler, input.dudvTexCoord).rg * 2.0f - 1.0f) * waterStrengthFactor;
 
-    float3 refractColor;
-    float3 reflectColor;
+    float3 refractColor = waterTintColor;
+    float3 reflectColor = waterTintColor;
     
     if (reflectWater == 1.0f)
     {
@@ -43,8 +43,6 @@ float4 main(PixelShaderInput input) : SV_TARGET
         reflectionTexCoord = clamp(reflectionTexCoord, 0.001f, 0.999f);
         reflectColor = reflectionTexture.Sample(simpleSampler, reflectionTexCoord).rgb;
     }    
-    else
-        reflectColor = waterTintColor;
     
     if (refractWater == 1.0f)
     {
@@ -54,8 +52,6 @@ float4 main(PixelShaderInput input) : SV_TARGET
         float depthLevel = saturate((distance(input.worldPos.y, eyePos.y)) / scaling * 5.0f);
         refractColor = lerp(refractionTexture.Sample(simpleSampler, refractionTexCoord), waterTintColor, depthLevel).rgb;
     }
-    else
-        refractColor = waterTintColor;
     
     float4 combinedWaterColor = float4(lerp(reflectColor, refractColor, refractiveFactor), 1.0f);
     float4 finalWaterColor = lerp(combinedWaterColor, waterTintColor, 0.2f);

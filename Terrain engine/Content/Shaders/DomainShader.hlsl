@@ -64,7 +64,7 @@ DS_OUTPUT main(
     Output.normal = normalize(float3(ze - zc, 2.0f, zb - zd));
     Output.pos.y = (sampledTexture.r - 0.1f) * amplitude;
     Output.worldPos = mul(Output.pos, model).xyz;
-    if (drawTerrain == 0.0f || clipPlaneType == 0.0f)
+    if (clipPlaneType == 0.0f)
         Output.clip = 1.0f;
     else if (clipPlaneType == 1.0f && Output.worldPos.y >= 0.0f)
         Output.clip = 1.0f;
