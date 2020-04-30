@@ -51,9 +51,12 @@ float4 height_and_slope_based_color(float3 pos, float slope)
     float height = pos.y;
     
     float2 tex = pos.xz / scaling;
-    float4 dirt = dirtTexture.Sample(simpleSampler, tex * tilingFactor + 0.5f);
-    float4 rock = rockTexture.Sample(simpleSampler, tex * tilingFactor + 0.5f);
-    float4 grass = grassTexture.Sample(simpleSampler, tex * tilingFactor + 0.5f);
+    float distanceFromCamera = distance(pos, eyePos);
+    float mipmapLevel = saturate((distanceFromCamera - 5000.0f) / fogStart) * 6;
+    
+    float4 dirt = dirtTexture.SampleLevel(simpleSampler, tex * tilingFactor + 0.5f, mipmapLevel);
+    float4 rock = rockTexture.SampleLevel(simpleSampler, tex * tilingFactor + 0.5f, mipmapLevel);
+    float4 grass = grassTexture.SampleLevel(simpleSampler, tex * tilingFactor + 0.5f, mipmapLevel);
     float4 snow = float4(0.8f, 0.8f, 0.8f, 1.0f);
  
     float bounds = amplitude * 0.02f;
