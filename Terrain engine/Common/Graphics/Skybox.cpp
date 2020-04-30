@@ -15,13 +15,14 @@ Skybox::Skybox(std::shared_ptr<DX::DeviceResources> deviceResources)
     m_deviceResources = deviceResources;
 
     auto device = m_deviceResources->GetD3DDevice();
+    auto context = m_deviceResources->GetD3DDeviceContext();
     auto wicFactory = m_deviceResources->GetWicImagingFactory();
     auto tempFolder = Windows::ApplicationModel::Package::Current->InstalledLocation;
 
-    BasicLoader^ basicLoader = ref new BasicLoader(device, wicFactory);
+    BasicLoader^ basicLoader = ref new BasicLoader(device, context, wicFactory);
 
     Platform::String^ fileName = tempFolder->Path + "\\Assets\\Textures\\skybox.dds";
-    basicLoader->LoadTexture(fileName, &m_d3dSkyboxTexture, &m_d3dSkyboxTextureShaderView);
+    basicLoader->LoadTexture(fileName, &m_d3dSkyboxTexture, &m_d3dSkyboxTextureShaderView, false);
 }
 
 Skybox::~Skybox()

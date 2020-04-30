@@ -16,19 +16,22 @@ ref class BasicLoader
 internal:
     BasicLoader(
         _In_ ID3D11Device* d3dDevice,
+        _In_ ID3D11DeviceContext3* d3dContext,
         _In_opt_ IWICImagingFactory2* wicFactory = nullptr
     );
 
     void LoadTexture(
         _In_ Platform::String^ filename,
         _Out_opt_ ID3D11Texture2D** texture,
-        _Out_opt_ ID3D11ShaderResourceView** textureView
+        _Out_opt_ ID3D11ShaderResourceView** textureView,
+        _In_ bool generateMipMaps
     );
 
     concurrency::task<void> LoadTextureAsync(
         _In_ Platform::String^ filename,
         _Out_opt_ ID3D11Texture2D** texture,
-        _Out_opt_ ID3D11ShaderResourceView** textureView
+        _Out_opt_ ID3D11ShaderResourceView** textureView,
+        _In_ bool generateMipMaps
     );
 
     void LoadShader(
@@ -119,6 +122,7 @@ internal:
 
 private:
     Microsoft::WRL::ComPtr<ID3D11Device> m_d3dDevice;
+    Microsoft::WRL::ComPtr<ID3D11DeviceContext3> m_d3dContext;
     Microsoft::WRL::ComPtr<IWICImagingFactory2> m_wicFactory;
     BasicReaderWriter^ m_basicReaderWriter;
 
@@ -138,6 +142,7 @@ private:
         _In_ uint32 dataSize,
         _Out_opt_ ID3D11Texture2D** texture,
         _Out_opt_ ID3D11ShaderResourceView** textureView,
+        _In_ bool generateMipMaps,
         _In_opt_ Platform::String^ debugName
     );
 

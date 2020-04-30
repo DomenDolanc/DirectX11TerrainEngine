@@ -278,6 +278,7 @@
     <Image Include="Assets\Textures\Ground_Dirt_007_normal.jpg" />
     <Image Include="Assets\Textures\mountain_stone_rock.jpg" />
     <Image Include="Assets\Textures\rsz_cliff_seamless_texture_#6624.jpg" />
+    <Image Include="Assets\Textures\rsz_cliff_seamless_texture_#6624_NormalMap.jpg" />
     <Image Include="Assets\Textures\rsz_grass_seamless_texture_#1405.jpg" />
     <Image Include="Assets\Textures\Skybox.dds" />
     <Image Include="Assets\Textures\Snow_001_DISP.png" />

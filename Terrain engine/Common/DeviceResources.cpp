@@ -271,8 +271,8 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 			lround(m_d3dRenderTargetSize.Width),
 			lround(m_d3dRenderTargetSize.Height),
 			DXGI_FORMAT_B8G8R8A8_UNORM,
-			0
-			//DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING	// this turns off vsync
+			//0
+			DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING	// this turns off vsync
 			);
 
 		if (hr == DXGI_ERROR_DEVICE_REMOVED || hr == DXGI_ERROR_DEVICE_RESET)
@@ -304,8 +304,8 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 		swapChainDesc.BufferCount = 2;									// Use double-buffering to minimize latency.
 		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;	// All Microsoft Store apps must use _FLIP_ SwapEffects.
-		swapChainDesc.Flags = 0;
-		//swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;		// this turns off vsync
+		//swapChainDesc.Flags = 0;
+		swapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING;		// this turns off vsync
 		swapChainDesc.Scaling = scaling;
 		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
 
@@ -386,16 +386,22 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 
 		auto tempFolder = Windows::ApplicationModel::Package::Current->InstalledLocation;
 		
-		BasicLoader^ basicLoader = ref new BasicLoader(m_d3dDevice.Get(), m_wicFactory.Get());
+		BasicLoader^ basicLoader = ref new BasicLoader(m_d3dDevice.Get(), m_d3dContext.Get(), m_wicFactory.Get());
 
 		Platform::String^ fileName = tempFolder->Path + "\\Assets\\Textures\\Ground Seamless Texture.jpg";
-		basicLoader->LoadTexture(fileName, &m_d3dDirtTexture, &m_d3dDirtTextureShaderView);
+		basicLoader->LoadTexture(fileName, &m_d3dDirtTexture, &m_d3dDirtTextureShaderView, true);
+		m_d3dContext->GenerateMips(m_d3dDirtTextureShaderView.Get());
 
 		fileName = tempFolder->Path + "\\Assets\\Textures\\rsz_cliff_seamless_texture_#6624.jpg";
-		basicLoader->LoadTexture(fileName, &m_d3dRockTexture, &m_d3dRockTextureShaderView);
+		basicLoader->LoadTexture(fileName, &m_d3dRockTexture, &m_d3dRockTextureShaderView, true);
+		m_d3dContext->GenerateMips(m_d3dRockTextureShaderView.Get());
 
 		fileName = tempFolder->Path + "\\Assets\\Textures\\rsz_grass_seamless_texture_#1405.jpg";
-		basicLoader->LoadTexture(fileName, &m_d3dGrassTexture, &m_d3dGrassTextureShaderView);
+		basicLoader->LoadTexture(fileName, &m_d3dGrassTexture, &m_d3dGrassTextureShaderView, true);
+		m_d3dContext->GenerateMips(m_d3dGrassTextureShaderView.Get());
+
+		fileName = tempFolder->Path + "\\Assets\\Textures\\rsz_cliff_seamless_texture_#6624_NormalMap.jpg";
+		basicLoader->LoadTexture(fileName, &m_d3dRockNormalTexture, &m_d3dRockNormalTextureShaderView, true);
 	}
 
 	// Set the proper orientation for the swap chain, and generate 2D and
@@ -743,8 +749,8 @@ void DX::DeviceResources::Present()
 	// to sleep until the next VSync. This ensures we don't waste any cycles rendering
 	// frames that will never be displayed to the screen.
 	DXGI_PRESENT_PARAMETERS parameters = { 0 };
-	HRESULT hr = m_swapChain->Present1(1, 0, &parameters);
-	//HRESULT hr = m_swapChain->Present1(0, DXGI_PRESENT_ALLOW_TEARING, &parameters);		// this turns off vsync
+	//HRESULT hr = m_swapChain->Present1(1, 0, &parameters);
+	HRESULT hr = m_swapChain->Present1(0, DXGI_PRESENT_ALLOW_TEARING, &parameters);		// this turns off vsync
 
 	// Discard the contents of the render target.
 	// This is a valid operation only when the existing contents will be entirely

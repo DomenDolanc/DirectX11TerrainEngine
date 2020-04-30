@@ -15,14 +15,15 @@ Water::Water(std::shared_ptr<DX::DeviceResources> deviceResources)
     m_deviceResources = deviceResources;
 
     auto device = m_deviceResources->GetD3DDevice();
+    auto context = m_deviceResources->GetD3DDeviceContext();
     auto wicFactory = m_deviceResources->GetWicImagingFactory();
 
     auto tempFolder = Windows::ApplicationModel::Package::Current->InstalledLocation;
 
-    BasicLoader^ basicLoader = ref new BasicLoader(device, wicFactory);
+    BasicLoader^ basicLoader = ref new BasicLoader(device, context, wicFactory);
 
     Platform::String^ fileName = tempFolder->Path + "\\Assets\\Textures\\waterDuDV.png";
-    basicLoader->LoadTexture(fileName, &m_d3dDUDVTexture, &m_d3dDUDVTextureShaderView);
+    basicLoader->LoadTexture(fileName, &m_d3dDUDVTexture, &m_d3dDUDVTextureShaderView, false);
 }
 
 Water::~Water()

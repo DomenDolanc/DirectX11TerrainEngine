@@ -173,13 +173,13 @@ void Terrain_engine::Terrain_engineMain::LoadBitmap(StorageFile^ file)
     {
         if (tempFile)
         {
-            BasicLoader^ basicLoader = ref new BasicLoader(m_deviceResources->GetD3DDevice(), m_deviceResources->GetWicImagingFactory());
+            BasicLoader^ basicLoader = ref new BasicLoader(m_deviceResources->GetD3DDevice(), m_deviceResources->GetD3DDeviceContext(), m_deviceResources->GetWicImagingFactory());
 
             ID3D11Texture2D* terrainTexture;
             ID3D11ShaderResourceView* terrainShaderResourceView;
             Platform::String^ fileName = tempFile->Path;
 
-            basicLoader->LoadTexture(fileName, &terrainTexture, &terrainShaderResourceView);
+            basicLoader->LoadTexture(fileName, &terrainTexture, &terrainShaderResourceView, false);
             m_deviceResources->SetTerrainHeightMap(terrainTexture);
             m_deviceResources->SetTerrainHeightShaderResourceView(terrainShaderResourceView);
             D3D11_TEXTURE2D_DESC desc;

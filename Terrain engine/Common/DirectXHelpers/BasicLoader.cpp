@@ -21,9 +21,11 @@ using namespace concurrency;
 
 BasicLoader::BasicLoader(
     _In_ ID3D11Device* d3dDevice,
+    _In_ ID3D11DeviceContext3* d3dContext,
     _In_opt_ IWICImagingFactory2* wicFactory
 ) :
     m_d3dDevice(d3dDevice),
+    m_d3dContext(d3dContext),
     m_wicFactory(wicFactory)
 {
     // Create a new BasicReaderWriter to do raw file I/O.
@@ -105,6 +107,7 @@ void BasicLoader::CreateTexture(
     _In_ uint32 dataSize,
     _Out_opt_ ID3D11Texture2D** texture,
     _Out_opt_ ID3D11ShaderResourceView** textureView,
+    _In_ bool generateMipMaps,
     _In_opt_ Platform::String^ debugName
 )
 {
@@ -139,6 +142,11 @@ void BasicLoader::CreateTexture(
         DX::ThrowIfFailed(
             resource.As(&texture2D)
         );
+
+        if (textureView != nullptr)
+        {
+            *textureView = shaderResourceView.Detach();
+        }
     }
     else
     {
@@ -216,42 +224,62 @@ void BasicLoader::CreateTexture(
             )
         );
 
-        D3D11_SUBRESOURCE_DATA initialData;
-        ZeroMemory(&initialData, sizeof(initialData));
-        initialData.pSysMem = bitmapPixels.get();
-        initialData.SysMemPitch = width * 4;
-        initialData.SysMemSlicePitch = 0;
 
-        CD3D11_TEXTURE2D_DESC textureDesc(
-            DXGI_FORMAT_B8G8R8A8_UNORM,
-            width,
-            height,
-            1,
-            1
-        );
 
-        DX::ThrowIfFailed(
-            m_d3dDevice->CreateTexture2D(
-                &textureDesc,
-                &initialData,
-                &texture2D
-            )
-        );
 
-        if (textureView != nullptr)
+        HRESULT hr;
+
+        // Create texture
+        D3D11_TEXTURE2D_DESC desc = {};
+        desc.Width = width;
+        desc.Height = height;
+        desc.MipLevels = (generateMipMaps) ? 0u : 1u;
+        desc.ArraySize = 1;
+        desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+        desc.SampleDesc.Count = 1;
+        desc.SampleDesc.Quality = 0;
+        desc.Usage = D3D11_USAGE_DEFAULT;
+        desc.CPUAccessFlags = 0;
+
+        if (generateMipMaps)
         {
-            CD3D11_SHADER_RESOURCE_VIEW_DESC shaderResourceViewDesc(
-                texture2D.Get(),
-                D3D11_SRV_DIMENSION_TEXTURE2D
-            );
+            desc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+            desc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
+        }
+        else
+        {
+            desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+            desc.MiscFlags = 0;
+        }
 
-            DX::ThrowIfFailed(
-                m_d3dDevice->CreateShaderResourceView(
-                    texture2D.Get(),
-                    &shaderResourceViewDesc,
-                    &shaderResourceView
-                )
-            );
+        D3D11_SUBRESOURCE_DATA initData;
+        initData.pSysMem = bitmapPixels.get();
+        initData.SysMemPitch = width * 4;
+        initData.SysMemSlicePitch = 0;
+
+        hr = m_d3dDevice->CreateTexture2D(&desc, (generateMipMaps) ? nullptr : &initData, &texture2D);
+        if (SUCCEEDED(hr) && texture2D)
+        {
+            if (textureView)
+            {
+                D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc = {};
+                SRVDesc.Format = desc.Format;
+
+                SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+                SRVDesc.Texture2D.MipLevels = (generateMipMaps) ? unsigned(-1) : 1u;
+
+                hr = m_d3dDevice->CreateShaderResourceView(texture2D.Get(), &SRVDesc, textureView);
+                if (FAILED(hr))
+                {
+                    texture2D->Release();
+                }
+
+                if (generateMipMaps)
+                {
+                    m_d3dContext->UpdateSubresource(texture2D.Get(), 0, nullptr, bitmapPixels.get(), width * 4, 0);
+                    m_d3dContext->GenerateMips(*textureView);
+                }
+            }
         }
     }
 
@@ -260,10 +288,6 @@ void BasicLoader::CreateTexture(
     if (texture != nullptr)
     {
         *texture = texture2D.Detach();
-    }
-    if (textureView != nullptr)
-    {
-        *textureView = shaderResourceView.Detach();
     }
 }
 
@@ -312,7 +336,8 @@ void BasicLoader::CreateInputLayout(
 void BasicLoader::LoadTexture(
     _In_ Platform::String^ filename,
     _Out_opt_ ID3D11Texture2D** texture,
-    _Out_opt_ ID3D11ShaderResourceView** textureView
+    _Out_opt_ ID3D11ShaderResourceView** textureView,
+    _In_ bool generateMipMaps
 )
 {
     Platform::Array<byte>^ textureData = m_basicReaderWriter->ReadData(filename);
@@ -323,6 +348,7 @@ void BasicLoader::LoadTexture(
         textureData->Length,
         texture,
         textureView,
+        generateMipMaps,
         filename
     );
 }
@@ -330,7 +356,8 @@ void BasicLoader::LoadTexture(
 task<void> BasicLoader::LoadTextureAsync(
     _In_ Platform::String^ filename,
     _Out_opt_ ID3D11Texture2D** texture,
-    _Out_opt_ ID3D11ShaderResourceView** textureView
+    _Out_opt_ ID3D11ShaderResourceView** textureView,
+    _In_ bool generateMipMaps
 )
 {
     return m_basicReaderWriter->ReadDataAsync(filename).then([=](const Platform::Array<byte>^ textureData)
@@ -341,6 +368,7 @@ task<void> BasicLoader::LoadTextureAsync(
                 textureData->Length,
                 texture,
                 textureView,
+                generateMipMaps,
                 filename
             );
         });

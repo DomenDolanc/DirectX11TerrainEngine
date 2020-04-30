@@ -52,6 +52,9 @@ namespace DX
 		ID3D11Texture2D* GetRockTexture() const { return m_d3dRockTexture.Get(); }
 		ID3D11ShaderResourceView* GetRockTextureShaderResourceView() const { return m_d3dRockTextureShaderView.Get(); }
 
+		ID3D11Texture2D* GetRockNormalTexture() const { return m_d3dRockNormalTexture.Get(); }
+		ID3D11ShaderResourceView* GetRockNormalTextureShaderResourceView() const { return m_d3dRockNormalTextureShaderView.Get(); }
+
 		ID3D11Texture2D* GetGrassTexture() const { return m_d3dGrassTexture.Get(); }
 		ID3D11ShaderResourceView* GetGrassTextureShaderResourceView() const { return m_d3dGrassTextureShaderView.Get(); }
 
@@ -96,6 +99,9 @@ namespace DX
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dRockTexture;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dRockTextureShaderView;
+
+		Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dRockNormalTexture;
+		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dRockNormalTextureShaderView;
 
 		Microsoft::WRL::ComPtr<ID3D11Texture2D>         m_d3dGrassTexture;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>m_d3dGrassTextureShaderView;
