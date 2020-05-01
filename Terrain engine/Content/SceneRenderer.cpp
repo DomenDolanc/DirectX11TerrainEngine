@@ -172,35 +172,10 @@ void Terrain_engine::SceneRenderer::GetViewFrustum(XMFLOAT4 planes[6])
 {
     XMFLOAT4X4 M;
 
-    //Size outputSize = m_deviceResources->GetOutputSize();
-    //float aspectRatio = outputSize.Width / outputSize.Height;
-    //float fovAngleY = 70.0f * XM_PI / 180.0f;
-    //float lightFovAngleY = 40.0f * XM_PI / 180.0f;
-
-    //if (aspectRatio < 1.0f)
-    //{
-    //    fovAngleY *= 2.0f;
-    //}
-
-    //XMMATRIX perspectiveMatrix = XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, 0.1f, (float)m_viewDistance);
-
-    //XMFLOAT4X4 orientation = m_deviceResources->GetOrientationTransform3D();
-
-    //XMMATRIX orientationMatrix = XMLoadFloat4x4(&orientation);
-    //XMFLOAT4X4 projFloat;
-    //XMStoreFloat4x4(&projFloat, perspectiveMatrix);
-    ////projFloat._43 *= -1.0f;
-    //perspectiveMatrix = XMLoadFloat4x4(&projFloat);
-    //XMMATRIX proj = (perspectiveMatrix * orientationMatrix);
-
     XMMATRIX proj = XMLoadFloat4x4(&m_constantBufferData.projection);
-    //proj = XMMatrixTranspose(proj);
-
-    //XMMATRIX view = m_Camera->GetMatrix(); 
     XMMATRIX view = XMLoadFloat4x4(&m_constantBufferData.view);
-    //view = XMMatrixTranspose(view);
 
-    XMStoreFloat4x4(&M, proj * view);
+    XMStoreFloat4x4(&M, XMMatrixTranspose(proj * view));
 
     // left
     planes[0].x = M(0, 3) + M(0, 0);

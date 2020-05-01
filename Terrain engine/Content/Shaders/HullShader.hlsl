@@ -94,27 +94,11 @@ bool aabbOutsideFrustumTest(float3 center, float3 extents, float4 frustumPlanes[
 
 bool isPatchCulled(InputPatch<VS_CONTROL_POINT_OUTPUT, NUM_CONTROL_POINTS> patch)
 {
-    float4 pos0 = patch[0].pos / scaling * 2;
-    pos0.y = -1.0f;
-    float4 pos3 = patch[3].pos / scaling * 2;
-    pos3.y = 1.0f;
-
+    float3 pos0 = patch[0].worldPos;
+    float3 pos3 = patch[3].worldPos;
     
-    pos0 = mul(pos0, model);
-    pos0 = mul(pos0, view);
-    pos0 = mul(pos0, projection);
-    
-    pos0.x *= -1.0f;
-    pos0.z *= -1.0f;
-    
-    pos3 = mul(pos3, model);
-    pos3 = mul(pos3, view);
-    pos3 = mul(pos3, projection);
-    pos3.x *= -1.0f;
-    pos3.z *= -1.0f;
-    
-    float3 vMin = (float3(pos0.x, pos0.y, pos0.z));
-    float3 vMax = (float3(pos3.x, pos3.y, pos3.z));
+    float3 vMin = (float3(pos0.x, 0.0f, pos0.z));
+    float3 vMax = (float3(pos3.x, amplitude, pos3.z));
      
     // center/extents representation.
     float3 boxCenter = 0.5f * (vMin + vMax);
