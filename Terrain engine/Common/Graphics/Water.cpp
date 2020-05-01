@@ -23,7 +23,7 @@ Water::Water(std::shared_ptr<DX::DeviceResources> deviceResources)
     BasicLoader^ basicLoader = ref new BasicLoader(device, context, wicFactory);
 
     Platform::String^ fileName = tempFolder->Path + "\\Assets\\Textures\\waterDuDV.png";
-    basicLoader->LoadTexture(fileName, &m_d3dDUDVTexture, &m_d3dDUDVTextureShaderView, false);
+    basicLoader->LoadTexture(fileName, &m_d3dDUDVTexture, &m_d3dDUDVTextureShaderView, true);
 }
 
 Water::~Water()
