@@ -108,8 +108,11 @@ float4 main(PixelShaderInput input) : SV_TARGET
     else
         color = float4(input.color, 1.0);
     
-    float fogLerp = saturate((distance(input.worldPos, eyePos) - fogStart) / fogRange);
+    float fogLerp = 1.0 - exp(-distance(input.worldPos, eyePos) / scaling * 8 * color.b);
+    float faceInLerp = saturate((distance(input.worldPos, eyePos) - faceInStart) / faceInRange);
+    
     color = lerp(color, fogColor, fogLerp);
+    color = lerp(color, faceInColor, faceInLerp);
     
     if (renderShadows == 0.0)
         return color;

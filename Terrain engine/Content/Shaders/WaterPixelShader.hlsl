@@ -55,6 +55,6 @@ float4 main(PixelShaderInput input) : SV_TARGET
     
     float4 combinedWaterColor = float4(lerp(reflectColor, refractColor, refractiveFactor), 1.0f);
     float4 finalWaterColor = lerp(combinedWaterColor, waterTintColor, 0.2f);
-    float fogLerp = saturate((distance(input.worldPos, eyePos) - fogStart) / fogRange);
-    return lerp(finalWaterColor, fogColor, fogLerp);
+    float faceInLerp = saturate((distance(input.worldPos, eyePos) - faceInStart) / faceInRange);
+    return lerp(finalWaterColor, faceInColor, faceInLerp);
 }
