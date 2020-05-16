@@ -207,6 +207,9 @@
     <Image Include="Assets\Textures\rsz_cliff_seamless_texture_#6624_NormalMap.jpg">
       <Filter>Assets\Textures</Filter>
     </Image>
+    <Image Include="Assets\Objects\F-15Cmetal.jpg">
+      <Filter>Assets\Textures</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />
