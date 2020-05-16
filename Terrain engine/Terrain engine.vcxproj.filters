@@ -265,5 +265,11 @@
     <FxCompile Include="Content\Shaders\SkyboxPixelShader.hlsl">
       <Filter>Content\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Content\Shaders\ObjectVertexShader.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Content\Shaders\ObjectPixelShader.hlsl">
+      <Filter>Content\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

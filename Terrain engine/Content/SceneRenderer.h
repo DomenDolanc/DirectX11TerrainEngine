@@ -62,6 +62,7 @@ namespace Terrain_engine
         void RenderTerrain();
         void RenderLightSource();
         void RenderSkybox();
+        void RenderJet();
 
         void SetProjection(double viewDistance);
 
@@ -69,6 +70,7 @@ namespace Terrain_engine
         std::shared_ptr<DX::DeviceResources> m_deviceResources;
 
         Microsoft::WRL::ComPtr<ID3D11InputLayout>	    m_inputLayout;
+        Microsoft::WRL::ComPtr<ID3D11InputLayout>	    m_inputLayoutObjects;
         Microsoft::WRL::ComPtr<ID3D11VertexShader>	    m_vertexShader;
         Microsoft::WRL::ComPtr<ID3D11GeometryShader>	m_geometryShader;
         Microsoft::WRL::ComPtr<ID3D11PixelShader>	    m_pixelShader;
@@ -80,6 +82,9 @@ namespace Terrain_engine
 
         Microsoft::WRL::ComPtr<ID3D11VertexShader>	    m_skyboxVertexShader;
         Microsoft::WRL::ComPtr<ID3D11PixelShader>	    m_skyboxPixelShader;
+
+        Microsoft::WRL::ComPtr<ID3D11VertexShader>	    m_objectVertexShader;
+        Microsoft::WRL::ComPtr<ID3D11PixelShader>	    m_objectPixelShader;
 
         Microsoft::WRL::ComPtr<ID3D11Buffer>		    m_constantBuffer;
         Microsoft::WRL::ComPtr<ID3D11Buffer>		    m_drawParamsConstantBuffer;

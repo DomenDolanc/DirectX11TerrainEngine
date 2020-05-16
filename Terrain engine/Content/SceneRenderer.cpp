@@ -398,6 +398,7 @@ void Terrain_engine::SceneRenderer::RenderToBackBuffer()
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
+    RenderJet();
     RenderScene();
     if (m_drawWater)
         RenderWater();
@@ -576,6 +577,28 @@ void Terrain_engine::SceneRenderer::RenderSkybox()
     m_Skybox->Draw();
 }
 
+void Terrain_engine::SceneRenderer::RenderJet()
+{
+    auto context = m_deviceResources->GetD3DDeviceContext();
+
+    context->IASetInputLayout(m_inputLayoutObjects.Get());
+
+    context->VSSetShader(m_objectVertexShader.Get(), nullptr, 0);
+    context->PSSetShader(m_objectPixelShader.Get(), nullptr, 0);
+    context->HSSetShader(nullptr, nullptr, 0);
+    context->DSSetShader(nullptr, nullptr, 0);
+
+
+    XMMATRIX jetRotation = XMMatrixRotationX(-m_Camera->getPitch() / 10.0) * XMMatrixRotationY(-m_Camera->getRoll() / 20.0);
+
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(jetRotation * m_Jet->GetTransformation()));
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixIdentity());
+    context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
+    context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
+    context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+    m_Jet->Draw();
+}
+
 void SceneRenderer::CreateDeviceDependentResources()
 {
     auto loadVSTask = DX::ReadDataAsync(L"VertexShader.cso");
@@ -587,6 +610,8 @@ void SceneRenderer::CreateDeviceDependentResources()
     auto loadWaterPSTask = DX::ReadDataAsync(L"WaterPixelShader.cso");
     auto loadSkyboxVSTask = DX::ReadDataAsync(L"SkyboxVertexShader.cso");
     auto loadSkyboxPSTask = DX::ReadDataAsync(L"SkyboxPixelShader.cso");
+    auto loadObjectVSTask = DX::ReadDataAsync(L"ObjectVertexShader.cso");
+    auto loadObjectPSTask = DX::ReadDataAsync(L"ObjectPixelShader.cso");
 
     auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) {
         DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateVertexShader(&fileData[0], fileData.size(), nullptr, &m_vertexShader));
@@ -642,6 +667,22 @@ void SceneRenderer::CreateDeviceDependentResources()
         DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreatePixelShader(&fileData[0], fileData.size(), nullptr, &m_skyboxPixelShader));
         });
 
+    auto createObjectVSTask = loadObjectVSTask.then([this](const std::vector<byte>& fileData) {
+        DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateVertexShader(&fileData[0], fileData.size(), nullptr, &m_objectVertexShader));
+
+        static const D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
+        {
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        };
+        DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateInputLayout(vertexDesc, ARRAYSIZE(vertexDesc), &fileData[0], fileData.size(), &m_inputLayoutObjects));
+        });
+
+    auto createObjectPSTask = loadObjectPSTask.then([this](const std::vector<byte>& fileData) {
+        DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreatePixelShader(&fileData[0], fileData.size(), nullptr, &m_objectPixelShader));
+        });
+
     auto createTerrainTask = (createPSTask && createVSTask).then([this]()
         {
             m_Terrain->CreateIndices();
@@ -666,7 +707,12 @@ void SceneRenderer::CreateDeviceDependentResources()
             m_Water->CreateVertices();
         });
 
-    auto meshesTask = (createTerrainTask && createLightTask && createWaterTask && createSkyboxTask).then([this]() {
+    auto createObjectTask = (createObjectPSTask && createObjectVSTask).then([this]()
+        {
+            m_Jet->LoadObject();
+        });
+
+    auto meshesTask = (createTerrainTask && createLightTask && createWaterTask && createSkyboxTask && createObjectTask).then([this]() {
         m_loadingComplete = true;
         });
 }
@@ -682,6 +728,8 @@ void SceneRenderer::ReleaseDeviceDependentResources()
     m_waterPixelShader.Reset();
     m_skyboxVertexShader.Reset();
     m_skyboxPixelShader.Reset();
+    m_objectVertexShader.Reset();
+    m_objectPixelShader.Reset();
 
     m_constantBuffer.Reset();
     m_drawParamsConstantBuffer.Reset();
