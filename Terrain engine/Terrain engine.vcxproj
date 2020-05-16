@@ -293,7 +293,8 @@
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="Common\DeviceResources.h" />
+    <ClInclude Include="Common\DeviceResources.h" />    
+	<ClInclude Include="Common\DirectXHelpers\OBJ_Loader.h" />
     <ClInclude Include="Common\DirectXHelpers\BasicLoader.h" />
     <ClInclude Include="Common\DirectXHelpers\BasicReaderWriter.h" />
     <ClInclude Include="Common\DirectXHelpers\DDSTextureLoader.h" />

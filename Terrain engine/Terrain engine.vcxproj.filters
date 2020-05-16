@@ -151,6 +151,9 @@
     <ClInclude Include="Common\Graphics\Skybox.h">
       <Filter>Common\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="Common\DirectXHelpers\OBJ_Loader.h">
+      <Filter>Common\DirectXHelpers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\StoreLogo.png">
