@@ -85,7 +85,11 @@ void Terrain_engine::SceneRenderer::UpdateMousePosition(DirectX::XMFLOAT2 mouseP
     yaw = yaw - deltaX / 150;
     m_Camera->setYaw(yaw);
 
-    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationX(0.0)));
+    float roll = m_Camera->getRoll();
+    roll = min(max(roll + deltaX / 300, -XM_PIDIV4), XM_PIDIV4);
+    m_Camera->setRoll(roll);
+
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
 }
 
 void Terrain_engine::SceneRenderer::SetMousePosition(DirectX::XMFLOAT2 mousePoint)

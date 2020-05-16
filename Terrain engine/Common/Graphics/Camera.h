@@ -26,6 +26,9 @@ namespace Terrain_engine
         void setPitch(float pitch);
         double getPitch();
 
+        void setRoll(float roll);
+        double getRoll();
+
         DirectX::XMFLOAT3 getEye();
 
         DirectX::XMMATRIX GetMatrix();
@@ -42,6 +45,7 @@ namespace Terrain_engine
         DirectX::XMFLOAT3 m_CurrentPositon = { 0.0f, 0.0f, 0.0f };
         float m_Pitch;
         float m_Yaw;
+        float m_Roll;
         float m_TravelSpeed = INITIAL_TRAVEL_SPEED;
         const float m_Acceleration = 1.0f;
     };

@@ -79,6 +79,16 @@ double Terrain_engine::Camera::getPitch()
     return m_Pitch;
 }
 
+void Terrain_engine::Camera::setRoll(float roll)
+{
+    m_Roll = roll;
+}
+
+double Terrain_engine::Camera::getRoll()
+{
+    return m_Roll;
+}
+
 DirectX::XMMATRIX Terrain_engine::Camera::GetMatrix()
 {
     const XMVECTOR forwardBaseVector = XMVectorSet(0.0f, 0.0f, -1.0f, 0.0f);
@@ -87,7 +97,7 @@ DirectX::XMMATRIX Terrain_engine::Camera::GetMatrix()
     const auto camTarget = camPositon + lookVector;
     
     XMStoreFloat3(&m_CurrentPositon, camPositon);
-    return XMMatrixLookAtRH(camPositon, camTarget, m_Up);
+    return XMMatrixLookAtRH(camPositon, camTarget, m_Up) * XMMatrixRotationZ(m_Roll);
 }
 
 DirectX::XMMATRIX Terrain_engine::Camera::GetReflectionMatrix()
@@ -102,7 +112,7 @@ DirectX::XMMATRIX Terrain_engine::Camera::GetReflectionMatrix()
     const auto camTarget = camPositon + lookVector;
 
     XMStoreFloat3(&m_CurrentPositon, camPositon);
-    return XMMatrixLookAtRH(camPositon, camTarget, m_Up);
+    return XMMatrixLookAtRH(camPositon, camTarget, m_Up) * XMMatrixRotationZ(-m_Roll);
 }
 
 DirectX::XMFLOAT3 Terrain_engine::Camera::getEye()
