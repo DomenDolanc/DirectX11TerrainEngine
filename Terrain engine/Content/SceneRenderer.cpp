@@ -28,6 +28,8 @@ SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceR
     m_Skybox = std::make_shared<Skybox>(m_deviceResources);
     m_Skybox->setScaling(m_sceneScaling);
 
+    m_Jet = std::make_shared<Jet>(m_deviceResources);
+
     XMFLOAT2 gridSize = m_Terrain->getGridSize();
     m_drawParamsConstantBufferData.terrainParams.amplitude = 5000.0f;
     m_drawParamsConstantBufferData.terrainParams.columns = gridSize.x;
@@ -688,4 +690,5 @@ void SceneRenderer::ReleaseDeviceDependentResources()
     m_Light->ResetBuffers();
     m_Water->ResetBuffers();
     m_Skybox->ResetBuffers();
+    m_Jet->ResetBuffers();
 }

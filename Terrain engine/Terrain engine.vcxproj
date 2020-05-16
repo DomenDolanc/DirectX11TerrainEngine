@@ -302,6 +302,7 @@
     <ClInclude Include="Common\DirectXMesh.h" />
     <ClInclude Include="Common\DirectXMeshP.h" />
     <ClInclude Include="Common\Graphics\Camera.h" />
+    <ClInclude Include="Common\Graphics\Jet.h" />
     <ClInclude Include="Common\Graphics\Skybox.h" />
     <ClInclude Include="Common\Graphics\Sphere.h" />
     <ClInclude Include="Common\Graphics\Terrain.h" />
@@ -332,6 +333,7 @@
     <ClCompile Include="Common\DirectXMeshUtil.cpp" />
     <ClCompile Include="Common\DirectXMeshValidate.cpp" />
     <ClCompile Include="Common\Graphics\Camera.cpp" />
+    <ClCompile Include="Common\Graphics\Jet.cpp" />
     <ClCompile Include="Common\Graphics\Skybox.cpp" />
     <ClCompile Include="Common\Graphics\Sphere.cpp" />
     <ClCompile Include="Common\Graphics\Terrain.cpp" />

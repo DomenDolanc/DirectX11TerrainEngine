@@ -9,6 +9,7 @@
 #include "..\Common\Graphics\Camera.h"
 #include "..\Common\Graphics\Water.h"
 #include "..\Common\Graphics\Skybox.h"
+#include "..\Common\Graphics\Jet.h"
 #include "..\Common\DirectXMesh.h"
 
 namespace Terrain_engine
@@ -93,6 +94,7 @@ namespace Terrain_engine
         std::shared_ptr<Sphere> m_Light;
         std::shared_ptr<Water> m_Water;
         std::shared_ptr<Skybox> m_Skybox;
+        std::shared_ptr<Jet> m_Jet;
 
         DirectX::XMFLOAT3 m_lightPos;
 

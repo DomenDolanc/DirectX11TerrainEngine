@@ -108,6 +108,9 @@
     <ClCompile Include="Common\Graphics\Skybox.cpp">
       <Filter>Common\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Common\Graphics\Jet.cpp">
+      <Filter>Common\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Terrain_engineMain.h" />
@@ -153,6 +156,9 @@
     </ClInclude>
     <ClInclude Include="Common\DirectXHelpers\OBJ_Loader.h">
       <Filter>Common\DirectXHelpers</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Graphics\Jet.h">
+      <Filter>Common\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
