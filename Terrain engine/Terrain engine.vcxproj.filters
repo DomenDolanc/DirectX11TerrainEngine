@@ -216,6 +216,12 @@
     <Image Include="Assets\Objects\F-15Cmetal.jpg">
       <Filter>Assets\Textures</Filter>
     </Image>
+    <Image Include="Assets\Textures\a9r0i-akq8a.jpg">
+      <Filter>Assets\Textures</Filter>
+    </Image>
+    <Image Include="Assets\Textures\a12ou-33lcy.jpg">
+      <Filter>Assets\Textures</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest" />

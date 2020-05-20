@@ -272,6 +272,8 @@
     <Image Include="Assets\Square44x44Logo.scale-200.png" />
     <Image Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Image Include="Assets\StoreLogo.png" />
+    <Image Include="Assets\Textures\a12ou-33lcy.jpg" />
+    <Image Include="Assets\Textures\a9r0i-akq8a.jpg" />
     <Image Include="Assets\Textures\Ground Seamless Texture #7137.jpg" />
     <Image Include="Assets\Textures\Ground Seamless Texture.jpg" />
     <Image Include="Assets\Textures\Ground Seamless Texture3.jpg" />
