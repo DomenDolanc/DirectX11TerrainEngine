@@ -52,7 +52,7 @@ float4 height_and_slope_based_color(float3 pos, float slope)
     
     float2 tex = pos.xz / scaling + 0.5f;
     float distanceFromCamera = distance(pos, eyePos);
-    float mipmapLevel = saturate((distanceFromCamera - 5000.0f) / fogStart) * 10;
+    float mipmapLevel = saturate((distanceFromCamera - 5000.0f) / fogStart) * 6;
     
     float4 dirt = dirtTexture.SampleLevel(simpleSampler, tex * tilingFactor, mipmapLevel);
     float4 rock = rockTexture.SampleLevel(simpleSampler, tex * tilingFactor, mipmapLevel);
