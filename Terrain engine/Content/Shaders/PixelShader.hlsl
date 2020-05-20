@@ -102,7 +102,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     float4 color;
     if (useTexture == 1.0f)
     {
-        float slope = acos(input.normal.y);
+        float slope = acos(clamp(input.normal.y, input.normal.y, 0.999f));
         color = height_and_slope_based_color(input.worldPos, slope);
     } 
     else
