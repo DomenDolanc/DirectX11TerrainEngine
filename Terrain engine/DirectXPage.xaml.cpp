@@ -230,6 +230,7 @@ void Terrain_engine::DirectXPage::LoadTextureButton_Click(Platform::Object^ send
 	openPicker->FileTypeFilter->Append(".jpg");
 	openPicker->FileTypeFilter->Append(".jpeg");
 	openPicker->FileTypeFilter->Append(".png");
+	openPicker->FileTypeFilter->Append(".tif");
 
 	auto openFileTask = create_task(openPicker->PickSingleFileAsync()).then([this](StorageFile^ file)
 	{
