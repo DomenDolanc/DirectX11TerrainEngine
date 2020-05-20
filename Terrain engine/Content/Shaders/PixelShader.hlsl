@@ -25,7 +25,7 @@ static const float attQuad = 0.95f;
 
 static const float4 waterTintColor = float4(0.0f, 0.6f, 0.8f, 1.0f);
 
-static const float tilingFactor = scaling / 5000.f;
+static const float tilingFactor = scaling / 10000.f;
 
 float4 slope_based_color(float slope, float4 colorSteep, float4 colorFlat)
 {
