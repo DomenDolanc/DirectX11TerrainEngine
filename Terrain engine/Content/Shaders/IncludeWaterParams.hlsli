@@ -1,8 +1,5 @@
-cbuffer WaterParamsConstantBuffer : register(b1)
-{
-    float scaling;
-    float3 eyePos;
-    
+cbuffer WaterParamsConstantBuffer : register(b2)
+{    
     float reflectWater;
     float refractWater;
     float waterMoveFactor;

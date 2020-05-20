@@ -15,13 +15,7 @@ struct PixelShaderInput
     float3 worldPos : POSITION0;
 };
 
-static const float3 materialColor = float3(0.7f, 0.7f, 0.9f);
-static const float3 ambient = float3(0.4f, 0.4f, 0.4f);
-static const float3 diffueColor = float3(1.0f, 1.0f, 1.0f);
-static const float diffueIntensity = 1.0f;
-static const float attConst = 1.0f;
-static const float attLin = 0.55f;
-static const float attQuad = 0.95f;
+static const float ambient = 0.2f;
 
 static const float4 waterTintColor = float4(0.0f, 0.6f, 0.8f, 1.0f);
 
@@ -96,7 +90,7 @@ float4 height_and_slope_based_color(float3 pos, float slope)
 }
 
 float4 main(PixelShaderInput input) : SV_TARGET
-{
+{    
     float4 color;
     if (useTexture == 1.0f)
     {
@@ -106,24 +100,22 @@ float4 main(PixelShaderInput input) : SV_TARGET
     else
         color = float4(input.color, 1.0);
     
-    float fogLerp = 1.0 - exp(-distance(input.worldPos, eyePos) / scaling * 8 * color.b);
-    float faceInLerp = saturate((distance(input.worldPos, eyePos) - faceInStart) / faceInRange);
+    float3 rayDir = normalize(input.worldPos - eyePos);
     
-    color = lerp(color, fogColor, fogLerp);
+    float fogAmount = saturate(1.0 - exp(-distance(input.worldPos, eyePos) * fogDensity));
+    float sunAmount = max(dot(rayDir, normalize(lightPos)), 0.0);
+    float3 fogColorMixed = lerp(blueFogColor, yellowFogColor, pow(sunAmount, sunAmountFactor));
+    color = lerp(color, float4(fogColorMixed, 1.0f), fogAmount);
+    
+    float faceInLerp = saturate((distance(input.worldPos, eyePos) - faceInStart) / faceInRange);
     color = lerp(color, faceInColor, faceInLerp);
     
     if (renderShadows == 0.0)
         return color;
-	
-    const float3 vTol = (lightPos - input.worldPos) / scaling;
-    const float distTol = length(vTol);
-    const float3 dirTol = vTol / distTol;
-	
-    const float att = 1.0f / (attConst + attLin * distTol + attQuad * (distTol * distTol));
-	
-    const float3 diffuse = diffueColor * diffueIntensity * att * max(0.0f, dot(dirTol, input.normal));
     
-    float4 shadedColor = min(color, float4(saturate((diffuse + ambient)), 1.0f) * color);
+    float diffuse = saturate(dot(input.normal, normalize(lightPos))); 
+    float4 shadedColor = float4(saturate((color.rgb * diffuse) + (color.rgb * ambient)), color.a);
+    
     if (eyePos.y >= 0.0f)
         return shadedColor;
     else    

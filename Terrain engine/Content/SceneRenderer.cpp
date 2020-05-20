@@ -424,8 +424,6 @@ void Terrain_engine::SceneRenderer::RenderWater()
     ID3D11ShaderResourceView* const resourceView2[1] = { m_Water->GetRefractionTextureResourceView() };
     ID3D11ShaderResourceView* const dudvResourceView[1] = { m_Water->GetDUDVTextureShaderResourceView() };
 
-    m_waterParamsConstantBufferData.eyePos = m_Camera->getEye();
-    m_waterParamsConstantBufferData.scaling = m_sceneScaling;
     m_waterParamsConstantBufferData.reflectWater = (m_reflectWater ? 1.0f : 0.0f);
     m_waterParamsConstantBufferData.refractWater = (m_refractWater ? 1.0f : 0.0f);
     m_waterParamsConstantBufferData.waterMoveFactor = m_waveMoveFactor;
@@ -438,10 +436,11 @@ void Terrain_engine::SceneRenderer::RenderWater()
 
     context->VSSetShader(m_waterVertexShader.Get(), nullptr, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
-    context->VSSetConstantBuffers1(1, 1, m_waterParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+    context->PSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
 
     context->PSSetShader(m_waterPixelShader.Get(), nullptr, 0);
-    context->PSSetConstantBuffers1(1, 1, m_waterParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+    context->PSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
+    context->PSSetConstantBuffers1(2, 1, m_waterParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
     context->PSSetShaderResources(0, 1, resourceView);
     context->PSSetShaderResources(1, 1, resourceView2);
     context->PSSetShaderResources(2, 1, dudvResourceView);

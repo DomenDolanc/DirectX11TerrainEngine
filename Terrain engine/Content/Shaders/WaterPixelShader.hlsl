@@ -5,8 +5,10 @@ SamplerState simpleSampler;
 
 #include "IncludeWaterParams.hlsli"
 #include "IncludeFogParams.hlsli"
+#include "IncludeDrawParams.hlsli"
  
 static const float4 waterTintColor = float4(0.0f, 0.6f, 0.8f, 1.0f);
+static const float3 ambient = float3(0.0f, 0.15f, 0.2f);
 
 struct PixelShaderInput
 {
@@ -55,6 +57,21 @@ float4 main(PixelShaderInput input) : SV_TARGET
     
     float4 combinedWaterColor = float4(lerp(reflectColor, refractColor, refractiveFactor), 1.0f);
     float4 finalWaterColor = lerp(combinedWaterColor, waterTintColor, 0.2f);
+    
+    
+    float3 rayDir = normalize(input.worldPos - eyePos);
+    
+    float fogAmount = saturate(1.0 - exp(-distance(input.worldPos, eyePos) * fogDensity));
+    float sunAmount = max(dot(rayDir, normalize(lightPos)), 0.0);
+    float3 fogColorMixed = lerp(blueFogColor, yellowFogColor, pow(sunAmount, sunAmountFactor));
+    finalWaterColor = lerp(finalWaterColor, float4(fogColorMixed, 1.0f), fogAmount);
+    
     float faceInLerp = saturate((distance(input.worldPos, eyePos) - faceInStart) / faceInRange);
-    return lerp(finalWaterColor, faceInColor, faceInLerp);
+    finalWaterColor = lerp(finalWaterColor, faceInColor, faceInLerp);
+    
+    if (renderShadows == 0.0)
+        return finalWaterColor;
+    
+    float diffuse = saturate(dot(input.normal, normalize(lightPos)));
+    return float4(saturate((finalWaterColor.rgb * diffuse) + (finalWaterColor.rgb * ambient)), finalWaterColor.a);
 }

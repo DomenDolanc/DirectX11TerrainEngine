@@ -5,7 +5,7 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
     matrix projection;
 };
 
-#include "IncludeWaterParams.hlsli"
+#include "IncludeDrawParams.hlsli"
 
 struct VertexShaderInput
 {

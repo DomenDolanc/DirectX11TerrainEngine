@@ -25,9 +25,6 @@ namespace Terrain_engine
 
     struct WaterParamsConstantBuffer
     {
-        float scaling;
-        DirectX::XMFLOAT3 eyePos;
-
         float reflectWater;
         float refractWater;
         float waterMoveFactor;
