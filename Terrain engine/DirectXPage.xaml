@@ -154,7 +154,7 @@
                     Margin="12,0,12,0" 
                     Foreground="White"
                     Minimum="5000"
-                    Maximum="100000"
+                    Maximum="500000"
                     StepFrequency="100"
                     Value="100000"
                     ValueChanged="TerrainViewDistanceSlider_ValueChanged"
