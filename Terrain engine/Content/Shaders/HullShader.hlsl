@@ -70,7 +70,7 @@ bool aabbBehindPlaneTest(float3 center, float3 extents, float4 plane)
     // if the center point of the box is a distance of e or more behind the plane
     // (in which case s is negative since it is behind the plane), then the box
     // is completely in the negative half space of the plane.
-    return (s + e) < 0.0f;
+    return (s + e) <= 0.0f;
 }
 
 // returns true if the box is completely outside the frustum.
