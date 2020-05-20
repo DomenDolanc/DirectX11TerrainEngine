@@ -50,20 +50,18 @@ float4 height_and_slope_based_color(float3 pos, float slope)
 {
     float height = pos.y;
     
-    float2 tex = pos.xz / scaling;
+    float2 tex = pos.xz / scaling + 0.5f;
     float distanceFromCamera = distance(pos, eyePos);
-    float mipmapLevel = saturate((distanceFromCamera - 5000.0f) / fogStart) * 6;
+    float mipmapLevel = saturate((distanceFromCamera - 5000.0f) / fogStart) * 10;
     
-    float4 dirt = dirtTexture.SampleLevel(simpleSampler, tex * tilingFactor + 0.5f, mipmapLevel);
-    float4 rock = rockTexture.SampleLevel(simpleSampler, tex * tilingFactor + 0.5f, mipmapLevel);
-    float4 grass = grassTexture.SampleLevel(simpleSampler, tex * tilingFactor + 0.5f, mipmapLevel);
-    float4 snow = float4(0.8f, 0.8f, 0.8f, 1.0f);
+    float4 dirt = dirtTexture.SampleLevel(simpleSampler, tex * tilingFactor, mipmapLevel);
+    float4 rock = rockTexture.SampleLevel(simpleSampler, tex * tilingFactor, mipmapLevel);
+    float4 grass = grassTexture.SampleLevel(simpleSampler, tex * tilingFactor, mipmapLevel);
+    float4 snow = float4(1.0f, 1.0f, 1.0f, 1.0f);
  
-    float bounds = amplitude * 0.02f;
-    float transition = amplitude * 0.3f;
-    float greenBlendEnd = transition + bounds;
-    float greenBlendStart = transition - bounds;
-    float snowBlendEnd = greenBlendEnd + 2 * bounds;
+    float greenBlendEnd = amplitude * 0.35f;
+    float greenBlendStart = amplitude * 0.1f; 
+    float snowBlendEnd = amplitude * 0.6f;
  
     if (height < greenBlendStart)
     {
