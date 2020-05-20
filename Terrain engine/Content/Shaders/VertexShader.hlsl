@@ -26,19 +26,37 @@ struct GeometryShaderInput
     float3 worldPos : POSITION0;
 };
 
-static const float stepX = 1.0f / textureSize.x;
-static const float stepY = 1.0f / textureSize.y;
+static const float tilingFactor = 5.0f;
 
 static const float4 clipPlane = float4(0.0f, 0.0f, 0.0f, 0.0f);
+
+inline float3 calculateNormal(float3 worldPos)
+{
+    float patchColumnStep = scaling / (columns - 1);
+    float patchRowStep = scaling / (rows - 1);
+    
+    float2 top = float2(worldPos.x, worldPos.z - patchRowStep) / scaling + 0.5f;
+    float2 right = float2(worldPos.x + patchColumnStep, worldPos.z) / scaling + 0.5f;
+    float2 bottom = float2(worldPos.x, worldPos.z + patchRowStep) / scaling + 0.5f;
+    float2 left = float2(worldPos.x - patchColumnStep, worldPos.z) / scaling + 0.5f;
+    
+    float zb = (heightMapTexture.SampleLevel(simpleSampler, top * tilingFactor, 0).r - 0.1f) * amplitude;
+    float zc = (heightMapTexture.SampleLevel(simpleSampler, right * tilingFactor, 0).r - 0.1f) * amplitude;
+    float zd = (heightMapTexture.SampleLevel(simpleSampler, bottom * tilingFactor, 0).r - 0.1f) * amplitude;
+    float ze = (heightMapTexture.SampleLevel(simpleSampler, left * tilingFactor, 0).r - 0.1f) * amplitude;
+    
+    float3 tangent = float3(0.0f, (zb - zd), -2.0f * patchRowStep);
+    float3 bitan = float3(-2.0f * patchColumnStep, (ze - zc), 0.0f);
+    return normalize(cross(tangent, bitan));
+}
 
 GeometryShaderInput main(VertexShaderInput input)
 {
     GeometryShaderInput output;
     
     float4 pos = float4(input.pos, 1.0f);
-    float2 outTex = float2((pos.x / scaling) + 0.5, (input.pos.z / scaling) + 0.5);
+    float2 outTex = clamp((pos.xz / scaling + 0.5f), 0.005f, 0.995f) * tilingFactor;
     float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0).rgb;
-    outTex = clamp(outTex, 0.005f, 0.995f);
     pos.y = (sampledTexture.r - 0.1f) * amplitude;
     
     if (usesTessallation == 1.0f)
@@ -48,14 +66,8 @@ GeometryShaderInput main(VertexShaderInput input)
         output.color = float3(1.0f, 1.0f, 1.0f);
     } else
     {
-        output.color = input.color;
-
-        float zb = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, -stepY), 0).r * amplitude;
-        float zc = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(stepX, 0), 0).r * amplitude;
-        float zd = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(0, stepY), 0).r * amplitude;
-        float ze = heightMapTexture.SampleLevel(simpleSampler, outTex + float2(-stepX, 0), 0).r * amplitude;
-    
-        output.normal = normalize(float3(ze - zc, 2.0f, zb - zd));
+        output.color = input.color;    
+        output.normal = calculateNormal(pos.xyz);
         output.color = sampledTexture;
         output.worldPos = pos.xyz;
 
