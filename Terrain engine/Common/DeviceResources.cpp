@@ -392,11 +392,11 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 		basicLoader->LoadTexture(fileName, &m_d3dDirtTexture, &m_d3dDirtTextureShaderView, true);
 		m_d3dContext->GenerateMips(m_d3dDirtTextureShaderView.Get());
 
-		fileName = tempFolder->Path + "\\Assets\\Textures\\rsz_cliff_seamless_texture_#6624.jpg";
+		fileName = tempFolder->Path + "\\Assets\\Textures\\a12ou-33lcy.jpg";
 		basicLoader->LoadTexture(fileName, &m_d3dRockTexture, &m_d3dRockTextureShaderView, true);
 		m_d3dContext->GenerateMips(m_d3dRockTextureShaderView.Get());
 
-		fileName = tempFolder->Path + "\\Assets\\Textures\\rsz_grass_seamless_texture_#1405.jpg";
+		fileName = tempFolder->Path + "\\Assets\\Textures\\a9r0i-akq8a.jpg";
 		basicLoader->LoadTexture(fileName, &m_d3dGrassTexture, &m_d3dGrassTextureShaderView, true);
 		m_d3dContext->GenerateMips(m_d3dGrassTextureShaderView.Get());
 
