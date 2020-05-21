@@ -15,7 +15,7 @@ struct PixelShaderInput
     float3 worldPos : POSITION0;
 };
 
-static const float ambient = 0.2f;
+static const float3 ambient = float3(0.202f, 0.233f, 0.292f);
 
 static const float4 waterTintColor = float4(0.0f, 0.6f, 0.8f, 1.0f);
 

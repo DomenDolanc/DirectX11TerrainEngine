@@ -8,7 +8,7 @@ SamplerState simpleSampler;
 #include "IncludeDrawParams.hlsli"
  
 static const float4 waterTintColor = float4(0.0f, 0.6f, 0.8f, 1.0f);
-static const float3 ambient = float3(0.0f, 0.15f, 0.2f);
+static const float3 ambient = float3(0.202f, 0.233f, 0.292f);
 
 struct PixelShaderInput
 {
