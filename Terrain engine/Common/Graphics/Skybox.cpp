@@ -45,24 +45,24 @@ void Skybox::CreateVertices()
 
     float halfScaling = m_scaling / 7.5f;
 
-    VertexPositionColor vertex;
+    VertexPosition vertex;
     XMFLOAT3 normal = { 0.0f, 1.0f, 0.0f };
 
-    vertex = { XMFLOAT3(-halfScaling, -halfScaling, -halfScaling), XMFLOAT3(0.0f, 0.0f, 0.0f), normal };
+    vertex = { XMFLOAT3(-halfScaling, -halfScaling, -halfScaling)};
     m_vertices.emplace_back(vertex);
-    vertex = { XMFLOAT3(-halfScaling, -halfScaling, halfScaling), XMFLOAT3(0.0f, 0.0f, 1.0f), normal };
+    vertex = { XMFLOAT3(-halfScaling, -halfScaling, halfScaling)};
     m_vertices.emplace_back(vertex);
-    vertex = { XMFLOAT3(-halfScaling, halfScaling, -halfScaling), XMFLOAT3(0.0f, 1.0f, 0.0f), normal };
+    vertex = { XMFLOAT3(-halfScaling, halfScaling, -halfScaling)};
     m_vertices.emplace_back(vertex); 
-    vertex = { XMFLOAT3(-halfScaling, halfScaling, halfScaling), XMFLOAT3(0.0f, 1.0f, 1.0f), normal };
+    vertex = { XMFLOAT3(-halfScaling, halfScaling, halfScaling)};
     m_vertices.emplace_back(vertex);
-    vertex = { XMFLOAT3(halfScaling, -halfScaling, -halfScaling), XMFLOAT3(1.0f, 0.0f, 0.0f), normal };
+    vertex = { XMFLOAT3(halfScaling, -halfScaling, -halfScaling)};
     m_vertices.emplace_back(vertex);
-    vertex = { XMFLOAT3(halfScaling, -halfScaling, halfScaling), XMFLOAT3(1.0f, 0.0f, 1.0f), normal };
+    vertex = { XMFLOAT3(halfScaling, -halfScaling, halfScaling)};
     m_vertices.emplace_back(vertex);
-    vertex = { XMFLOAT3(halfScaling, halfScaling, -halfScaling), XMFLOAT3(1.0f, 1.0f, 0.0f), normal };
+    vertex = { XMFLOAT3(halfScaling, halfScaling, -halfScaling)};
     m_vertices.emplace_back(vertex);
-    vertex = { XMFLOAT3(halfScaling, halfScaling, halfScaling), XMFLOAT3(1.0f, 1.0f, 1.0f), normal };
+    vertex = { XMFLOAT3(halfScaling, halfScaling, halfScaling)};
     m_vertices.emplace_back(vertex);
 
     m_verticesCount = m_vertices.size();
@@ -71,7 +71,7 @@ void Skybox::CreateVertices()
     vertexBufferData.pSysMem = &m_vertices.front();
     vertexBufferData.SysMemPitch = 0;
     vertexBufferData.SysMemSlicePitch = 0;
-    CD3D11_BUFFER_DESC vertexBufferDesc(m_verticesCount * sizeof(VertexPositionColor), D3D11_BIND_VERTEX_BUFFER);
+    CD3D11_BUFFER_DESC vertexBufferDesc(m_verticesCount * sizeof(VertexPosition), D3D11_BIND_VERTEX_BUFFER);
     DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_vertexBuffer));
     m_loadingComplete = true;
 }
@@ -146,7 +146,7 @@ void Skybox::Draw()
 {
     auto context = m_deviceResources->GetD3DDeviceContext();
 
-    UINT stride = sizeof(VertexPositionColor);
+    UINT stride = sizeof(VertexPosition);
     UINT offset = 0;
     context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
     context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);

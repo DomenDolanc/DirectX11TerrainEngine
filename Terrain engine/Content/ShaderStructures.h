@@ -47,14 +47,12 @@ namespace Terrain_engine
         DirectX::XMFLOAT4 planes[6];
     };
 
-    struct VertexPositionColor
+    struct VertexPosition
     {
         DirectX::XMFLOAT3 pos;
-        DirectX::XMFLOAT3 color;
-        DirectX::XMFLOAT3 normal;
     };
 
-    struct VertexPosition
+    struct VertexData
     {
         DirectX::XMFLOAT3 pos;
         DirectX::XMFLOAT3 normal;

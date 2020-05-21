@@ -118,11 +118,7 @@ void Water::CreateVertices()
     float halfScaling = m_scaling / 2.0f;
     float heightPos = 0.0f;
 
-    VertexPositionColor vertex;
-    XMVECTOR normal;
-
-    vertex.color = { 0.0, 0.0, 1.0 };
-    vertex.normal = { 0.0, 1.0, 0.0 };
+    VertexPosition vertex;
 
     vertex.pos = { -halfScaling, heightPos, -halfScaling };
     m_vertices.emplace_back(vertex);
@@ -142,7 +138,7 @@ void Water::CreateVertices()
     vertexBufferData.pSysMem = &m_vertices.front();
     vertexBufferData.SysMemPitch = 0;
     vertexBufferData.SysMemSlicePitch = 0;
-    CD3D11_BUFFER_DESC vertexBufferDesc(m_verticesCount * sizeof(VertexPositionColor), D3D11_BIND_VERTEX_BUFFER);
+    CD3D11_BUFFER_DESC vertexBufferDesc(m_verticesCount * sizeof(VertexPosition), D3D11_BIND_VERTEX_BUFFER);
     DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_vertexBuffer));
     m_loadingComplete = true;
 }
@@ -189,7 +185,7 @@ void Water::Draw()
 {
     auto context = m_deviceResources->GetD3DDeviceContext();
 
-    UINT stride = sizeof(VertexPositionColor);
+    UINT stride = sizeof(VertexPosition);
     UINT offset = 0;
     context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
     context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);

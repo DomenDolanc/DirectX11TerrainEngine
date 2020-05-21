@@ -10,8 +10,6 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
 struct VertexShaderInput
 {
     float3 pos : POSITION;
-    float3 color : COLOR0;
-    float3 normal : NORMAL0;
 };
 
 struct PixelShaderInput
@@ -32,7 +30,7 @@ PixelShaderInput main(VertexShaderInput input)
     
     float4 pos = float4(input.pos, 1.0f);
     
-    output.normal = input.normal;
+    output.normal = float3(0.0f, 1.0f, 0.0f);
     output.worldPos = input.pos;
     output.vectorToCamera = eyePos - pos.xyz;
     output.dudvTexCoord = (pos.xz / scaling + 0.5f) * tilingFactor;

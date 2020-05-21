@@ -43,13 +43,8 @@ void Sphere::CreateVertices()
     int vertexCount = 0;
     float halfScaling = m_scaling / 2.0f;
 
-    VertexPositionColor vertex;
-    XMVECTOR normal;
-
-    vertex.color = {1.0, 1.0, 1.0};
+    VertexPosition vertex;
     vertex.pos = { 0, (float)m_radius, 0 };
-    normal = XMVector2Normalize(XMLoadFloat3(&vertex.pos));
-    XMStoreFloat3(&vertex.normal, normal);
 
     m_vertices.emplace_back(vertex);
 
@@ -67,38 +62,20 @@ void Sphere::CreateVertices()
                 ((float)m_radius * cos(phi)),
                 ((float)m_radius * sin(phi) * sin(theta))
             };
-            normal = XMVector2Normalize(XMLoadFloat3(&vertex.pos));
-            XMStoreFloat3(&vertex.normal, normal);
             m_vertices.emplace_back(vertex);
             vertexCount++;
         }
     }
     vertex.pos = { 0, -(float)m_radius, 0 };
-    normal = XMVector2Normalize(XMLoadFloat3(&vertex.pos));
-    XMStoreFloat3(&vertex.normal, normal);
 
     m_vertices.emplace_back(vertex);
-
-    std::unique_ptr<XMFLOAT3[]> pos(new XMFLOAT3[m_vertices.size()]);
-
-    for (size_t j = 0; j < m_vertices.size(); j++)
-        pos.get()[j] = m_vertices[j].pos;
-
     m_verticesCount = m_vertices.size();
-
-    size_t nFaces = m_indexCount / 3;
-
-    std::unique_ptr<XMFLOAT3[]> normals(new XMFLOAT3[m_vertices.size()]);
-    ComputeNormals(&m_indices.front(), nFaces, pos.get(), m_vertices.size(), CNORM_WIND_CW, normals.get());
-
-    for (size_t j = 0; j < m_vertices.size(); j++)
-        m_vertices[j].normal = normals.get()[j];
 
     D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
     vertexBufferData.pSysMem = &m_vertices.front();
     vertexBufferData.SysMemPitch = 0;
     vertexBufferData.SysMemSlicePitch = 0;
-    CD3D11_BUFFER_DESC vertexBufferDesc(m_verticesCount * sizeof(VertexPositionColor), D3D11_BIND_VERTEX_BUFFER);
+    CD3D11_BUFFER_DESC vertexBufferDesc(m_verticesCount * sizeof(VertexPosition), D3D11_BIND_VERTEX_BUFFER);
     DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_vertexBuffer));
     m_loadingComplete = true;
 }
@@ -163,7 +140,7 @@ void Sphere::Draw()
 {
     auto context = m_deviceResources->GetD3DDeviceContext();
 
-    UINT stride = sizeof(VertexPositionColor);
+    UINT stride = sizeof(VertexPosition);
     UINT offset = 0;
     context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
     context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);

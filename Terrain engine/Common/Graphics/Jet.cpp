@@ -37,7 +37,7 @@ void Terrain_engine::Jet::LoadObject()
     vertexBufferData.pSysMem = &m_objLoader->LoadedVertices.front();
     vertexBufferData.SysMemPitch = 0;
     vertexBufferData.SysMemSlicePitch = 0;
-    CD3D11_BUFFER_DESC vertexBufferDesc(m_objLoader->LoadedVertices.size() * sizeof(VertexPosition), D3D11_BIND_VERTEX_BUFFER);
+    CD3D11_BUFFER_DESC vertexBufferDesc(m_objLoader->LoadedVertices.size() * sizeof(VertexData), D3D11_BIND_VERTEX_BUFFER);
     DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_vertexBuffer));
 
     D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
@@ -54,7 +54,7 @@ void Terrain_engine::Jet::Draw()
     ID3D11SamplerState* const sampler[1] = { m_deviceResources->GetSampler() };
     auto dirtTextureShaderResouce = GetTextureShaderResourceView();
 
-    UINT stride = sizeof(VertexPosition);
+    UINT stride = sizeof(VertexData);
     UINT offset = 0;
     context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
     context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);

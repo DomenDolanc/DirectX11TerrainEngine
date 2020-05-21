@@ -13,8 +13,6 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
 struct VertexShaderInput
 {
     float3 pos : POSITION;
-    float3 color : COLOR0;
-    float3 normal : NORMAL0;
 };
 
 struct GeometryShaderInput
@@ -62,11 +60,11 @@ GeometryShaderInput main(VertexShaderInput input)
     if (usesTessallation == 1.0f)
     {
         output.worldPos = pos.xyz;
-        output.normal = input.normal;
-        output.color = float3(1.0f, 1.0f, 1.0f);
+        output.normal = float3(0.0f, 1.0f, 0.0f);
+        output.color = float3(0.0f, 0.0f, 0.0f);
     } else
     {
-        output.color = input.color;    
+        output.color = float3(0.0f, 0.0f, 0.0f);
         output.normal = calculateNormal(pos.xyz);
         output.color = sampledTexture;
         output.worldPos = pos.xyz;

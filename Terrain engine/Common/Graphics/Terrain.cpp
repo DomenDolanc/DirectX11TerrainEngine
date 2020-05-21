@@ -55,10 +55,8 @@ void Terrain::CreateVertices()
         float tempZ = startZ;
         for (int j = 0; j < m_Rows; j++)
         {
-            VertexPositionColor vertex;
+            VertexPosition vertex;
             vertex.pos = XMFLOAT3(tempX, 0.0, tempZ);
-            vertex.normal = XMFLOAT3(0.0, 1.0, 0.0);
-            vertex.color = XMFLOAT3(1.0, 1.0, 1.0);
             m_vertices.emplace_back(vertex);
             tempZ += stepZ;
         }
@@ -71,7 +69,7 @@ void Terrain::CreateVertices()
     vertexBufferData.pSysMem = &m_vertices.front();
     vertexBufferData.SysMemPitch = 0;
     vertexBufferData.SysMemSlicePitch = 0;
-    CD3D11_BUFFER_DESC vertexBufferDesc(m_verticesCount * sizeof(VertexPositionColor), D3D11_BIND_VERTEX_BUFFER);
+    CD3D11_BUFFER_DESC vertexBufferDesc(m_verticesCount * sizeof(VertexPosition), D3D11_BIND_VERTEX_BUFFER);
     DX::ThrowIfFailed(m_deviceResources->GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexBufferData, &m_vertexBuffer));
 }
 
@@ -165,7 +163,7 @@ void Terrain::Draw()
 {
     auto context = m_deviceResources->GetD3DDeviceContext();
 
-    UINT stride = sizeof(VertexPositionColor);
+    UINT stride = sizeof(VertexPosition);
     UINT offset = 0;
     context->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
     context->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);

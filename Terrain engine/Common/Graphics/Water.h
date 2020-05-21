@@ -46,7 +46,7 @@ namespace Terrain_engine
 
         float m_scaling = 1.0f;
 
-        std::vector<VertexPositionColor> m_vertices;
+        std::vector<VertexPosition> m_vertices;
         std::vector<uint32_t> m_indices;
         size_t	m_verticesCount;
         size_t	m_indexCount;
