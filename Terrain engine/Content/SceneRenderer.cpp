@@ -398,7 +398,7 @@ void Terrain_engine::SceneRenderer::RenderToBackBuffer()
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
-    RenderJet();
+    //RenderJet();
     RenderScene();
     if (m_drawWater)
         RenderWater();
@@ -706,7 +706,7 @@ void SceneRenderer::CreateDeviceDependentResources()
 
     auto createObjectTask = (createObjectPSTask && createObjectVSTask).then([this]()
         {
-            m_Jet->LoadObject();
+            //m_Jet->LoadObject();
         });
 
     auto meshesTask = (createTerrainTask && createLightTask && createWaterTask && createSkyboxTask && createObjectTask).then([this]() {
