@@ -43,7 +43,7 @@ void Skybox::CreateVertices()
     m_vertices.clear();
     m_vertexBuffer.Reset();
 
-    float halfScaling = m_scaling / 7.5f;
+    float halfScaling = m_scaling / 1.9f;
 
     VertexPosition vertex;
     XMFLOAT3 normal = { 0.0f, 1.0f, 0.0f };
