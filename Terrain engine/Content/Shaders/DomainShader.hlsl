@@ -37,8 +37,6 @@ struct HS_CONSTANT_DATA_OUTPUT
 	// TODO: change/add other stuff
 };
 
-static const float tilingFactor = 5.0f;
-
 inline float3 calculateNormal(float3 worldPos, float tessellationFactor)
 {
     float patchColumnStep = scaling / (columns - 1) / tessellationFactor;
@@ -49,10 +47,10 @@ inline float3 calculateNormal(float3 worldPos, float tessellationFactor)
     float2 bottom = float2(worldPos.x, worldPos.z + patchRowStep) / scaling + 0.5f;
     float2 left = float2(worldPos.x - patchColumnStep, worldPos.z) / scaling + 0.5f;
     
-    float zb = (heightMapTexture.SampleLevel(simpleSampler, top * tilingFactor, 0).r - 0.1f) * amplitude;
-    float zc = (heightMapTexture.SampleLevel(simpleSampler, right * tilingFactor, 0).r - 0.1f) * amplitude;
-    float zd = (heightMapTexture.SampleLevel(simpleSampler, bottom * tilingFactor, 0).r - 0.1f) * amplitude;
-    float ze = (heightMapTexture.SampleLevel(simpleSampler, left * tilingFactor, 0).r - 0.1f) * amplitude;
+    float zb = (heightMapTexture.SampleLevel(simpleSampler, top * terrainTiling, 0).r - 0.1f) * amplitude;
+    float zc = (heightMapTexture.SampleLevel(simpleSampler, right * terrainTiling, 0).r - 0.1f) * amplitude;
+    float zd = (heightMapTexture.SampleLevel(simpleSampler, bottom * terrainTiling, 0).r - 0.1f) * amplitude;
+    float ze = (heightMapTexture.SampleLevel(simpleSampler, left * terrainTiling, 0).r - 0.1f) * amplitude;
     
     float3 tangent = float3(0.0f, (zb - zd), -2.0f * patchRowStep);
     float3 bitan = float3(-2.0f * patchColumnStep, (ze - zc), 0.0f);
@@ -71,7 +69,7 @@ DS_OUTPUT main(
 
     Output.pos = lerp(lerp(patch[0].pos, patch[1].pos, domain.x), lerp(patch[2].pos, patch[3].pos, domain.x), domain.y);
 	
-    float2 outTex = clamp((Output.pos.xz / scaling + 0.5f), 0.005f, 0.995f) * tilingFactor;
+    float2 outTex = clamp((Output.pos.xz / scaling + 0.5f), 0.005f, 0.995f) * terrainTiling;
     float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0).rgb;
     
     Output.normal = calculateNormal(Output.pos.xyz, input.InsideTessFactor[0]);

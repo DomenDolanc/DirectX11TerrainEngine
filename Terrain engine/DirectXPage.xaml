@@ -122,6 +122,23 @@
                     Value="100"
                     ValueChanged="TerrainOptionsSlider_ValueChanged"
                  />
+                <TextBlock
+                   Name="TerrainTillingText"
+                   Text="Tilling"
+                   Foreground="White"
+                   HorizontalAlignment="Stretch"
+                   VerticalAlignment="Top"
+                   FontSize="12" />
+                <Slider
+                    Name="TerrainTillingSlider"
+                    HorizontalAlignment="Stretch" VerticalAlignment="Top" 
+                    Margin="12,0,12,0" 
+                    Foreground="White"
+                    Minimum="1"
+                    Maximum="30"
+                    Value="5"
+                    ValueChanged="TerrainOptionsSlider_ValueChanged"
+                 />
                 <TextBlock 
                     Name="TerrainAmplitudeText"
                     Text="Elevation"

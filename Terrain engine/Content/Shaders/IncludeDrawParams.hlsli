@@ -9,7 +9,7 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float columns;
     float rows;
     float amplitude;
-    float drawTerrain;
+    float terrainTiling;
     
     float useTexture;
     float usesTessallation;
@@ -17,8 +17,8 @@ cbuffer DrawParamsConstantBuffer : register(b1)
     float useCulling;
     
     float2 textureSize;
-    float clipPlaneType;
-    float padding;
+    float clipPlaneType;    
+    float drawTerrain;
     
     float4 frustum[6];
 };

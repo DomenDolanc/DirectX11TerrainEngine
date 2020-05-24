@@ -34,6 +34,7 @@ SceneRenderer::SceneRenderer(const std::shared_ptr<DX::DeviceResources>& deviceR
     m_drawParamsConstantBufferData.terrainParams.amplitude = 5000.0f;
     m_drawParamsConstantBufferData.terrainParams.columns = gridSize.x;
     m_drawParamsConstantBufferData.terrainParams.rows = gridSize.y;
+    m_drawParamsConstantBufferData.terrainParams.tiling = m_terrainTilling;
 
     CreateDeviceDependentResources();
     CreateWindowSizeDependentResources();

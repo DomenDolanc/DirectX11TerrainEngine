@@ -21,6 +21,7 @@ namespace Terrain_engine
         float columns;
         float rows;
         float amplitude;
+        float tiling;
     };
 
     struct WaterParamsConstantBuffer
@@ -35,15 +36,19 @@ namespace Terrain_engine
     {
         DirectX::XMFLOAT3 lightPos;
         float scaling;
+
         DirectX::XMFLOAT3 eyePos;
         float renderShadows;
+
         TerrainParams terrainParams;
-        float drawTerrain;
+
         float useTexture;
         TessellationParams tessellationParams;
+        
         DirectX::XMFLOAT2 textureSize;
         float clipPlaneType;
-        float padding;
+        float drawTerrain;
+        
         DirectX::XMFLOAT4 planes[6];
     };
 

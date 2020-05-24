@@ -107,6 +107,7 @@ namespace Terrain_engine
         bool m_renderShadows = true;
         bool m_usesTessellation = false;
         bool m_drawLOD = false;
+        float m_terrainTilling = 5.0;
         bool m_useFrustumCulling = false;
 
         bool m_drawWater = false;

@@ -262,8 +262,10 @@ void Terrain_engine::DirectXPage::TerrainOptionsSlider_ValueChanged(Platform::Ob
     TerrainColumnsText->Text = "Grid columns: " + TerrainColumnsSlider->Value.ToString();
 	TerrainRowsText->Text = "Grid rows: " + TerrainRowsSlider->Value.ToString();
     TerrainAmplitudeText->Text = "Elevation: " + TerrainAmplitudeSlider->Value.ToString() + "m";
+	TerrainTillingText->Text = "Tiling: " + TerrainTillingSlider->Value.ToString();
 
-	TerrainParams params = { (float)TerrainColumnsSlider->Value , (float)TerrainRowsSlider->Value, (float)TerrainAmplitudeSlider->Value };
+	TerrainParams params = { (float)TerrainColumnsSlider->Value , (float)TerrainRowsSlider->Value, 
+							(float)TerrainAmplitudeSlider->Value, (float)TerrainTillingSlider->Value };
     m_main->UpdateTerrainSettings(params);
 }
 
