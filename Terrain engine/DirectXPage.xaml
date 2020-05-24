@@ -135,7 +135,7 @@
                     Margin="12,0,12,0" 
                     Foreground="White"
                     Minimum="100"
-                    Maximum="25000"
+                    Maximum="50000"
                     StepFrequency="100"
                     Value="5000"
                     ValueChanged="TerrainOptionsSlider_ValueChanged"
