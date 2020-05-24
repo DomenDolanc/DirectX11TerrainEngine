@@ -19,18 +19,18 @@ static const float3 ambient = float3(0.202f, 0.233f, 0.292f);
 
 static const float4 waterTintColor = float4(0.0f, 0.6f, 0.8f, 1.0f);
 
-static const float tilingFactor = scaling / 10000.f;
+static const float tilingFactor = scaling / 5000.f;
 
 float4 slope_based_color(float slope, float4 colorSteep, float4 colorFlat)
 {
-    if (slope < 0.25f)
+    if (slope < 0.35f)
     {
         return colorFlat;
     }
  
     if (slope < 0.5f)
     {
-        float blend = (slope - 0.25f) * (1.0f / (0.5f - 0.25f));
+        float blend = (slope - 0.35f) * (1.0f / (0.5f - 0.35f));
  
         return lerp(colorFlat, colorSteep, blend);
     }
@@ -46,7 +46,7 @@ float4 height_and_slope_based_color(float3 pos, float slope)
     
     float2 tex = pos.xz / scaling + 0.5f;
     float distanceFromCamera = distance(pos, eyePos);
-    float mipmapLevel = saturate((distanceFromCamera - 5000.0f) / fogStart) * 6;
+    float mipmapLevel = saturate((distanceFromCamera - 5000.0f) / fogStart) * 8;
     
     float4 dirt = dirtTexture.SampleLevel(simpleSampler, tex * tilingFactor, mipmapLevel);
     float4 rock = rockTexture.SampleLevel(simpleSampler, tex * tilingFactor, mipmapLevel);
