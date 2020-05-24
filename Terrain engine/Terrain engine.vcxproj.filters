@@ -192,9 +192,6 @@
     <Image Include="Assets\Textures\Snow_Seamless_Texture_6758_1024x1024.jpg">
       <Filter>Assets\Textures</Filter>
     </Image>
-    <Image Include="Assets\Textures\Ground Seamless Texture #7137.jpg">
-      <Filter>Assets\Textures</Filter>
-    </Image>
     <Image Include="Assets\Textures\Ground Seamless Texture3.jpg">
       <Filter>Assets\Textures</Filter>
     </Image>
