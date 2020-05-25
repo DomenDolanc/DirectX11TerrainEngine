@@ -4,7 +4,6 @@
 #include "Content/ShaderStructures.h"
 #include "..\Common\DirectXHelper.h"
 #include "..\Common\Graphics\Camera.h"
-#include "..\Common\DirectXMesh.h"
 #include <map>
 
 namespace Terrain_engine

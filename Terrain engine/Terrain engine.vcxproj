@@ -295,13 +295,11 @@
     <ClInclude Include="App.xaml.h">
       <DependentUpon>App.xaml</DependentUpon>
     </ClInclude>
-    <ClInclude Include="Common\DeviceResources.h" />    
-	<ClInclude Include="Common\DirectXHelpers\OBJ_Loader.h" />
+    <ClInclude Include="Common\DeviceResources.h" />
+    <ClInclude Include="Common\DirectXHelpers\OBJ_Loader.h" />
     <ClInclude Include="Common\DirectXHelpers\BasicLoader.h" />
     <ClInclude Include="Common\DirectXHelpers\BasicReaderWriter.h" />
     <ClInclude Include="Common\DirectXHelpers\DDSTextureLoader.h" />
-    <ClInclude Include="Common\DirectXMesh.h" />
-    <ClInclude Include="Common\DirectXMeshP.h" />
     <ClInclude Include="Common\Graphics\Camera.h" />
     <ClInclude Include="Common\Graphics\Jet.h" />
     <ClInclude Include="Common\Graphics\Skybox.h" />
@@ -328,11 +326,6 @@
     <ClCompile Include="Common\DirectXHelpers\BasicLoader.cpp" />
     <ClCompile Include="Common\DirectXHelpers\BasicReaderWriter.cpp" />
     <ClCompile Include="Common\DirectXHelpers\DDSTextureLoader.cpp" />
-    <ClCompile Include="Common\DirectXMeshClean.cpp" />
-    <ClCompile Include="Common\DirectXMeshNormals.cpp" />
-    <ClCompile Include="Common\DirectXMeshOptimize.cpp" />
-    <ClCompile Include="Common\DirectXMeshUtil.cpp" />
-    <ClCompile Include="Common\DirectXMeshValidate.cpp" />
     <ClCompile Include="Common\Graphics\Camera.cpp" />
     <ClCompile Include="Common\Graphics\Jet.cpp" />
     <ClCompile Include="Common\Graphics\Skybox.cpp" />
@@ -370,7 +363,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Common\DirectXMesh.inl" />
     <None Include="Content\Shaders\IncludeFogParams.hlsli" />
     <None Include="Content\Shaders\IncludeDrawParams.hlsli" />
     <None Include="Content\Shaders\IncludeWaterParams.hlsli" />

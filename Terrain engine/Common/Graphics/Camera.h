@@ -3,7 +3,6 @@
 #include "..\Common\DeviceResources.h"
 #include "Content/ShaderStructures.h"
 #include "..\Common\DirectXHelper.h"
-#include "..\Common\DirectXMesh.h"
 
 namespace Terrain_engine
 {

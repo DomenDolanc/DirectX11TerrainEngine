@@ -10,7 +10,6 @@
 #include "..\Common\Graphics\Water.h"
 #include "..\Common\Graphics\Skybox.h"
 #include "..\Common\Graphics\Jet.h"
-#include "..\Common\DirectXMesh.h"
 
 namespace Terrain_engine
 {

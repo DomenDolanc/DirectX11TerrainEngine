@@ -75,21 +75,6 @@
     <ClCompile Include="Common\Graphics\Terrain.cpp">
       <Filter>Common\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Common\DirectXMeshClean.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\DirectXMeshNormals.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\DirectXMeshOptimize.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\DirectXMeshUtil.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\DirectXMeshValidate.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="Common\Graphics\Sphere.cpp">
       <Filter>Common\Graphics</Filter>
     </ClCompile>
@@ -126,12 +111,6 @@
     </ClInclude>
     <ClInclude Include="Common\Graphics\Terrain.h">
       <Filter>Common\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\DirectXMesh.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\DirectXMeshP.h">
-      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Common\scoped.h">
       <Filter>Common</Filter>
@@ -227,9 +206,6 @@
     <Page Include="DirectXPage.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Common\DirectXMesh.inl">
-      <Filter>Common</Filter>
-    </None>
     <None Include="Content\Shaders\IncludeDrawParams.hlsli">
       <Filter>Content\Shaders</Filter>
     </None>
