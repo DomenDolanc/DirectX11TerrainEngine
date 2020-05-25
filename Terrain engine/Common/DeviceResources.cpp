@@ -400,7 +400,7 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 		basicLoader->LoadTexture(fileName, &m_d3dGrassTexture, &m_d3dGrassTextureShaderView, true);
 		m_d3dContext->GenerateMips(m_d3dGrassTextureShaderView.Get());
 
-		fileName = tempFolder->Path + "\\Assets\\Textures\\rsz_cliff_seamless_texture_#6624_NormalMap.jpg";
+		fileName = tempFolder->Path + "\\Assets\\Textures\\a12ou-33lcy_Normal.png";
 		basicLoader->LoadTexture(fileName, &m_d3dRockNormalTexture, &m_d3dRockNormalTextureShaderView, true);
 	}
 

@@ -16,6 +16,8 @@ struct DS_OUTPUT
     float clip : SV_ClipDistance0;
     float3 color : COLOR0;
     float3 normal : NORMAL0;
+    float3 tangent : TANGENT0;
+    float3 bitangent : BITANGENT0;
     float3 worldPos : POSITION0;
 };
 
@@ -26,6 +28,8 @@ struct HS_CONTROL_POINT_OUTPUT
     float clip : SV_ClipDistance0;
     float3 color : COLOR0;
     float3 normal : NORMAL0;
+    float3 tangent : TANGENT0;
+    float3 bitangent : BITANGENT0;
     float3 worldPos : POSITION0;
 };
 
@@ -37,7 +41,7 @@ struct HS_CONSTANT_DATA_OUTPUT
 	// TODO: change/add other stuff
 };
 
-inline float3 calculateNormal(float3 worldPos, float tessellationFactor)
+inline float3x3 calculateTangentSpaceMatrix(float3 worldPos, float tessellationFactor)
 {
     float patchColumnStep = scaling / (columns - 1) / tessellationFactor;
     float patchRowStep = scaling / (rows - 1) / tessellationFactor;
@@ -54,7 +58,8 @@ inline float3 calculateNormal(float3 worldPos, float tessellationFactor)
     
     float3 tangent = float3(0.0f, (zb - zd), -2.0f * patchRowStep);
     float3 bitan = float3(-2.0f * patchColumnStep, (ze - zc), 0.0f);
-    return normalize(cross(tangent, bitan));
+    
+    return float3x3(normalize(bitan), normalize(tangent), normalize(cross(tangent, bitan)));
 }
 
 #define NUM_CONTROL_POINTS 4
@@ -72,7 +77,11 @@ DS_OUTPUT main(
     float2 outTex = clamp((Output.pos.xz / scaling + 0.5f), 0.005f, 0.995f) * terrainTiling;
     float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0).rgb;
     
-    Output.normal = calculateNormal(Output.pos.xyz, input.InsideTessFactor[0]);
+    float3x3 tangentSpace = calculateTangentSpaceMatrix(Output.pos.xyz, input.InsideTessFactor[0]);
+    Output.tangent = tangentSpace[0];
+    Output.bitangent = tangentSpace[1];
+    Output.normal = tangentSpace[2];
+    
     Output.pos.y = (sampledTexture.r - 0.1f) * amplitude;
     Output.worldPos = mul(Output.pos, model).xyz;
     if (clipPlaneType == 0.0f)

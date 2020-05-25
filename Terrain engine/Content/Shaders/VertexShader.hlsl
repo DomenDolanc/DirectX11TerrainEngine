@@ -21,12 +21,14 @@ struct GeometryShaderInput
     float clip : SV_ClipDistance0;
     float3 color : COLOR0;
     float3 normal : NORMAL0;
+    float3 tangent : TANGENT0;
+    float3 bitangent : BITANGENT0;
     float3 worldPos : POSITION0;
 };
 
 static const float4 clipPlane = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-inline float3 calculateNormal(float3 worldPos)
+inline float3x3 calculateTangentSpaceMatrix(float3 worldPos)
 {
     float patchColumnStep = scaling / (columns - 1);
     float patchRowStep = scaling / (rows - 1);
@@ -43,7 +45,7 @@ inline float3 calculateNormal(float3 worldPos)
     
     float3 tangent = float3(0.0f, (zb - zd), -2.0f * patchRowStep);
     float3 bitan = float3(-2.0f * patchColumnStep, (ze - zc), 0.0f);
-    return normalize(cross(tangent, bitan));
+    return float3x3(normalize(bitan), normalize(tangent), normalize(cross(tangent, bitan)));
 }
 
 GeometryShaderInput main(VertexShaderInput input)
@@ -63,7 +65,10 @@ GeometryShaderInput main(VertexShaderInput input)
     } else
     {
         output.color = float3(0.0f, 0.0f, 0.0f);
-        output.normal = calculateNormal(pos.xyz);
+        float3x3 tangentSpace = calculateTangentSpaceMatrix(pos.xyz);
+        output.tangent = tangentSpace[0];
+        output.bitangent = tangentSpace[1];
+        output.normal = tangentSpace[2];
         output.color = sampledTexture;
         output.worldPos = pos.xyz;
 

@@ -501,10 +501,12 @@ void Terrain_engine::SceneRenderer::RenderTerrain()
     auto dirtTextureShaderResouce = m_deviceResources->GetDirtTextureShaderResourceView();
     auto rockTextureShaderResouce = m_deviceResources->GetRockTextureShaderResourceView();
     auto grassTextureShaderResouce = m_deviceResources->GetGrassTextureShaderResourceView();
+    auto rockNormalTextureShaderResouce = m_deviceResources->GetRockNormalTextureShaderResourceView();
     context->PSSetSamplers(0, 1, sampler);
     context->PSSetShaderResources(0, 1, &dirtTextureShaderResouce);
     context->PSSetShaderResources(1, 1, &rockTextureShaderResouce);
     context->PSSetShaderResources(2, 1, &grassTextureShaderResouce);
+    context->PSSetShaderResources(3, 1, &rockNormalTextureShaderResouce);
 
     context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);

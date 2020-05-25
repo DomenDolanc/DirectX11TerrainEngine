@@ -1,6 +1,7 @@
 Texture2D dirtTexture: register(t0);
 Texture2D rockTexture: register(t1);
 Texture2D grassTexture : register(t2);
+Texture2D rockNormalTexture : register(t3);
 SamplerState simpleSampler;
 
 #include "IncludeDrawParams.hlsli"
@@ -12,6 +13,8 @@ struct PixelShaderInput
     float clip : SV_ClipDistance0;
     float3 color : COLOR0;
     float3 normal : NORMAL0;
+    float3 tangent : TANGENT0;
+    float3 bitangent : BITANGENT0;
     float3 worldPos : POSITION0;
 };
 
@@ -91,14 +94,16 @@ float4 height_and_slope_based_color(float3 pos, float slope)
 
 float4 main(PixelShaderInput input) : SV_TARGET
 {    
-    float4 color;
     if (useTexture == 1.0f)
     {
-        float slope = acos(clamp(input.normal.y, input.normal.y, 0.999f));
-        color = height_and_slope_based_color(input.worldPos, slope);
-    } 
-    else
-        color = float4(input.color, 1.0);
+        float4 bumpMap = rockNormalTexture.Sample(simpleSampler, (input.worldPos.xz / scaling + 0.5f) * tilingFactor);
+        bumpMap = (bumpMap * 2.0f) - 1.0f;
+        float3 bumpNormal = (bumpMap.x * input.tangent) + (bumpMap.y * input.bitangent) + (bumpMap.z * input.normal);
+        input.normal = normalize(bumpNormal);
+    }
+    
+    float slope = acos(clamp(input.normal.y, input.normal.y, 0.999f));
+    float4 color = height_and_slope_based_color(input.worldPos, slope);
     
     float3 rayDir = normalize(input.worldPos - eyePos);
     
@@ -112,7 +117,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
     
     if (renderShadows == 0.0)
         return color;
-    
+
     float diffuse = saturate(dot(input.normal, normalize(lightPos))); 
     float4 shadedColor = float4(saturate((color.rgb * diffuse) + (color.rgb * ambient)), color.a);
     

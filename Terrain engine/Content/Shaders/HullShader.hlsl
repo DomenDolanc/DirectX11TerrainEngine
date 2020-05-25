@@ -14,6 +14,8 @@ struct VS_CONTROL_POINT_OUTPUT
     float clip : SV_ClipDistance0;
     float3 color : COLOR0;
     float3 normal : NORMAL0;
+    float3 tangent : TANGENT0;
+    float3 bitangent : BITANGENT0;
     float3 worldPos : POSITION0;
 };
 
@@ -24,6 +26,8 @@ struct HS_CONTROL_POINT_OUTPUT
     float clip : SV_ClipDistance0;
     float3 color : COLOR0;
     float3 normal : NORMAL0;
+    float3 tangent : TANGENT0;
+    float3 bitangent : BITANGENT0;
     float3 worldPos : POSITION0;
 };
 
