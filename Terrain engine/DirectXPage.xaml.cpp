@@ -76,6 +76,8 @@ DirectXPage::DirectXPage():
 			Windows::UI::Core::CoreInputDeviceTypes::Pen
 			);
 
+		m_coreInput->PointerCursor = nullptr;
+
 		// Register for pointer events, which will be raised on the background thread.
 		m_coreInput->PointerPressed += ref new TypedEventHandler<Object^, PointerEventArgs^>(this, &DirectXPage::OnPointerPressed);
 		m_coreInput->PointerMoved += ref new TypedEventHandler<Object^, PointerEventArgs^>(this, &DirectXPage::OnPointerMoved);
