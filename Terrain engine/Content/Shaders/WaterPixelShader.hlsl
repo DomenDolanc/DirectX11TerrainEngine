@@ -51,7 +51,7 @@ float4 main(PixelShaderInput input) : SV_TARGET
         refractionTexCoord += distortion;
         refractionTexCoord.x = clamp(refractionTexCoord.x, 0.001f, 0.999f);
         refractionTexCoord.y = clamp(refractionTexCoord.y, -0.999f, -0.001f);
-        float depthLevel = saturate((distance(input.worldPos.y, eyePos.y)) / scaling * 5.0f);
+        float depthLevel = saturate((distance(input.worldPos.y, eyePos.y)) / scaling);
         refractColor = lerp(refractionTexture.Sample(simpleSampler, refractionTexCoord), waterTintColor, depthLevel).rgb;
     }
     
