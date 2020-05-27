@@ -2,9 +2,7 @@
 
 cbuffer ModelViewProjectionConstantBuffer : register(b0)
 {
-    matrix model;
-    matrix view;
-    matrix projection;
+    matrix mvp;
 };
 
 // Input control point

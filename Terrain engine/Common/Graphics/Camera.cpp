@@ -112,7 +112,17 @@ DirectX::XMMATRIX Terrain_engine::Camera::GetReflectionMatrix()
     const auto camTarget = camPositon + lookVector;
 
     XMStoreFloat3(&m_CurrentPositon, camPositon);
-    return XMMatrixLookAtRH(camPositon, camTarget, m_Up);// *XMMatrixRotationZ(-m_Roll);
+    return XMMatrixLookAtRH(camPositon, camTarget, m_Up);//*XMMatrixRotationZ(-m_Roll);
+}
+
+DirectX::XMMATRIX Terrain_engine::Camera::GetProjection()
+{
+    return m_Projection;
+}
+
+void Terrain_engine::Camera::SetProjection(DirectX::XMMATRIX projection)
+{
+    m_Projection = projection;
 }
 
 DirectX::XMFLOAT3 Terrain_engine::Camera::getEye()

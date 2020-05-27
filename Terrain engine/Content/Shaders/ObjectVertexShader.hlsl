@@ -1,8 +1,6 @@
 cbuffer ModelViewProjectionConstantBuffer : register(b0)
 {
-    matrix model;
-    matrix view;
-    matrix projection;
+    matrix mvp;
 };
 
 #include "IncludeDrawParams.hlsli"
@@ -32,9 +30,7 @@ VertexShaderOutput main(VertexShaderInput input)
     output.texCoord = input.texCoord;
 
 
-    pos = mul(pos, model);
-    pos = mul(pos, view);
-    pos = mul(pos, projection);
+    pos = mul(pos, mvp);
     output.pos = pos;
     
     return output;

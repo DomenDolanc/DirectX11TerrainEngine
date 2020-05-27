@@ -33,8 +33,13 @@ namespace Terrain_engine
         DirectX::XMMATRIX GetMatrix();
         DirectX::XMMATRIX GetReflectionMatrix();
 
+        DirectX::XMMATRIX GetProjection();
+        void SetProjection(DirectX::XMMATRIX projection);
+
         static const float INITIAL_TRAVEL_SPEED;
     private:
+
+        DirectX::XMMATRIX m_Projection;
 
         DirectX::XMVECTOR m_Eye = { 0.0f, 15000.0f, -1000.0f, 1000.0f };
         DirectX::XMVECTOR m_At = { 0.0f, 0.0f, 0.0f, 0.0f };

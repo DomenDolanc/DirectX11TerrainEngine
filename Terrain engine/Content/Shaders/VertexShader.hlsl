@@ -3,9 +3,7 @@ SamplerState simpleSampler;
 
 cbuffer ModelViewProjectionConstantBuffer : register(b0)
 {
-    matrix model;
-    matrix view;
-    matrix projection;
+    matrix mvp;
 };
 
 #include "IncludeDrawParams.hlsli"
@@ -84,9 +82,7 @@ GeometryShaderInput main(VertexShaderInput input)
         output.color = sampledTexture;
         output.worldPos = pos.xyz;
 
-        pos = mul(pos, model);
-        pos = mul(pos, view);
-        pos = mul(pos, projection);
+        pos = mul(pos, mvp);
     }
     
     output.pos = pos;

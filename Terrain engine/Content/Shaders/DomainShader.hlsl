@@ -3,9 +3,7 @@ SamplerState simpleSampler;
 
 cbuffer ModelViewProjectionConstantBuffer : register(b0)
 {
-    matrix model;
-    matrix view;
-    matrix projection;
+    matrix mvp;
 };
 
 #include "IncludeDrawParams.hlsli"
@@ -96,9 +94,7 @@ DS_OUTPUT main(
     Output.bitangent = tangentSpace[1];
     Output.normal = tangentSpace[2];
     
-    Output.pos = mul(Output.pos, model);
-    Output.pos = mul(Output.pos, view);
-    Output.pos = mul(Output.pos, projection);
+    Output.pos = mul(Output.pos, mvp);
     if (drawLOD)
         Output.color = lerp(lerp(patch[0].color, patch[1].color, domain.x), lerp(patch[2].color, patch[3].color, domain.x), domain.y);
     else
