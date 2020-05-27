@@ -28,8 +28,11 @@ struct GeometryShaderInput
 
 static const float4 clipPlane = float4(0.0f, 0.0f, 0.0f, 0.0f);
 
-inline float3x3 calculateTangentSpaceMatrix(float3 worldPos)
+inline float3x3 calculateTangentSpaceMatrix(float3 worldPos, float clip)
 {
+    if (clip == -1.0f)
+        return float3x3(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+    
     float patchColumnStep = scaling / (columns - 1);
     float patchRowStep = scaling / (rows - 1);
     
@@ -56,16 +59,25 @@ GeometryShaderInput main(VertexShaderInput input)
     float2 outTex = clamp((pos.xz / scaling + 0.5f), 0.005f, 0.995f) * terrainTiling;
     float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0).rgb;
     pos.y = (sampledTexture.r - 0.1f) * amplitude;
+    if (clipPlaneType == 0.0f)
+        output.clip = 1.0f;
+    else if (clipPlaneType == 1.0f && pos.y >= 0.0f)
+        output.clip = 1.0f;
+    else if (clipPlaneType == -1.0f && pos.y <= 0.0f)
+        output.clip = 1.0f;
+    else
+        output.clip = -1.0f;
     
     if (usesTessallation == 1.0f)
     {
         output.worldPos = pos.xyz;
         output.normal = float3(0.0f, 1.0f, 0.0f);
         output.color = float3(0.0f, 0.0f, 0.0f);
-    } else
+    } 
+    else
     {
         output.color = float3(0.0f, 0.0f, 0.0f);
-        float3x3 tangentSpace = calculateTangentSpaceMatrix(pos.xyz);
+        float3x3 tangentSpace = calculateTangentSpaceMatrix(pos.xyz, output.clip);
         output.tangent = tangentSpace[0];
         output.bitangent = tangentSpace[1];
         output.normal = tangentSpace[2];
@@ -77,14 +89,6 @@ GeometryShaderInput main(VertexShaderInput input)
         pos = mul(pos, projection);
     }
     
-    if (clipPlaneType == 0.0f)
-        output.clip = 1.0f;
-    else if (clipPlaneType == 1.0f && output.worldPos.y >= 0.0f)
-        output.clip = 1.0f;
-    else if (clipPlaneType == -1.0f && output.worldPos.y <= 0.0f)
-        output.clip = 1.0f;
-    else
-        output.clip = -1.0f;
     output.pos = pos;
     
     return output;

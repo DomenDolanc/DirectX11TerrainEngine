@@ -113,7 +113,9 @@ void Terrain_engine::SceneRenderer::ToggleShadowsRendering()
 
 void Terrain_engine::SceneRenderer::UpdateLightPosition(DirectX::XMFLOAT3 lightPos)
 {
-    m_lightPos = lightPos;
+    XMVECTOR lightVec = XMLoadFloat3(&lightPos);
+    lightVec = XMVector3Normalize(lightVec);
+    XMStoreFloat3(&m_lightPos, lightVec);
 }
 
 void Terrain_engine::SceneRenderer::UpdateTerrainSettings(TerrainParams params)

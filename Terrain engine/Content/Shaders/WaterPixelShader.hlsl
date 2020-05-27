@@ -60,18 +60,18 @@ float4 main(PixelShaderInput input) : SV_TARGET
     
     
     float3 rayDir = normalize(input.worldPos - eyePos);
-    
-    float fogAmount = saturate(1.0 - exp(-distance(input.worldPos, eyePos) * fogDensity));
+    float distanceToCamera = distance(input.worldPos, eyePos);
+    float fogAmount = saturate(1.0 - exp(-distanceToCamera * fogDensity));
     float sunAmount = max(dot(rayDir, normalize(lightPos)), 0.0);
     float3 fogColorMixed = lerp(blueFogColor, yellowFogColor, pow(sunAmount, sunAmountFactor));
     finalWaterColor = lerp(finalWaterColor, float4(fogColorMixed, 1.0f), fogAmount);
     
-    float faceInLerp = saturate((distance(input.worldPos, eyePos) - faceInStart) / faceInRange);
+    float faceInLerp = saturate((distanceToCamera - faceInStart) / faceInRange);
     finalWaterColor = lerp(finalWaterColor, faceInColor, faceInLerp);
     
     if (renderShadows == 0.0)
         return finalWaterColor;
     
-    float diffuse = saturate(dot(input.normal, normalize(lightPos)));
+    float diffuse = saturate(dot(input.normal, lightPos));
     return float4(saturate((finalWaterColor.rgb * diffuse) + (finalWaterColor.rgb * ambient)), finalWaterColor.a);
 }

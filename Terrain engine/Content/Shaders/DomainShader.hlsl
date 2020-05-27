@@ -41,8 +41,11 @@ struct HS_CONSTANT_DATA_OUTPUT
 	// TODO: change/add other stuff
 };
 
-inline float3x3 calculateTangentSpaceMatrix(float3 worldPos, float tessellationFactor)
+inline float3x3 calculateTangentSpaceMatrix(float3 worldPos, float tessellationFactor, float clip)
 {
+    if (clip == -1.0f)
+        return float3x3(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+    
     float patchColumnStep = scaling / (columns - 1) / tessellationFactor;
     float patchRowStep = scaling / (rows - 1) / tessellationFactor;
     
@@ -77,13 +80,8 @@ DS_OUTPUT main(
     float2 outTex = clamp((Output.pos.xz / scaling + 0.5f), 0.005f, 0.995f) * terrainTiling;
     float3 sampledTexture = heightMapTexture.SampleLevel(simpleSampler, outTex, 0).rgb;
     
-    float3x3 tangentSpace = calculateTangentSpaceMatrix(Output.pos.xyz, input.InsideTessFactor[0]);
-    Output.tangent = tangentSpace[0];
-    Output.bitangent = tangentSpace[1];
-    Output.normal = tangentSpace[2];
-    
     Output.pos.y = (sampledTexture.r - 0.1f) * amplitude;
-    Output.worldPos = mul(Output.pos, model).xyz;
+    Output.worldPos = Output.pos.xyz;
     if (clipPlaneType == 0.0f)
         Output.clip = 1.0f;
     else if (clipPlaneType == 1.0f && Output.worldPos.y >= 0.0f)
@@ -92,6 +90,12 @@ DS_OUTPUT main(
         Output.clip = 1.0f;
     else
         Output.clip = -1.0f;
+    
+    float3x3 tangentSpace = calculateTangentSpaceMatrix(Output.pos.xyz, input.InsideTessFactor[0], Output.clip);
+    Output.tangent = tangentSpace[0];
+    Output.bitangent = tangentSpace[1];
+    Output.normal = tangentSpace[2];
+    
     Output.pos = mul(Output.pos, model);
     Output.pos = mul(Output.pos, view);
     Output.pos = mul(Output.pos, projection);
