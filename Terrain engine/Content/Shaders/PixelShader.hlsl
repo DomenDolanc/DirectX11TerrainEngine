@@ -24,14 +24,14 @@ static const float tilingFactor = scaling / 5000.f;
 
 float4 slope_based_color(float slope, float4 colorSteep, float4 colorFlat)
 {
-    if (slope < 0.35f)
+    if (slope < 0.45f)
     {
         return colorFlat;
     }
  
-    if (slope < 0.5f)
+    if (slope < 0.65f)
     {
-        float blend = (slope - 0.35f) * (1.0f / (0.5f - 0.35f));
+        float blend = (slope - 0.45f) * (1.0f / (0.65f - 0.45f));
  
         return lerp(colorFlat, colorSteep, blend);
     }
@@ -44,7 +44,7 @@ float4 height_and_slope_based_color(float3 pos, float slope, float distanceToCam
     float height = pos.y;
     
     float2 tex = pos.xz / scaling + 0.5f;
-    float mipmapLevel = saturate((distanceToCamera - 5000.0f) / fogStart) * 8;
+    float mipmapLevel = saturate((distanceToCamera - 5000.0f) / fogStart) * 6;
  
     float greenBlendEnd = amplitude * 0.35f;
     float greenBlendStart = amplitude * 0.1f; 
@@ -91,8 +91,8 @@ float4 main(PixelShaderInput input) : SV_TARGET
 {    
     if (useTexture == 1.0f)
     {
-        float4 bumpMap = rockNormalTexture.Sample(simpleSampler, (input.worldPos.xz / scaling + 0.5f) * tilingFactor) * 2.0f - 1.0f;
-        float3 bumpNormal = (bumpMap.x * input.tangent) + (bumpMap.y * input.bitangent) + (bumpMap.z * input.normal);
+        float4 bumpMap = rockNormalTexture.Sample(simpleSampler, (input.worldPos.xz / scaling + 0.5f) * tilingFactor * 2.0f) * 2.0f - 1.0f;
+        float3 bumpNormal = (bumpMap.x * input.bitangent) + (bumpMap.y * input.tangent) + (bumpMap.z * input.normal);
         input.normal = normalize(bumpNormal);
     }
     
