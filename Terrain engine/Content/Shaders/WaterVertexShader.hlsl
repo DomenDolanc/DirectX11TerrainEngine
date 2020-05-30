@@ -1,6 +1,8 @@
 cbuffer ModelViewProjectionConstantBuffer : register(b0)
 {
-    matrix mvp;
+    matrix model;
+    matrix view;
+    matrix projection;
 };
 
 #include "IncludeDrawParams.hlsli"
@@ -33,9 +35,13 @@ PixelShaderInput main(VertexShaderInput input)
     output.vectorToCamera = eyePos - pos.xyz;
     output.dudvTexCoord = (pos.xz / scaling + 0.5f) * tilingFactor;
     
-    output.texCoord = mul(pos, mvp);
+    output.texCoord = mul(pos, model);
+    output.texCoord = mul(output.texCoord, view);
+    output.texCoord = mul(output.texCoord, projection);
     
-    pos = mul(pos, mvp);
+    pos = mul(pos, model);
+    pos = mul(pos, view);
+    pos = mul(pos, projection);
     output.pos = pos;
 
     return output;

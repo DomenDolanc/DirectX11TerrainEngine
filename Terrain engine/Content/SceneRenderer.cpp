@@ -47,7 +47,8 @@ Terrain_engine::SceneRenderer::~SceneRenderer()
 void SceneRenderer::CreateWindowSizeDependentResources()
 {
     SetProjection(100000.0f);
-    XMStoreFloat4x4(&m_constantBufferData.mvp, XMMatrixTranspose(m_Camera->GetMatrix()));
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetMatrix()));
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixRotationX(0.0)));
 
     Windows::Foundation::Size targetSize = m_deviceResources->GetRenderTargetSize();
     m_Water->CreateReflectionTexture(targetSize);
@@ -91,7 +92,7 @@ void Terrain_engine::SceneRenderer::UpdateMousePosition(DirectX::XMFLOAT2 mouseP
     roll = min(max(roll + deltaX / 300, -XM_PIDIV4), XM_PIDIV4);
     m_Camera->setRoll(roll);
 
-    XMStoreFloat4x4(&m_constantBufferData.mvp, XMMatrixIdentity());
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
 }
 
 void Terrain_engine::SceneRenderer::SetMousePosition(DirectX::XMFLOAT2 mousePoint)
@@ -179,7 +180,11 @@ void Terrain_engine::SceneRenderer::UpdateViewDistance(double viewDistance)
 void Terrain_engine::SceneRenderer::GetViewFrustum(XMFLOAT4 planes[6])
 {
     XMFLOAT4X4 M;
-    XMStoreFloat4x4(&M, m_currentCameraView * m_Camera->GetProjection());
+
+    XMMATRIX proj = XMLoadFloat4x4(&m_constantBufferData.projection);
+    XMMATRIX view = XMLoadFloat4x4(&m_constantBufferData.view);
+
+    XMStoreFloat4x4(&M, XMMatrixTranspose(proj * view));
 
     // left
     planes[0].x = M(0, 3) + M(0, 0);
@@ -284,7 +289,7 @@ void Terrain_engine::SceneRenderer::SetProjection(double viewDistance)
 
     XMMATRIX orientationMatrix = XMLoadFloat4x4(&orientation);
 
-    m_Camera->SetProjection(perspectiveMatrix * orientationMatrix);
+    XMStoreFloat4x4(&m_constantBufferData.projection, XMMatrixTranspose(perspectiveMatrix * orientationMatrix));
 }
 
 void Terrain_engine::SceneRenderer::Render()
@@ -340,7 +345,8 @@ void Terrain_engine::SceneRenderer::RenderToWaterReflection()
     context->ClearRenderTargetView(m_Water->GetReflectionRenderTarget(), DirectX::Colors::CornflowerBlue);
     context->ClearDepthStencilView(m_Water->GetWaterDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-    XMStoreFloat4x4(&m_constantBufferData.mvp, XMMatrixTranspose(m_Camera->GetReflectionMatrix() * m_Camera->GetProjection()));
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_Camera->GetReflectionMatrix()));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
@@ -370,7 +376,8 @@ void Terrain_engine::SceneRenderer::RenderToWaterRefraction()
     context->ClearRenderTargetView(m_Water->GetRefractionRenderTarget(), DirectX::Colors::CornflowerBlue);
     context->ClearDepthStencilView(m_Water->GetWaterDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-    XMStoreFloat4x4(&m_constantBufferData.mvp, XMMatrixTranspose(m_currentCameraView * m_Camera->GetProjection()));
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_currentCameraView));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
@@ -389,7 +396,8 @@ void Terrain_engine::SceneRenderer::RenderToBackBuffer()
     context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
     context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-    XMStoreFloat4x4(&m_constantBufferData.mvp, XMMatrixTranspose(m_currentCameraView * m_Camera->GetProjection()));
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_currentCameraView));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
@@ -423,6 +431,7 @@ void Terrain_engine::SceneRenderer::RenderWater()
     m_waterParamsConstantBufferData.refractWater = (m_refractWater ? 1.0f : 0.0f);
     m_waterParamsConstantBufferData.waterMoveFactor = m_waveMoveFactor;
 
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->UpdateSubresource1(m_waterParamsConstantBuffer.Get(), 0, NULL, &m_waterParamsConstantBufferData, 0, 0, 0);
 
@@ -449,7 +458,8 @@ void Terrain_engine::SceneRenderer::RenderTerrain()
 {
     auto context = m_deviceResources->GetD3DDeviceContext();
 
-    XMStoreFloat4x4(&m_constantBufferData.mvp, XMMatrixTranspose(m_currentCameraView * m_Camera->GetProjection()));
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(m_currentCameraView));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
 
     m_drawParamsConstantBufferData.scaling = m_sceneScaling;
@@ -516,7 +526,7 @@ void Terrain_engine::SceneRenderer::RenderLightSource()
     context->VSSetShader(m_vertexShader.Get(), nullptr, 0);
     context->PSSetShader(m_pixelShader.Get(), nullptr, 0);
 
-    XMStoreFloat4x4(&m_constantBufferData.mvp, XMMatrixTranspose(XMMatrixTranslation(m_lightPos.x, m_lightPos.y, m_lightPos.z)) * XMMatrixTranspose(m_currentCameraView * m_Camera->GetProjection()));
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(XMMatrixTranslation(m_lightPos.x, m_lightPos.y, m_lightPos.z)));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
@@ -556,7 +566,8 @@ void Terrain_engine::SceneRenderer::RenderSkybox()
     XMStoreFloat3x3(&rotatedView, cameraMatrix);
     cameraMatrix = XMLoadFloat3x3(&rotatedView);
 
-    XMStoreFloat4x4(&m_constantBufferData.mvp, XMMatrixTranspose(cameraMatrix * m_Camera->GetProjection()));
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixIdentity());
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixTranspose(cameraMatrix));
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
 
@@ -584,7 +595,8 @@ void Terrain_engine::SceneRenderer::RenderJet()
 
     XMMATRIX jetRotation = XMMatrixRotationX(-m_Camera->getPitch() / 10.0) * XMMatrixRotationY(-m_Camera->getRoll() / 20.0);
 
-    XMStoreFloat4x4(&m_constantBufferData.mvp, XMMatrixTranspose(jetRotation * m_Jet->GetTransformation() * m_Camera->GetProjection()));
+    XMStoreFloat4x4(&m_constantBufferData.model, XMMatrixTranspose(jetRotation * m_Jet->GetTransformation()));
+    XMStoreFloat4x4(&m_constantBufferData.view, XMMatrixIdentity());
     context->UpdateSubresource1(m_constantBuffer.Get(), 0, NULL, &m_constantBufferData, 0, 0, 0);
     context->VSSetConstantBuffers1(0, 1, m_constantBuffer.GetAddressOf(), nullptr, nullptr);
     context->VSSetConstantBuffers1(1, 1, m_drawParamsConstantBuffer.GetAddressOf(), nullptr, nullptr);
